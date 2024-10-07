@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+   <!-- Lista de Visualização para geracad.nfse -->
+   <record id="view_geracad_nfse_tree" model="ir.ui.view">
+    <field name="name">geracad.nfse.tree</field>
+    <field name="model">geracad.nfse</field>
+    <field name="arch" type="xml">
+        <tree string="NFS-e">
+            <field name="name"/>
+            <field name="state"/>
+            <field name="valor_servico"/>
+            <field name="cliente_id"/>
+            <field name="data_emissao"/>
+        </tree>
+    </field>
+</record>
+ <!-- Formulário de Visualização para geracad.nfse -->
+ <record id="view_geracad_nfse_form" model="ir.ui.view">
+    <field name="name">geracad.nfse.form</field>
+    <field name="model">geracad.nfse</field>
+    <field name="arch" type="xml">
+        <form string="NFS-e">
+            <header>
+                <button name="action_gerar_nfse" 
+              groups="geracad_curso.group_geracad_curso_finaceiro"
+               string="Reenviar" type="object"  class="btn-secondary"  attrs="{'invisible': [('state', '=', 'enviada')]}"/>
+                
+               <button name="action_get_nfse" 
+              groups="geracad_curso.group_geracad_curso_finaceiro"
+               string="Baixar NFSe" type="object"  class="btn-secondary"  attrs="{'invisible': [('state', '=', 'enviada')]}"/>
+               
+               <button name="get_consulta_nfse_plugnotas" 
+              groups="geracad_curso.group_geracad_curso_finaceiro"
+               string="Consulta NFSe" type="object"  class="btn-secondary"  />
+               
+               <field name="state" widget="statusbar" clickable="1" statusbar_visible="draft,enviada,erro" statusbar_colors="{'erro':'red'}"/>
+            </header>
+            <sheet>
+                <widget name="web_ribbon" title="Enviada" attrs="{'invisible': [('state', '!=', 'enviada')]}"/>
+                <widget name="web_ribbon" title="Erro"  bg_color="bg-danger" attrs="{'invisible': [('state', '!=', 'erro')]}"/>
+                <group>
+               
+                    <field name="name"/>
+                    <field name="company_id"/>
+               
+                    <field name="valor_servico"/>
+                    <field name="aluno_id"/>
+                    <field name="cliente_id"/>
+                    <field name="codigo_servico"/>
+                    <field name="data_emissao"/>
+                    <field name="data_autorizacao"/>
+                    <field name="description"/>
+                </group>
+                <group>
+                    
+                    <field name="plugnotas_id"/>
+                    <field name="nfse_protocolo"/>
+                    <field name="nfse_pdf" widget="pdf_viewer"/>
+                    <field name="nfse_xml"/>
+                </group>
+                <group>
+                    <field name="resposta_api_ids">
+                        <tree>
+                            
+                            <field name="data_resposta"/>
+                            <field name="resposta"/>
+                            <field name="state"/>
+                          
+                        </tree>
+                        </field>
+
+                   
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+<!-- Ação para geracad.nfse -->
+<record id="action_geracad_nfse" model="ir.actions.act_window">
+    <field name="name">NFS-e</field>
+    <field name="res_model">geracad.nfse</field>
+    <field name="view_mode">tree,form</field>
+    <field name="view_id" ref="view_geracad_nfse_tree"/>
+</record>
+<menuitem id="menu_geracad_nfse" name="NFS-e" parent="geracad_curso.menu_root_financeiro" action="action_geracad_nfse" sequence="10"/>
+    <!-- <menuitem id="menu_geracad_nfse" name="NFS-e" parent="account.menu_finance" action="action_geracad_nfse"/> -->
+</odoo>

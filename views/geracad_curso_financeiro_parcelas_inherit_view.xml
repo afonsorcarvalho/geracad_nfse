@@ -1,0 +1,51 @@
+<odoo>
+    <data>
+    <record id="view_geracad_curso_financeiro_parcelas_extendido_tree" model="ir.ui.view">
+        <field name="name">geracad_curso.financeiro.parcelas.extendido.tree</field>
+        <field name="model">geracad.curso.financeiro.parcelas</field>
+        <field name="inherit_id" ref="geracad_curso.geracad_curso_financeiro_parcelas_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/header" position="inside">
+                <button name="action_emitir_nfse"  groups="geracad_curso.group_geracad_curso_finaceiro" string="Emitir NFSe"  class="btn-secondary"  type="object" />
+            </xpath>
+            <xpath expr="//field[@name='state']" position="before">
+               
+                    <field name="nfse_id" readonly="1"/>
+              
+               
+            </xpath>
+        </field>
+    </record>
+    <record id="view_geracad_curso_financeiro_parcelas_extendido_form" model="ir.ui.view">
+        <field name="name">geracad_curso.financeiro.parcelas.extendido.form</field>
+        <field name="model">geracad.curso.financeiro.parcelas</field>
+        <field name="inherit_id" ref="geracad_curso.geracad_curso_financeiro_parcelas_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/header" position="inside">
+                <button name="action_emitir_nfse"  class="oe_highlight"  groups="geracad_curso.group_geracad_curso_finaceiro" string="Emitir NFSe" type="object" />
+         
+            </xpath>
+            <xpath expr="//form/sheet/widget" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button  name="action_go_nfse" type="object"  class="oe_stat_button" icon="fa-list-alt">
+                      <div class="o_field_widget o_stat_info">
+                        <!-- <field name="notas_disciplinas_count" class="o_state_value" /> -->
+                        <span class="o_stat_text">NFSe</span>
+                      </div>
+                    </button>
+                  </div>
+                
+            </xpath>
+
+            <xpath expr="//group[3]" position="before">
+                <group string="Documentos Eletrônicos" >
+                    <field name="nfse_id" readonly="1"/>
+              
+                </group>
+            </xpath>
+           
+        </field>
+    </record>
+   
+    </data>
+</odoo>

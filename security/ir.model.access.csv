@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_geracad_nfse,access.geracad.nfse,model_geracad_nfse,,1,1,1,1
+access_geracad_nfse_resposta,access.geracad.nfse.resposta,model_geracad_nfse_resposta,,1,1,1,1
