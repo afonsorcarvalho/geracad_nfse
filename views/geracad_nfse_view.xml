@@ -53,7 +53,7 @@
             <header>
                 <button name="action_gerar_nfse" 
               groups="geracad_curso.group_geracad_curso_finaceiro"
-               string="Reenviar" type="object"  class="btn-secondary"  attrs="{'invisible': [('state', '=', 'enviada')]}"/>
+               string="Reenviar" type="object"  class="btn-secondary"  attrs="{'invisible': [('state', '=', 'concluida')]}"/>
                 
                <!-- <button name="action_get_nfse" 
               groups="geracad_curso.group_geracad_curso_finaceiro"
@@ -65,12 +65,12 @@
                
                <field name="state" widget="statusbar" clickable="1" statusbar_visible="draft,enviada,erro" statusbar_colors="{'erro':'red'}"/>
             </header>
-            <sheet>
-                <widget name="web_ribbon" title="Enviada" attrs="{'invisible': [('state', '!=', 'enviada')]}"/>
+            <sheet >
+                <widget name="web_ribbon" title="Enviada" attrs="{'invisible': [('state', '!=', 'concluida')]}"/>
                 <widget name="web_ribbon" title="Erro"  bg_color="bg-danger" attrs="{'invisible': [('state', '!=', 'erro')]}"/>
                 <group>
                
-                    <field name="name"/>
+                    <field name="name" />
                     <field name="company_id"/>
                
                     <field name="nfse_descricao_nota"/>
@@ -80,7 +80,7 @@
                     <field name="nfse_serviço"/>
                     <field name="valor_servico"/>
                     <field name="aluno_id"/>
-                    <field name="cliente_id"/>
+                    <field name="cliente_id" context="{'form_view_ref': 'base.view_partner_form'}"/>
                     <field name="data_emissao"/>
                     <field name="data_autorizacao"/>
                     
