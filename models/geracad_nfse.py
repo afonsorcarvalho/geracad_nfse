@@ -31,11 +31,11 @@ class GeracadNfse(models.Model):
         required=True, 
         
     )
-    plugnotas_id = fields.Char(string='ID Plugnotas')
+    plugnotas_id = fields.Char(string='ID Plugnotas',copy=False)
     name = fields.Char("Número da NFS-e", copy=False)
     state = fields.Selection(
         [('draft', 'Rascunho'),('vigente', 'Vigente'), ('enviada', 'Enviada'), ('erro', 'Erro'),('em_processamento',"Em Processamento"), ('concluida','Emitida')],
-        string="Status", default='draft', tracking=True
+        string="Status", default='draft', tracking=True,copy=False
     )
     nfse_emitida = fields.Boolean("NFSe emitida")
     nfse_protocolo = fields.Char()
@@ -56,8 +56,8 @@ class GeracadNfse(models.Model):
     cliente_id = fields.Many2one('res.partner', string="Sacado", required=True)
     aluno_id = fields.Many2one('res.partner', string="Aluno" )
     codigo_servico = fields.Char()
-    data_emissao = fields.Date("Data de Emissão", readonly=True)
-    data_autorizacao = fields.Date("Data de autorizacao", readonly=True)
+    data_emissao = fields.Date("Data de Emissão", readonly=True,copy=False)
+    data_autorizacao = fields.Date("Data de autorizacao", readonly=True,copy=False)
     resposta_api_ids = fields.One2many('geracad.nfse.resposta', 'nfse_id', string="Respostas da API")
     description = fields.Char()
 
