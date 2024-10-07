@@ -116,6 +116,16 @@
     <field name="view_mode">tree,form</field>
     <field name="view_id" ref="view_geracad_nfse_tree"/>
 </record>
+<record id="action_geracad_nfse_sacado" model="ir.actions.act_window">
+    <field name="name">Sacados</field>
+    <field name="res_model">res.partner</field>
+    <field name="view_mode">tree,form</field>
+    <field name="view_ids" eval="[(5, 0, 0),
+     (0, 0, {'view_mode': 'tree', 'view_id': ref('base.view_partner_tree')}), 
+     (0, 0, {'view_mode': 'form', 'view_id': ref('base.view_partner_form')})]"/>
+  
+</record>
 <menuitem id="menu_geracad_nfse" name="NFS-e" parent="geracad_curso.menu_root_financeiro" action="action_geracad_nfse" sequence="10"/>
+<menuitem id="menu_geracad_nfse_sacados" name="Sacado" parent="geracad_nfse.menu_geracad_nfse" action="action_geracad_nfse_sacado" sequence="10"/>
     <!-- <menuitem id="menu_geracad_nfse" name="NFS-e" parent="account.menu_finance" action="action_geracad_nfse"/> -->
 </odoo>
