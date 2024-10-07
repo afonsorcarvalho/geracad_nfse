@@ -125,7 +125,8 @@
      (0, 0, {'view_mode': 'form', 'view_id': ref('base.view_partner_form')})]"/>
   
 </record>
-<menuitem id="menu_geracad_nfse" name="NFS-e" parent="geracad_curso.menu_root_financeiro" action="action_geracad_nfse" sequence="10"/>
-<menuitem id="menu_geracad_nfse_sacados" name="Sacado" parent="geracad_nfse.menu_geracad_nfse" action="action_geracad_nfse_sacado" sequence="10"/>
+<menuitem id="menu_geracad_nfse" name="NFS-e" parent="geracad_curso.menu_root_financeiro"  sequence="10"/>
+<menuitem id="menu_geracad_nfse_emitidas" name="Notas Fiscais de Serviço" parent="geracad_nfse.menu_geracad_nfse" action="action_geracad_nfse" sequence="1"/>
+<menuitem id="menu_geracad_nfse_sacados" name="Sacado" parent="geracad_nfse.menu_geracad_nfse" action="action_geracad_nfse_sacado" sequence="2"/>
     <!-- <menuitem id="menu_geracad_nfse" name="NFS-e" parent="account.menu_finance" action="action_geracad_nfse"/> -->
 </odoo>
