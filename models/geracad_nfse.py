@@ -198,6 +198,7 @@ class GeracadNfse(models.Model):
                         'nfse_pdf': base64.b64encode(response_pdf.content),
                         'nfse_xml': base64.b64encode(response_xml.content),
                         'data_emissao': datetime.strptime(resp.get('emissao'),'%d/%m/%Y'),
+                        'state':'concluida',
                         'resposta_api_ids':[(0,0,
                             {
                                 'state': 'sucesso',

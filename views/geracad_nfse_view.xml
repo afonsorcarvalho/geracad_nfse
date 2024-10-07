@@ -55,10 +55,10 @@
               groups="geracad_curso.group_geracad_curso_finaceiro"
                string="Reenviar" type="object"  class="btn-secondary"  attrs="{'invisible': [('state', '=', 'enviada')]}"/>
                 
-               <button name="action_get_nfse" 
+               <!-- <button name="action_get_nfse" 
               groups="geracad_curso.group_geracad_curso_finaceiro"
                string="Baixar NFSe" type="object"  class="btn-secondary"  attrs="{'invisible': [('state', '=', 'enviada')]}"/>
-               
+                -->
                <button name="get_consulta_nfse_plugnotas" 
               groups="geracad_curso.group_geracad_curso_finaceiro"
                string="Consulta NFSe" type="object"  class="btn-secondary"  />
