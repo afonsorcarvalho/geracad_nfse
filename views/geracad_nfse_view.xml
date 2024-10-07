@@ -12,8 +12,38 @@
             <field name="cliente_id"/>
             <field name="data_emissao"/>
         </tree>
+       
     </field>
 </record>
+   <!-- Search View para geracad.nfse -->
+    <record id="view_geracad_nfse_search" model="ir.ui.view">
+        <field name="name">geracad.nfse.search</field>
+        <field name="model">geracad.nfse</field>
+        <field name="arch" type="xml">
+            <search string="Buscar NFS-e">
+                <!-- Campo cliente_id para busca -->
+                <field name="cliente_id" string="Cliente"/>
+
+                <!-- Campo data_emissao para busca por datas -->
+                <!-- <field name="data_emissao" string="Data de Emissão" filter_domain="[]"/> -->
+
+                <!-- Filtro por estado da nota -->
+                <field name="state" string="Status"/>
+                
+                <!-- Adiciona filtros por datas (última semana, mês etc.) -->
+                <!-- <filter string="Hoje" domain="[('data_emissao', '=', context_today())]" help="Notas emitidas hoje"/> -->
+                <!-- <filter string="Este Mês" domain="[('data_emissao', '>=', context_today().replace(day=1))]" help="Notas emitidas neste mês"/> -->
+
+                <!-- Agrupamento por cliente -->
+                <!-- <group expand="1" string="Agrupar Por">
+                    <filter string="Cliente" context="{'group_by':'cliente_id'}"/>
+                    <filter string="Estado" context="{'group_by':'state'}"/>
+                </group> -->
+            </search>
+        </field>
+    </record>
+
+     
  <!-- Formulário de Visualização para geracad.nfse -->
  <record id="view_geracad_nfse_form" model="ir.ui.view">
     <field name="name">geracad.nfse.form</field>
@@ -43,13 +73,17 @@
                     <field name="name"/>
                     <field name="company_id"/>
                
+                    <field name="nfse_descricao_nota"/>
+                    <field name="nfse_CNAE"/>
+                    
+                    <field name="nfse_descricao_servico"/>
+                    <field name="nfse_serviço"/>
                     <field name="valor_servico"/>
                     <field name="aluno_id"/>
                     <field name="cliente_id"/>
-                    <field name="codigo_servico"/>
                     <field name="data_emissao"/>
                     <field name="data_autorizacao"/>
-                    <field name="description"/>
+                    
                 </group>
                 <group>
                     

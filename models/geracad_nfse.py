@@ -32,13 +32,20 @@ class GeracadNfse(models.Model):
         
     )
     plugnotas_id = fields.Char(string='ID Plugnotas')
-    name = fields.Char("Número da NFS-e", readonly=True)
+    name = fields.Char("Número da NFS-e", copy=False)
     state = fields.Selection(
         [('draft', 'Rascunho'),('vigente', 'Vigente'), ('enviada', 'Enviada'), ('erro', 'Erro'),('em_processamento',"Em Processamento"), ('concluida','Emitida')],
         string="Status", default='draft', tracking=True
     )
     nfse_emitida = fields.Boolean("NFSe emitida")
     nfse_protocolo = fields.Char()
+    nfse_descricao_nota = fields.Text("Descrição da Nota")
+    nfse_serviço = fields.Many2one(
+         "geracad.nfse.servico",
+        string='Serviço',
+        )
+    nfse_descricao_servico =  fields.Char(string='Descrição do Serviço')
+    nfse_CNAE =  fields.Char(string='CNAE')
     nfse_pdf = fields.Binary()
     nfse_xml = fields.Binary()
     # nfse_id = fields.Many2one(
@@ -47,7 +54,7 @@ class GeracadNfse(models.Model):
     #     )
     valor_servico = fields.Float("Valor do Serviço", required=True)
     cliente_id = fields.Many2one('res.partner', string="Sacado", required=True)
-    aluno_id = fields.Many2one('res.partner', string="Aluno", required=True)
+    aluno_id = fields.Many2one('res.partner', string="Aluno" )
     codigo_servico = fields.Char()
     data_emissao = fields.Date("Data de Emissão", readonly=True)
     data_autorizacao = fields.Date("Data de autorizacao", readonly=True)
@@ -82,30 +89,30 @@ class GeracadNfse(models.Model):
                         "estado": rec.cliente_id.state_id.code,
                         "logradouro": rec.cliente_id.street,
                         "numero": rec.cliente_id.l10n_br_number,
-                        "codigoCidade":"2111300"
+                        "descricaoCidade": rec.cliente_id.city_id.name,
+                        "codigoCidade":  rec.cliente_id.state_id.l10n_br_ibge_code+rec.cliente_id.city_id.l10n_br_ibge_code,
                         
                     }
 
                 },
+                "descricao": rec.nfse_descricao_nota,
                 "servico":{
-                    "codigo": "0801",
-                    "descricaoLC116": "ENSINO REGULAR PRE-ESCOLAR, FUNDAMENTAL, MEDIO E SUPERIOR.",
-                    "discriminacao": "EDUCACAO PROFISSIONAL DE NIVEL TECNICO",
-                    "cnae": "854140000",
-                    "codigoTributacao": "4115200",
-                    "codigoCidadeIncidencia": "2111300",
+                    "codigo": rec.nfse_serviço.codigo,
+                    "descricaoLC116": rec.nfse_serviço.name,
+                    "discriminacao": rec.nfse_descricao_servico,
+                    "cnae": rec.nfse_CNAE,
+             #       "codigoTributacao": "4115200",
+             #       "codigoCidadeIncidencia": "2111300",
                     "descricaoCidadeIncidencia": "São Luís",
                     "iss": {
                         "aliquota": 5,
                         "tipoTributacao": 6
                     },
                     "valor": {
-                        "deducoes": 0,
-                        "baseCalculo": 0.1,
-                        "servico": 1,
-                        "liquido": 0.1
+                        "servico": rec.valor_servico
                     }
                 },
+               
                
             }]
             _logger.info(payload)
@@ -283,3 +290,11 @@ class GeracadNFSEResposta(models.Model):
         [('sucesso', 'Sucesso'), ('erro', 'Erro'),('processando', 'Processando')],
         string="Status"
     )
+class GeracadNFSEServico(models.Model):
+    _name = "geracad.nfse.servico"
+    _description = "Servico API para NFS-e"
+
+    
+    codigo = fields.Char("Codigo serviço")
+    name = fields.Char("Nome")
+   
