@@ -38,7 +38,7 @@ class GeracadNfse(models.Model):
         string="Status", default='draft', tracking=True,copy=False
     )
     nfse_emitida = fields.Boolean("NFSe emitida")
-    nfse_protocolo = fields.Char()
+    nfse_protocolo = fields.Char(copy=False)
     nfse_descricao_nota = fields.Text("Descrição da Nota")
     nfse_serviço = fields.Many2one(
          "geracad.nfse.servico",
@@ -46,13 +46,13 @@ class GeracadNfse(models.Model):
         )
     nfse_descricao_servico =  fields.Char(string='Descrição do Serviço')
     nfse_CNAE =  fields.Char(string='CNAE')
-    nfse_pdf = fields.Binary()
-    nfse_xml = fields.Binary()
+    nfse_pdf = fields.Binary(copy=False)
+    nfse_xml = fields.Binary(copy=False)
     # nfse_id = fields.Many2one(
     #     'geracad.nfse',
     #     string='NFSe',
     #     )
-    valor_servico = fields.Float("Valor do Serviço", required=True)
+    valor_servico = fields.Float("Valor do Serviço", required=True,copy=False)
     cliente_id = fields.Many2one('res.partner', string="Sacado", required=True)
     aluno_id = fields.Many2one('res.partner', string="Aluno" )
     codigo_servico = fields.Char()
