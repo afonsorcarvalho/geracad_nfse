@@ -299,3 +299,4 @@ class GeracadNFSEServico(models.Model):
     codigo = fields.Char("Codigo serviço")
     name = fields.Char("Nome")
    
+   

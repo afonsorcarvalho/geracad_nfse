@@ -34,7 +34,12 @@ class GeracadCursoFinanceiroParcelasInherit(models.Model):
 
     
     def action_emitir_nfse(self):
+        
+
         for rec in self:
+            cnae = ""
+            servico = ""
+            descricao_nota_servico = ""
             if rec.state == 'recebido':
                 # Verificar se a NFS-e já foi emitida
                 if rec.nfse_id:
@@ -42,15 +47,34 @@ class GeracadCursoFinanceiroParcelasInherit(models.Model):
 
                 # # Aplicar taxa administrativa ao pagar a parcela
                 # rec.action_aplicar_taxa_administrativa()
+                if rec.curso_matricula_id.curso_turma_id.curso_id.type_curso.name in ['Técnico']:
+                    cnae = '854140000'
+                    servico = self.env['geracad.nfse.servico'].search([('codigo','=','0801')],limit=1)
+                    descricao_nota_servico = 'SERVICO DE EDUCACAO PROFISSIONAL DE NIVEL TECNICO'
+
+                if rec.curso_matricula_id.curso_turma_id.curso_id.type_curso.name in ['Superior']:
+                    cnae = '853250000'
+                    servico = self.env['geracad.nfse.servico'].search([('codigo','=','0801')],limit=1)
+                    descricao_nota_servico = 'SERVICO DE EDUCACAO SUPERIOR - GRADUACAO E POS-GRADUACAO'
+
+                if rec.curso_matricula_id.curso_turma_id.curso_id.type_curso.name in ['Preparatório','Qualificação']:
+                    cnae = '859969900'
+                    servico = self.env['geracad.nfse.servico'].search([('codigo','=','0802')],limit=1)
+                    descricao_nota_servico = 'SERVICO DE ATIVIDADES DE ENSINO'
+
 
                 # Criar um registro em geracad.nfse
                 nfse_vals = {
                     'company_id': rec.company_id.id,
                     'name': _('NFS-e de %s') % rec.sacado.name,
                     'valor_servico': rec.valor_total,
+                    'nfse_descricao_nota': _(f'{descricao_nota_servico} | Aluno: {rec.aluno_id.name} | Sacado: {rec.sacado.name} | Parcela: {rec.numero_parcela} | Curso: {rec.curso_nome}' ) , 
+                    'nfse_descricao_servico':  descricao_nota_servico,
+                    'nfse_serviço': servico[0].id,
                     'cliente_id': rec.sacado.id,
                     'aluno_id': rec.aluno_id.id,
-                    'codigo_servico': '14.10',  # Exemplo de código de serviço
+                    'nfse_CNAE': cnae,
+                    
                     'state':'draft',
                     'description': _(f'Aluno: {rec.aluno_id.name} Sacado: {rec.sacado.name} \n Parcela: {rec.numero_parcela}') , 
                     # Exemplo de código de serviço
@@ -75,6 +99,10 @@ class GeracadCursoFinanceiroParcelasInherit(models.Model):
             'target':'current',
             'view_mode': 'form',
             'res_model': 'geracad.nfse',
-            'domain': [('id', '=', self.nfse_id.id)],
+            'res_id': self.nfse_id.id,
+            'context': {
+                'default_id': self.nfse_id.id,
+     
+            }
             
         }
