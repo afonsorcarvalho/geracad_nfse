@@ -61,6 +61,15 @@ class GeracadNfse(models.Model):
     resposta_api_ids = fields.One2many('geracad.nfse.resposta', 'nfse_id', string="Respostas da API")
     description = fields.Char()
 
+    def unlink(self):
+        for rec in self:
+            if rec.state in ['concluida', 'em_processamento','enviada']:
+                raise UserError(
+                    _('Não é possível excluir NFSe %s.') % (
+                    rec.state,))
+            
+        return super(GeracadNfse, self).unlink()
+    
     def action_get_nfse(self,id="",):
       
         
