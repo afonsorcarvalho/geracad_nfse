@@ -52,7 +52,7 @@ class GeracadNfse(models.Model):
     #     'geracad.nfse',
     #     string='NFSe',
     #     )
-    valor_servico = fields.Float("Valor do Serviço", required=True,copy=False)
+    valor_servico = fields.Float("Valor do Serviço", required=True)
     cliente_id = fields.Many2one('res.partner', string="Sacado", required=True)
     aluno_id = fields.Many2one('res.partner', string="Aluno" )
     codigo_servico = fields.Char()
