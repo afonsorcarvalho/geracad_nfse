@@ -99,7 +99,7 @@ class GeracadNfse(models.Model):
                 },
                 "tomador": {
                     "cpfCnpj": re.sub(r'\D', '',rec.cliente_id.l10n_br_cnpj_cpf),
-                    "razaoSocial": rec.cliente_id.l10n_br_legal_name,
+                    "razaoSocial": rec.cliente_id.l10n_br_legal_name if rec.cliente_id.l10n_br_legal_name else rec.cliente_id.name ,
                     #"email": rec.cliente_id.email,
                     'inscricaoMunicipal': rec.cliente_id.l10n_br_inscr_mun if rec.cliente_id.l10n_br_inscr_mun else "" ,
                     "endereco":{
