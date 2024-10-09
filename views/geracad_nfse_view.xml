@@ -53,7 +53,7 @@
             <header>
                 <button name="action_gerar_nfse" 
               groups="geracad_curso.group_geracad_curso_finaceiro"
-               string="Reenviar" type="object"  class="btn-secondary"  attrs="{'invisible': [('state', '=', 'concluida')]}"/>
+               string="Enviar NFSe" type="object"  class="btn-secondary"  attrs="{'invisible': [('state', '=', 'concluida')]}"/>
                 
                <!-- <button name="action_get_nfse" 
               groups="geracad_curso.group_geracad_curso_finaceiro"
@@ -68,43 +68,47 @@
             <sheet >
                 <widget name="web_ribbon" title="Enviada" attrs="{'invisible': [('state', '!=', 'concluida')]}"/>
                 <widget name="web_ribbon" title="Erro"  bg_color="bg-danger" attrs="{'invisible': [('state', '!=', 'erro')]}"/>
+              
                 <group>
-               
-                    <field name="name" />
-                    <field name="company_id"/>
-               
-                    <field name="nfse_descricao_nota"/>
-                    <field name="nfse_CNAE"/>
-                    
-                    <field name="nfse_descricao_servico"/>
-                    <field name="nfse_serviço"/>
-                    <field name="valor_servico"/>
-                    <field name="aluno_id"/>
-                    <field name="cliente_id" context="{'form_view_ref': 'base.view_partner_form'}"/>
-                    <field name="data_emissao"/>
-                    <field name="data_autorizacao"/>
-                    
-                </group>
-                <group>
-                    
-                    <field name="plugnotas_id"/>
-                    <field name="nfse_protocolo"/>
-                    <field name="nfse_pdf" widget="pdf_viewer"/>
-                    <field name="nfse_xml"/>
-                </group>
-                <group>
-                    <field name="resposta_api_ids">
-                        <tree>
-                            
-                            <field name="data_resposta"/>
-                            <field name="resposta"/>
-                            <field name="state"/>
-                          
-                        </tree>
-                        </field>
 
-                   
-                </group>
+                    <group>
+                        <field name="name" readonly="1" />
+                        <field name="company_id" string="Unidade"/>
+                        <field name="nfse_descricao_nota"/>
+                        <field name="nfse_CNAE"/>
+                        <field name="nfse_descricao_servico"/>
+                        <field name="nfse_serviço"/>
+                        <field name="valor_servico"/>
+                        <field name="aluno_id"/>
+                        <field name="cliente_id" context="{'form_view_ref': 'base.view_partner_form'}"/>
+                        <field name="nfse_local_cidade" string="Cidade do serviço" />
+                        <field name="nfse_local_estado" string="Estado do serviço" />
+                        <field name="nfse_retido" string="ISS Retido" />
+                        <field name="data_emissao"/>
+                        <field name="data_autorizacao"/>
+                        <field name="plugnotas_id"/>
+                        <field name="nfse_protocolo"/>
+                    </group>
+                    
+                    <group colspan="12">
+                        <field name="nfse_pdf" widget="pdf_viewer"/>
+                        <field name="nfse_xml"/>
+                    </group>
+                    <group colspan="12">
+                        <field name="resposta_api_ids">
+                            <tree>
+                                
+                                <field name="data_resposta"/>
+                                <field name="resposta" style="white-space: normal; word-wrap: break-word; max-width: 300px;"/>
+                                <field name="state"/>
+                            
+                            </tree>
+                        </field>
+                    </group>
+                    
+
+            </group>
+                
             </sheet>
         </form>
     </field>

@@ -29,6 +29,7 @@ class GeracadNfse(models.Model):
         string='Company', 
         comodel_name='res.company', 
         required=True, 
+        default=1
         
     )
     plugnotas_id = fields.Char(string='ID Plugnotas',copy=False)
@@ -48,6 +49,14 @@ class GeracadNfse(models.Model):
     nfse_CNAE =  fields.Char(string='CNAE')
     nfse_pdf = fields.Binary(copy=False)
     nfse_xml = fields.Binary(copy=False)
+    nfse_local_cidade = fields.Many2one(
+        'res.city',
+        string='Cidade',
+        )
+    nfse_local_estado = fields.Many2one('res.country.state',
+        string='Estado',domain="[('country_id.code', '=', 'BR')]"
+        )
+    nfse_retido = fields.Boolean("Retido")
     # nfse_id = fields.Many2one(
     #     'geracad.nfse',
     #     string='NFSe',
@@ -90,8 +99,9 @@ class GeracadNfse(models.Model):
                 },
                 "tomador": {
                     "cpfCnpj": re.sub(r'\D', '',rec.cliente_id.l10n_br_cnpj_cpf),
-                    "razaoSocial": rec.cliente_id.name,
+                    "razaoSocial": rec.cliente_id.l10n_br_legal_name,
                     #"email": rec.cliente_id.email,
+                    'inscricaoMunicipal': rec.cliente_id.l10n_br_inscr_mun,
                     "endereco":{
                         "bairro": rec.cliente_id.l10n_br_district,
                         "cep": re.sub(r'\D', '',rec.cliente_id.zip),
@@ -104,23 +114,33 @@ class GeracadNfse(models.Model):
                     }
 
                 },
-                "descricao": rec.nfse_descricao_nota,
+                "descricao": rec.nfse_descricao_nota.replace("\n", "  "),
                 "servico":{
                     "codigo": rec.nfse_serviço.codigo,
                     "descricaoLC116": rec.nfse_serviço.name,
                     "discriminacao": rec.nfse_descricao_servico,
                     "cnae": rec.nfse_CNAE,
+                    
              #       "codigoTributacao": "4115200",
-             #       "codigoCidadeIncidencia": "2111300",
-                    "descricaoCidadeIncidencia": "São Luís",
+                    "codigoCidadeIncidencia": rec.nfse_local_estado.l10n_br_ibge_code+rec.nfse_local_cidade.l10n_br_ibge_code,
+                    
+                    "descricaoCidadeIncidencia": rec.nfse_local_cidade.name,
                     "iss": {
                         "aliquota": 5,
-                        "tipoTributacao": 6
+                       # "tipoTributacao": 5 if rec.nfse_retido else 6,
+                        "retido": rec.nfse_retido,
                     },
                     "valor": {
                         "servico": rec.valor_servico
-                    }
+                    },
+                    
                 },
+                "cidadePrestacao":{
+
+                    "codigo":rec.nfse_local_estado.l10n_br_ibge_code+rec.nfse_local_cidade.l10n_br_ibge_code,
+                    "descricao": rec.nfse_local_cidade.name,
+                    "estado": rec.nfse_local_estado.code
+                }
                
                
             }]
@@ -307,5 +327,12 @@ class GeracadNFSEServico(models.Model):
     
     codigo = fields.Char("Codigo serviço")
     name = fields.Char("Nome")
+# class GeracadNFSECNAE(models.Model):
+#     _name = "geracad.nfse.cnae"
+#     _description = "Codigos CNAE"
+
+    
+#     codigo = fields.Char("Codigo serviço")
+#     name = fields.Char("Descrição")
    
    

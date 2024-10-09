@@ -68,7 +68,7 @@ class GeracadCursoFinanceiroParcelasInherit(models.Model):
                     'company_id': rec.company_id.id,
                     'name': _('NFS-e de %s') % rec.sacado.name,
                     'valor_servico': rec.valor_total,
-                    'nfse_descricao_nota': _(f'{descricao_nota_servico} | Aluno: {rec.aluno_id.name} | Sacado: {rec.sacado.name} | Parcela: {rec.numero_parcela} | Curso: {rec.curso_nome}' ) , 
+                    'nfse_descricao_nota': _(f'{descricao_nota_servico} Aluno: {rec.aluno_id.name} Sacado: {rec.sacado.name} Parcela: {rec.numero_parcela} Curso: {rec.curso_nome}' ) , 
                     'nfse_descricao_servico':  descricao_nota_servico,
                     'nfse_serviço': servico[0].id,
                     'cliente_id': rec.sacado.id,
