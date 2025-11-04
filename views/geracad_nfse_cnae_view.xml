@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Views para Código de Serviço -->
+    <record id="view_geracad_nfse_servico_tree" model="ir.ui.view">
+        <field name="name">geracad.nfse.servico.tree</field>
+        <field name="model">geracad.nfse.servico</field>
+        <field name="arch" type="xml">
+            <tree string="Códigos de Serviço">
+                <field name="codigo"/>
+                <field name="name"/>
+                <field name="aliquota"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_geracad_nfse_servico_form" model="ir.ui.view">
+        <field name="name">geracad.nfse.servico.form</field>
+        <field name="model">geracad.nfse.servico</field>
+        <field name="arch" type="xml">
+            <form string="Código de Serviço">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="codigo"/>
+                            <field name="aliquota"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="name" placeholder="Descrição do serviço conforme LC 116/2003"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_geracad_nfse_servico_search" model="ir.ui.view">
+        <field name="name">geracad.nfse.servico.search</field>
+        <field name="model">geracad.nfse.servico</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Código de Serviço">
+                <field name="codigo"/>
+                <field name="name"/>
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Alíquota" name="group_aliquota" context="{'group_by':'aliquota'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Views para CNAE -->
+    <record id="view_geracad_nfse_cnae_tree" model="ir.ui.view">
+        <field name="name">geracad.nfse.cnae.tree</field>
+        <field name="model">geracad.nfse.cnae</field>
+        <field name="arch" type="xml">
+            <tree string="CNAEs">
+                <field name="codigo"/>
+                <field name="name"/>
+                <field name="servico_codigo"/>
+                <field name="servico_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_geracad_nfse_cnae_form" model="ir.ui.view">
+        <field name="name">geracad.nfse.cnae.form</field>
+        <field name="model">geracad.nfse.cnae</field>
+        <field name="arch" type="xml">
+            <form string="CNAE">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="codigo"/>
+                            <field name="servico_id"/>
+                            <field name="servico_codigo"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="name" placeholder="Descrição da atividade econômica"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_geracad_nfse_cnae_search" model="ir.ui.view">
+        <field name="name">geracad.nfse.cnae.search</field>
+        <field name="model">geracad.nfse.cnae</field>
+        <field name="arch" type="xml">
+            <search string="Buscar CNAE">
+                <field name="codigo"/>
+                <field name="name"/>
+                <field name="servico_id"/>
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Código de Serviço" name="group_servico" context="{'group_by':'servico_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_geracad_nfse_servico" model="ir.actions.act_window">
+        <field name="name">Códigos de Serviço</field>
+        <field name="res_model">geracad.nfse.servico</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Criar um novo código de serviço
+            </p>
+            <p>
+                Códigos de serviço conforme lista anexa à LC 116/2003.<br/>
+                Cada código representa um tipo de serviço para fins de tributação do ISS.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_geracad_nfse_cnae" model="ir.actions.act_window">
+        <field name="name">CNAEs</field>
+        <field name="res_model">geracad.nfse.cnae</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Criar um novo CNAE
+            </p>
+            <p>
+                Cadastre os CNAEs (Classificação Nacional de Atividades Econômicas) e<br/>
+                relacione-os aos respectivos códigos de serviço para NFS-e.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_geracad_nfse_configuracao" 
+        name="Configuração" 
+        parent="geracad_nfse.menu_geracad_nfse" 
+        sequence="99"/>
+    
+    <menuitem id="menu_geracad_nfse_cnae" 
+        name="CNAEs" 
+        parent="menu_geracad_nfse_configuracao" 
+        action="action_geracad_nfse_cnae" 
+        sequence="1"/>
+    
+    <menuitem id="menu_geracad_nfse_servico" 
+        name="Códigos de Serviço" 
+        parent="menu_geracad_nfse_configuracao" 
+        action="action_geracad_nfse_servico" 
+        sequence="2"/>
+
+</odoo>
+

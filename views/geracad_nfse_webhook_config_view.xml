@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Modelo simples para documentação do Webhook -->
+    <record id="view_nfse_webhook_info_form" model="ir.ui.view">
+        <field name="name">nfse.webhook.info.form</field>
+        <field name="model">ir.ui.view</field>
+        <field name="arch" type="xml">
+            <form string="Configuração de Webhooks - Focus NFSe" create="false" edit="false" delete="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Configuração de Webhooks - Focus NFSe</h1>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <div class="alert alert-info" role="alert">
+                                <h3>📡 URL do Webhook</h3>
+                                <p>Configure esta URL no painel da Focus NFSe:</p>
+                                <p style="font-size: 16px; font-weight: bold; color: #0066cc;">
+                                    <span id="webhook_url_display">[SEU_DOMINIO]/focusnfe/webhook</span>
+                                </p>
+                                <p class="text-muted">
+                                    <small>Exemplo: https://meuodoo.com.br/focusnfe/webhook</small>
+                                </p>
+                            </div>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Instruções">
+                            <group>
+                                <group string="Como Configurar na Focus NFSe">
+                                    <div>
+                                        <ol>
+                                            <li>Acesse o <a href="https://homologacao.acrasnfe.com.br/" target="_blank">painel da Focus NFSe</a></li>
+                                            <li>Vá em <strong>Configurações → Webhooks</strong></li>
+                                            <li>Adicione a URL do webhook acima</li>
+                                            <li>Selecione os eventos:
+                                                <ul>
+                                                    <li>✅ NFS-e Autorizada</li>
+                                                    <li>✅ NFS-e com Erro</li>
+                                                    <li>✅ NFS-e em Processamento</li>
+                                                </ul>
+                                            </li>
+                                            <li>Salve as configurações</li>
+                                        </ol>
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Benefícios">
+                            <group>
+                                <div>
+                                    <ul>
+                                        <li>🔄 <strong>Atualização Automática:</strong> NFS-e é atualizada assim que autorizada</li>
+                                        <li>⚡ <strong>Processamento Rápido:</strong> Não precisa consultar manualmente</li>
+                                        <li>📄 <strong>Download Automático:</strong> PDF e XML baixados automaticamente</li>
+                                        <li>🔔 <strong>Notificação de Erros:</strong> Erros são registrados imediatamente</li>
+                                    </ul>
+                                </div>
+                            </group>
+                        </page>
+                        
+                        <page string="Teste">
+                            <group>
+                                <div class="alert alert-success" role="alert">
+                                    <h3>🧪 Testar Webhook</h3>
+                                    <p>Para testar se o webhook está acessível, acesse no navegador:</p>
+                                    <p style="font-size: 16px; font-weight: bold; color: #00aa00;">
+                                        <span id="webhook_test_url_display">[SEU_DOMINIO]/focusnfe/webhook/test</span>
+                                    </p>
+                                    <p class="text-muted">
+                                        <small>Se ver uma mensagem "Webhook da Focus NFSe está funcionando", a rota está configurada corretamente.</small>
+                                    </p>
+                                </div>
+                            </group>
+                        </page>
+                        
+                        <page string="Documentação">
+                            <group>
+                                <div>
+                                    <p>Para mais informações, consulte:</p>
+                                    <ul>
+                                        <li><a href="https://focusnfe.com.br/doc/" target="_blank">Documentação Focus NFSe</a></li>
+                                        <li>Arquivo: <code>addons/geracad_nfse/WEBHOOKS_FOCUS_NFSE.md</code></li>
+                                        <li>Controller: <code>addons/geracad_nfse/controllers/webhook_controller.py</code></li>
+                                    </ul>
+                                </div>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>
+

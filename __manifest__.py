@@ -29,9 +29,8 @@
     'data': [
         'security/geracad_nfse_security.xml',
         'security/ir.model.access.csv',
-        #'data/sequence.xml',
-        #'data/mail_template.xml',
-        #'views/geracad',
+        'data/geracad_nfse_cnae_data.xml',
+        'views/geracad_nfse_cnae_view.xml',
         'views/geracad_curso_financeiro_parcelas_inherit_view.xml',
         'views/geracad_nfse_view.xml',
     ],

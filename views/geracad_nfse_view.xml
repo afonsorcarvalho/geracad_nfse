@@ -5,11 +5,13 @@
     <field name="name">geracad.nfse.tree</field>
     <field name="model">geracad.nfse</field>
     <field name="arch" type="xml">
-        <tree string="NFS-e">
+        <tree string="NFS-e" default_order="id desc" decoration-muted="state=='draft'" decoration-warning="state=='em_processamento'" decoration-success="state=='concluida'" decoration-danger="state=='erro'">
             <field name="name"/>
-            <field name="state"/>
+            <field name="nfse_provider"/>
+            <field name="state" widget="badge" decoration-muted="state=='draft'" decoration-warning="state=='em_processamento'" decoration-success="state=='concluida'" decoration-danger="state=='erro'"/>
             <field name="valor_servico"/>
             <field name="cliente_id"/>
+            <field name="nfse_descricao_nota"/>
             <field name="data_emissao"/>
         </tree>
        
@@ -21,24 +23,52 @@
         <field name="model">geracad.nfse</field>
         <field name="arch" type="xml">
             <search string="Buscar NFS-e">
-                <!-- Campo cliente_id para busca -->
-                <field name="cliente_id" string="Cliente"/>
-
-                <!-- Campo data_emissao para busca por datas -->
-                <!-- <field name="data_emissao" string="Data de Emissão" filter_domain="[]"/> -->
-
-                <!-- Filtro por estado da nota -->
-                <field name="state" string="Status"/>
+                <!-- Search Panel - Painel lateral de filtros -->
+                <searchpanel>
+                    <!-- Filtro por Status -->
+                    <field name="state" string="Status" icon="fa-tasks" select="multi" enable_counters="1"/>
+                    <!-- Filtro por Provedor -->
+                    <field name="nfse_provider" string="Provedor" icon="fa-server" select="multi" enable_counters="1"/>
+                   
+                   
+                </searchpanel>
                 
-                <!-- Adiciona filtros por datas (última semana, mês etc.) -->
-                <!-- <filter string="Hoje" domain="[('data_emissao', '=', context_today())]" help="Notas emitidas hoje"/> -->
-                <!-- <filter string="Este Mês" domain="[('data_emissao', '>=', context_today().replace(day=1))]" help="Notas emitidas neste mês"/> -->
+                <!-- Campos de busca -->
+                <field name="name" string="Número NFS-e"/>
+                <field name="cliente_id" string="Sacado"/>
+                <field name="state" string="Status"/>
+                <field name="data_emissao" string="Data de Emissão"/>
+                <field name="create_date" string="Data de Criação"/>
+                
+                <!-- Filtros por Status -->
+                <filter string="Rascunho" name="filter_draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Em Processamento" name="filter_em_processamento" domain="[('state', '=', 'em_processamento')]"/>
+                <filter string="Emitida" name="filter_concluida" domain="[('state', '=', 'concluida')]"/>
+                <filter string="Erro" name="filter_erro" domain="[('state', '=', 'erro')]"/>
+                
+                <separator/>
+                
+                <!-- Filtros de Data de Emissão -->
+                <filter string="Data de Emissão" name="filter_data_emissao" date="data_emissao" default_period="this_month"/>
+                
+                <separator/>
+                
+                <!-- Filtros de Data de Criação -->
+                <filter string="Data de Criação" name="filter_data_criacao" date="create_date" default_period="this_month"/>
 
-                <!-- Agrupamento por cliente -->
-                <!-- <group expand="1" string="Agrupar Por">
-                    <filter string="Cliente" context="{'group_by':'cliente_id'}"/>
-                    <filter string="Estado" context="{'group_by':'state'}"/>
-                </group> -->
+                <separator/>
+
+                <!-- Agrupamento -->
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Sacado" name="group_sacado" context="{'group_by':'cliente_id'}"/>
+                    <filter string="Status" name="group_status" context="{'group_by':'state'}"/>
+                    <filter string="Data de Emissão: Mês" name="group_data_emissao_month" context="{'group_by':'data_emissao:month'}"/>
+                    <filter string="Data de Emissão: Trimestre" name="group_data_emissao_quarter" context="{'group_by':'data_emissao:quarter'}"/>
+                    <filter string="Data de Emissão: Ano" name="group_data_emissao_year" context="{'group_by':'data_emissao:year'}"/>
+                    <filter string="Data de Criação: Mês" name="group_create_date_month" context="{'group_by':'create_date:month'}"/>
+                    <filter string="Data de Criação: Trimestre" name="group_create_date_quarter" context="{'group_by':'create_date:quarter'}"/>
+                    <filter string="Data de Criação: Ano" name="group_create_date_year" context="{'group_by':'create_date:year'}"/>
+                </group>
             </search>
         </field>
     </record>
@@ -52,62 +82,195 @@
         <form string="NFS-e">
             <header>
                 <button name="action_gerar_nfse" 
-              groups="geracad_curso.group_geracad_curso_finaceiro"
-               string="Enviar NFSe" type="object"  class="btn-secondary"  attrs="{'invisible': [('state', '=', 'concluida')]}"/>
-                
-               <!-- <button name="action_get_nfse" 
-              groups="geracad_curso.group_geracad_curso_finaceiro"
-               string="Baixar NFSe" type="object"  class="btn-secondary"  attrs="{'invisible': [('state', '=', 'enviada')]}"/>
-                -->
-               <button name="get_consulta_nfse_plugnotas" 
-              groups="geracad_curso.group_geracad_curso_finaceiro"
-               string="Consulta NFSe" type="object"  class="btn-secondary"  />
+                    groups="geracad_curso.group_geracad_curso_finaceiro"
+                    string="Enviar NFSe" 
+                    type="object"  
+                    class="btn-primary"  
+                    attrs="{'invisible': [('state', '=', 'concluida')]}"/>
                
-               <field name="state" widget="statusbar" clickable="1" statusbar_visible="draft,enviada,erro" statusbar_colors="{'erro':'red'}"/>
+                <button name="action_get_nfse" 
+                    groups="geracad_curso.group_geracad_curso_finaceiro"
+                    string="Consultar NFSe" 
+                    type="object"  
+                    class="btn-secondary"/>
+               
+                <field name="state" 
+                    widget="statusbar" 
+                    clickable="1" 
+                    statusbar_visible="draft,em_processamento,concluida,erro" 
+                    statusbar_colors="{'erro':'red','em_processamento':'orange','concluida':'green'}"/>
             </header>
-            <sheet >
-                <widget name="web_ribbon" title="Enviada" attrs="{'invisible': [('state', '!=', 'concluida')]}"/>
-                <widget name="web_ribbon" title="Erro"  bg_color="bg-danger" attrs="{'invisible': [('state', '!=', 'erro')]}"/>
+            
+            <sheet>
+                <!-- Ribbons de Status -->
+                <widget name="web_ribbon" 
+                    title="Emitida" 
+                    bg_color="bg-success" 
+                    attrs="{'invisible': [('state', '!=', 'concluida')]}"/>
+                <widget name="web_ribbon" 
+                    title="Erro"  
+                    bg_color="bg-danger" 
+                    attrs="{'invisible': [('state', '!=', 'erro')]}"/>
+                <widget name="web_ribbon" 
+                    title="Em Processamento"  
+                    bg_color="bg-warning" 
+                    attrs="{'invisible': [('state', '!=', 'em_processamento')]}"/>
               
+                <div class="oe_title">
+                    <label for="name" string="Número da NFS-e"/>
+                    <h1>
+                        <field name="name" readonly="1" placeholder="Número da NFS-e"/>
+                    </h1>
+                </div>
+                
                 <group>
-
-                    <group>
-                        <field name="name" readonly="1" />
-                        <field name="company_id" string="Unidade"/>
-                        <field name="nfse_descricao_nota"/>
-                        <field name="nfse_CNAE"/>
-                        <field name="nfse_descricao_servico"/>
-                        <field name="nfse_serviço"/>
-                        <field name="valor_servico"/>
-                        <field name="aluno_id"/>
-                        <field name="cliente_id" context="{'form_view_ref': 'base.view_partner_form'}"/>
-                        <field name="nfse_local_cidade" string="Cidade do serviço" />
-                        <field name="nfse_local_estado" string="Estado do serviço" />
-                        <field name="nfse_retido" string="ISS Retido" />
-                        <field name="data_emissao"/>
-                        <field name="data_autorizacao"/>
-                        <field name="plugnotas_id"/>
-                        <field name="nfse_protocolo"/>
+                    <group string="Informações da Nota">
+                        <field name="data_emissao" 
+                            string="Data de Emissão"
+                            attrs="{'readonly': [('state', '=', 'concluida')]}"/>
+                        <field name="aluno_id" 
+                            string="Aluno" 
+                            options="{'no_create': True}"
+                            attrs="{'invisible': [('aluno_id', '=', False)], 'readonly': [('state', '=', 'concluida')]}"/>
+                        <field name="cliente_id" 
+                            string="Sacado" 
+                            options="{'no_create': True}" 
+                            context="{'form_view_ref': 'base.view_partner_form'}"
+                            attrs="{'readonly': [('state', '=', 'concluida')]}"/>
+                        <field name="nfse_descricao_nota" 
+                            string="Descrição da Nota" 
+                            placeholder="Descrição detalhada da nota fiscal"
+                            attrs="{'readonly': [('state', '=', 'concluida')]}"/>
                     </group>
                     
-                    <group colspan="12">
-                        <field name="nfse_pdf" widget="pdf_viewer"/>
-                        <field name="nfse_xml"/>
+                    <group string="Informações Fiscais">
+                        <field name="valor_servico" 
+                            string="Valor do Serviço" 
+                            widget="monetary"
+                            attrs="{'readonly': [('state', '=', 'concluida')]}"/>
+                        <field name="nfse_retido" 
+                            string="ISS Retido"
+                            attrs="{'readonly': [('state', '=', 'concluida')]}"/>
+                        <field name="regime_especial_tributacao" 
+                            string="Regime Especial de Tributação"
+                            attrs="{'invisible': [('nfse_provider', '!=', 'focusnfe')], 'readonly': [('state', '=', 'concluida')]}"/>
                     </group>
-                    <group colspan="12">
+                </group>
+                
+                <group>
+                    <group string="Descrição do Serviço">
+                        <field name="nfse_CNAE" 
+                            string="CNAE" 
+                            options="{'no_create': True}"
+                            attrs="{'readonly': [('state', '=', 'concluida')]}"/>
+                        <field name="nfse_serviço" 
+                            string="Código de Serviço"
+                            readonly="1"
+                            attrs="{'invisible': [('nfse_CNAE', '=', False)]}"/>
+                        <field name="nfse_descricao_servico" 
+                            string="Descrição do Serviço"
+                            attrs="{'readonly': [('state', '=', 'concluida')]}"/>
+                    </group>
+                    
+                    <group string="Local de Prestação do Serviço">
+                        <field name="nfse_local_estado" 
+                            string="Estado" 
+                            options="{'no_create': True, 'no_open': True}"
+                            attrs="{'readonly': [('state', '=', 'concluida')]}"/>
+                        <field name="nfse_local_cidade" 
+                            string="Cidade" 
+                            options="{'no_create': True, 'no_open': True}"
+                            attrs="{'readonly': [('state', '=', 'concluida')]}"/>
+                    </group>
+                </group>
+
+                <notebook>
+                    <page string="Respostas da API">
                         <field name="resposta_api_ids">
-                            <tree>
-                                
-                                <field name="data_resposta"/>
-                                <field name="resposta" style="white-space: normal; word-wrap: break-word; max-width: 300px;"/>
-                                <field name="state"/>
-                            
+                            <tree decoration-success="state=='sucesso'" decoration-danger="state=='erro'" decoration-warning="state=='processando'">
+                                <field name="data_resposta" string="Data/Hora"/>
+                                <field name="state" 
+                                    widget="badge" 
+                                    decoration-success="state=='sucesso'" 
+                                    decoration-danger="state=='erro'" 
+                                    decoration-warning="state=='processando'"/>
+                                <field name="resposta" string="Resposta"/>
                             </tree>
                         </field>
-                    </group>
+                    </page>
                     
-
-            </group>
+                    <page string="PDF da NFS-e" attrs="{'invisible': [('nfse_pdf', '=', False)]}">
+                        <group>
+                            <field name="nfse_pdf_url" 
+                                widget="url" 
+                                readonly="1" 
+                                string="URL do PDF (DANFSE)" 
+                                attrs="{'invisible': [('nfse_pdf_url', '=', False)]}"/>
+                        </group>
+                        <field name="nfse_pdf" widget="pdf_viewer"/>
+                    </page>
+                    
+                    <page string="XML da NFS-e" attrs="{'invisible': [('nfse_xml', '=', False)]}">
+                        <group>
+                            <field name="nfse_xml" filename="nfse_xml_filename"/>
+                        </group>
+                    </page>
+                    
+                    <page string="Itens do Serviço" attrs="{'invisible': [('nfse_provider', '!=', 'focusnfe')]}">
+                        <field name="item_ids" attrs="{'readonly': [('state', '=', 'concluida')]}">
+                            <tree editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="discriminacao" required="1"/>
+                                <field name="quantidade"/>
+                                <field name="valor_unitario" widget="monetary"/>
+                                <field name="valor_total" readonly="1" sum="Total" widget="monetary"/>
+                                <field name="tributavel"/>
+                            </tree>
+                        </field>
+                        <group>
+                            <div class="alert alert-info" role="alert">
+                                <strong>ℹ️ Informação:</strong> Os itens são obrigatórios para municípios como São Luís/MA.
+                                Quando houver itens cadastrados, o payload será montado no formato com array de itens conforme 
+                                <a href="https://focusnfe.com.br/guides/nfse/municipios-integrados/sao-luis-ma" target="_blank">documentação oficial</a>.
+                            </div>
+                        </group>
+                    </page>
+                    
+                    <page string="Informações Gerais">
+                        <group>
+                            <group string="Dados Administrativos">
+                                <field name="company_id" 
+                                    string="Unidade" 
+                                    options="{'no_create': True, 'no_open': True}"
+                                    attrs="{'readonly': [('state', '=', 'concluida')]}"/>
+                                <field name="nfse_provider" 
+                                    string="Provedor de NFS-e" 
+                                    options="{'no_create': True}"
+                                    attrs="{'readonly': [('state', '=', 'concluida')]}"/>
+                                <field name="nfse_provider_identifier" 
+                                    readonly="1" 
+                                    placeholder="Será definido após envio"
+                                    attrs="{'invisible': [('nfse_provider_identifier', '=', False)]}"/>
+                            </group>
+                            
+                            <group string="Controle de Envio">
+                                <field name="data_autorizacao" 
+                                    string="Data de Autorização" 
+                                    readonly="1"
+                                    attrs="{'invisible': [('data_autorizacao', '=', False)]}"/>
+                                <field name="nfse_protocolo" 
+                                    string="Protocolo" 
+                                    readonly="1"
+                                    attrs="{'invisible': [('nfse_protocolo', '=', False)]}"/>
+                                <field name="plugnotas_id" 
+                                    string="ID PlugNotas" 
+                                    readonly="1"
+                                    attrs="{'invisible': [('plugnotas_id', '=', False)]}"/>
+                            </group>
+                        </group>
+                    </page>
+                    
+                </notebook>
                 
             </sheet>
         </form>

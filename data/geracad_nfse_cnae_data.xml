@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Códigos de Serviço conforme LC 116/2003 -->
+        
+        <!-- Serviços de Engenharia e Arquitetura -->
+        <record id="servico_7_02" model="geracad.nfse.servico">
+            <field name="codigo">7.02</field>
+            <field name="name">Execução, por administração, empreitada ou subempreitada, de obras de construção civil, hidráulica ou elétrica e de outras obras semelhantes, inclusive sondagem, perfuração de poços, escavação, drenagem e irrigação, terraplanagem, pavimentação, concretagem e a instalação e montagem de produtos, peças e equipamentos (exceto o fornecimento de mercadorias produzidas pelo prestador de serviços fora do local da prestação dos serviços, que fica sujeito ao ICMS)</field>
+            <field name="aliquota">5.0</field>
+        </record>
+        
+        <record id="servico_31_01" model="geracad.nfse.servico">
+            <field name="codigo">31.01</field>
+            <field name="name">Serviços técnicos em edificações, eletrônica, eletrotécnica, mecânica, telecomunicações e congêneres</field>
+            <field name="aliquota">5.0</field>
+        </record>
+        
+        <!-- Serviços de Educação e Ensino -->
+        <record id="servico_8_01" model="geracad.nfse.servico">
+            <field name="codigo">8.01</field>
+            <field name="name">Ensino regular pré-escolar, fundamental, médio e superior</field>
+            <field name="aliquota">5.0</field>
+        </record>
+        
+        <record id="servico_8_02" model="geracad.nfse.servico">
+            <field name="codigo">8.02</field>
+            <field name="name">Instrução, treinamento, orientação pedagógica e educacional, avaliação de conhecimentos de qualquer natureza</field>
+            <field name="aliquota">5.0</field>
+        </record>
+        
+        
+        <!-- CNAEs e seus relacionamentos com Códigos de Serviço -->
+        
+        <!-- CNAE: Atividades técnicas relacionadas à engenharia e arquitetura -->
+        <record id="cnae_7119799" model="geracad.nfse.cnae">
+            <field name="codigo">7119799</field>
+            <field name="name">Atividades técnicas relacionadas à engenharia e arquitetura não especificadas anteriormente</field>
+            <field name="servico_id" ref="servico_31_01"/>
+        </record>
+        
+        <!-- CNAE: Educação Superior - Graduação -->
+        <record id="cnae_8532500" model="geracad.nfse.cnae">
+            <field name="codigo">8532500</field>
+            <field name="name">Educação superior - graduação e pós-graduação</field>
+            <field name="servico_id" ref="servico_8_01"/>
+        </record>
+        
+        <!-- CNAE: Educação Profissional de Nível Técnico -->
+        <record id="cnae_8541400" model="geracad.nfse.cnae">
+            <field name="codigo">8541400</field>
+            <field name="name">Educação profissional de nível técnico</field>
+            <field name="servico_id" ref="servico_8_02"/>
+        </record>
+        
+        <!-- CNAE: Educação Profissional de Nível Tecnológico -->
+        <record id="cnae_8542200" model="geracad.nfse.cnae">
+            <field name="codigo">8542200</field>
+            <field name="name">Educação profissional de nível tecnológico</field>
+            <field name="servico_id" ref="servico_8_02"/>
+        </record>
+        
+        <!-- CNAE: Treinamento em Informática -->
+        <record id="cnae_8599603" model="geracad.nfse.cnae">
+            <field name="codigo">8599603</field>
+            <field name="name">Treinamento em informática</field>
+            <field name="servico_id" ref="servico_8_02"/>
+        </record>
+        
+    </data>
+</odoo>
+
