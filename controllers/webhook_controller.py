@@ -98,11 +98,11 @@ class FocusNFSeWebhookController(http.Controller):
         _logger.info(f"Processando webhook - NFS-e ID: {nfse.id}, Status: {status}")
         
         # Registra a resposta da API
+        # O campo data_resposta tem default=fields.Datetime.now, será preenchido automaticamente
         nfse.resposta_api_ids.create({
             'nfse_id': nfse.id,
             'resposta': json.dumps(data, indent=2, ensure_ascii=False),
-            'state': self._map_status_to_state(status),
-            'data_resposta': nfse.env.context.get('tz') or 'UTC'
+            'state': self._map_status_to_state(status)
         })
         
         # Processa baseado no status
