@@ -362,10 +362,14 @@ class GeracadNfse(models.Model):
                 self.nfse_descricao_nota or (self.nfse_descricao_servico or 'SERVICOS PRESTADOS')
             )
             
+            # Prepara código CNAE e código tributário (9 dígitos = CNAE + '00')
+            codigo_cnae_limpo = re.sub(r'\D', '', self.nfse_CNAE_codigo) if self.nfse_CNAE_codigo else ""
+            codigo_tributario = codigo_cnae_limpo.ljust(9, '0') if codigo_cnae_limpo else ""
+            
             nfse["servico"] = {
                 "iss_retido": 1 if self.nfse_retido else 0,  # 0 ou 1 quando tem itens
                 "item_lista_servico": item_lista_servico,
-                "codigo_tributario_municipio": re.sub(r'\D', '', self.nfse_CNAE_codigo) if self.nfse_CNAE_codigo else "",
+                "codigo_tributario_municipio": codigo_tributario,
                 "aliquota": aliquota,  # Número quando tem itens
                 "discriminacao": discriminacao_sanitizada,
             }
@@ -387,9 +391,13 @@ class GeracadNfse(models.Model):
                 "valor_servicos": f"{valor_servico:.2f}",
             }
             
-            if self.nfse_CNAE:
-                nfse["servico"]["codigo_cnae"] = re.sub(r'\D', '', self.nfse_CNAE)
-                nfse["servico"]["codigo_tributario_municipio"] = re.sub(r'\D', '', self.nfse_CNAE)
+            # Adiciona código CNAE e código tributário (9 dígitos = CNAE + '00')
+            if self.nfse_CNAE_codigo:
+                codigo_cnae_limpo = re.sub(r'\D', '', self.nfse_CNAE_codigo)
+                codigo_tributario = codigo_cnae_limpo.ljust(9, '0')
+                
+                nfse["servico"]["codigo_cnae"] = codigo_cnae_limpo
+                nfse["servico"]["codigo_tributario_municipio"] = codigo_tributario   
 
         nfse["tomador"] = {
             "razao_social": cliente.l10n_br_legal_name or cliente.name,
