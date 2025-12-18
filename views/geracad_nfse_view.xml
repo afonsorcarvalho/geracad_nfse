@@ -93,12 +93,19 @@
                     string="Consultar NFSe" 
                     type="object"  
                     class="btn-secondary"/>
+                
+                <button name="action_cancelar_nfse" 
+                    groups="geracad_curso.group_geracad_curso_finaceiro"
+                    string="Cancelar NFSe" 
+                    type="object"  
+                    class="btn-danger"
+                    attrs="{'invisible': [('state', '!=', 'concluida'), ('nfse_provider', '!=', 'focusnfe')], 'readonly': [('state', '!=', 'concluida')]}"/>
                
                 <field name="state" 
                     widget="statusbar" 
                     clickable="1" 
-                    statusbar_visible="draft,em_processamento,concluida,erro" 
-                    statusbar_colors="{'erro':'red','em_processamento':'orange','concluida':'green'}"/>
+                    statusbar_visible="draft,em_processamento,concluida,erro,cancelada" 
+                    statusbar_colors="{'erro':'red','em_processamento':'orange','concluida':'green','cancelada':'red'}"/>
             </header>
             
             <sheet>

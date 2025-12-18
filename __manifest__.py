@@ -33,6 +33,7 @@
         'data/geracad_nfse_cnae_data.xml',
         'views/geracad_nfse_cnae_view.xml',
         'views/geracad_curso_financeiro_parcelas_inherit_view.xml',
+        'views/geracad_nfse_cancel_wizard_view.xml',
         'views/geracad_nfse_view.xml',
     ],
     # only loaded in demonstration mode

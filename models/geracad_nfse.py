@@ -56,7 +56,7 @@ class GeracadNfse(models.Model):
     )
     name = fields.Char("Número da NFS-e", copy=False, tracking=True)
     state = fields.Selection(
-        [('draft', 'Rascunho'),('vigente', 'Vigente'), ('enviada', 'Enviada'), ('erro', 'Erro'),('em_processamento',"Em Processamento"), ('concluida','Emitida')],
+        [('draft', 'Rascunho'),('vigente', 'Vigente'), ('enviada', 'Enviada'), ('erro', 'Erro'),('em_processamento',"Em Processamento"), ('concluida','Emitida'), ('cancelada', 'Cancelada')],
         string="Status", default='draft', tracking=True,copy=False
     )
     nfse_emitida = fields.Boolean("NFSe emitida")
@@ -678,6 +678,97 @@ class GeracadNfse(models.Model):
             valores_write['state'] = 'erro'
 
         self.write(valores_write)
+
+    def action_cancelar_nfse(self):
+        """
+        Abre wizard para solicitar justificativa de cancelamento.
+        Conforme documentação FocusNFe: https://focusnfe.com.br/doc/?python#nfse
+        """
+        self.ensure_one()
+        
+        # Validações
+        if self.state != 'concluida':
+            raise UserError(_('Apenas notas emitidas podem ser canceladas.'))
+        
+        if self.nfse_provider != 'focusnfe':
+            raise UserError(_('Cancelamento disponível apenas para notas emitidas via Focus NFSe.'))
+        
+        if not self.nfse_provider_identifier:
+            raise UserError(_('Não foi possível identificar a referência da nota para cancelamento.'))
+        
+        # Abre wizard
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Cancelar NFS-e'),
+            'res_model': 'geracad.nfse.cancel.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_nfse_id': self.id,
+                'default_referencia': self.nfse_provider_identifier,
+            }
+        }
+
+    def _cancelar_focus_nfse(self, referencia, justificativa):
+        """
+        Cancela uma NFSe na Focus NFSe.
+        
+        Args:
+            referencia (str): Identificador único da nota usado no envio
+            justificativa (str): Justificativa do cancelamento (15 a 255 caracteres)
+            
+        Returns:
+            tuple: (status_code, response_json)
+        """
+        self.ensure_one()
+        
+        # Valida justificativa
+        if not justificativa or len(justificativa.strip()) < 15:
+            raise UserError(_('A justificativa deve ter no mínimo 15 caracteres.'))
+        
+        if len(justificativa) > 255:
+            raise UserError(_('A justificativa deve ter no máximo 255 caracteres.'))
+        
+        try:
+            focus_api = self._focus_api_instance()
+            status_code, response_data = focus_api.cancel_nfse(referencia, justificativa.strip())
+        except requests.exceptions.RequestException as exc:
+            _logger.error('Erro de comunicação ao cancelar NFSe na Focus: %s', exc)
+            raise UserError(_('Falha na comunicação com a Focus NFSe: %s') % exc)
+        
+        # Registra resposta
+        if isinstance(response_data, dict):
+            retorno_texto = json.dumps(response_data, ensure_ascii=False)
+        else:
+            retorno_texto = str(response_data)
+        
+        sucesso_http = status_code in (200, 201, 202)
+        status_api = (response_data or {}).get('status') if isinstance(response_data, dict) else None
+        
+        valores_write: Dict[str, Any] = {
+            'resposta_api_ids': [(0, 0, {
+                'state': 'sucesso' if sucesso_http else 'erro',
+                'resposta': retorno_texto,
+                'data_resposta': fields.Datetime.now()
+            })]
+        }
+        
+        if sucesso_http:
+            if status_api and status_api.lower() in ('cancelado', 'cancelada'):
+                valores_write['state'] = 'cancelada'
+                valores_write['description'] = response_data.get('mensagem') or 'Nota cancelada com sucesso.'
+            else:
+                # Pode estar processando o cancelamento
+                valores_write['state'] = 'em_processamento'
+                valores_write['description'] = response_data.get('mensagem') or 'Cancelamento em processamento.'
+        else:
+            # Erro no cancelamento
+            mensagem_erro = response_data.get('mensagem') or response_data.get('erro') or 'Erro ao cancelar nota.'
+            valores_write['description'] = mensagem_erro
+            raise UserError(_('Erro ao cancelar nota: %s') % mensagem_erro)
+        
+        self.write(valores_write)
+        return status_code, response_data
 
     def _fetch_focus_files(self, focus_api, referencia, payload, valores_write):
         """
