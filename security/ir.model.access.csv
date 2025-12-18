@@ -1,5 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_geracad_nfse,access.geracad.nfse,model_geracad_nfse,,1,1,1,1
+access_geracad_nfse_user,access.geracad.nfse.user,model_geracad_nfse,base.group_user,1,1,1,0
+access_geracad_nfse_admin,access.geracad.nfse.admin,model_geracad_nfse,base.group_system,1,1,1,1
 access_geracad_nfse_resposta,access.geracad.nfse.resposta,model_geracad_nfse_resposta,,1,1,1,1
 access_geracad_nfse_item,access.geracad.nfse.item,model_geracad_nfse_item,,1,1,1,1
 access_geracad_nfse_servico_user,geracad_nfse.geracad.nfse.servico,model_geracad_nfse_servico,base.group_user,1,1,1,1

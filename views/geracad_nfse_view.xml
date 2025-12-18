@@ -86,7 +86,7 @@
                     string="Enviar NFSe" 
                     type="object"  
                     class="btn-primary"  
-                    attrs="{'invisible': [('state', '=', 'concluida')]}"/>
+                    attrs="{'invisible': [('state', 'in', ['concluida', 'em_processamento'])]}"/>
                
                 <button name="action_get_nfse" 
                     groups="geracad_curso.group_geracad_curso_finaceiro"
@@ -127,33 +127,33 @@
                     <group string="Informações da Nota">
                         <field name="data_emissao" 
                             string="Data de Emissão"
-                            attrs="{'readonly': [('state', '=', 'concluida')]}"/>
+                            attrs="{'readonly': [('state', 'in', ['concluida', 'em_processamento'])]}"/>
                         <field name="aluno_id" 
                             string="Aluno" 
                             options="{'no_create': True}"
-                            attrs="{'invisible': [('aluno_id', '=', False)], 'readonly': [('state', '=', 'concluida')]}"/>
+                            attrs="{'invisible': [('aluno_id', '=', False)], 'readonly': [('state', 'in', ['concluida', 'em_processamento'])]}"/>
                         <field name="cliente_id" 
                             string="Sacado" 
                             options="{'no_create': True}" 
                             context="{'form_view_ref': 'base.view_partner_form'}"
-                            attrs="{'readonly': [('state', '=', 'concluida')]}"/>
+                            attrs="{'readonly': [('state', 'in', ['concluida', 'em_processamento'])]}"/>
                         <field name="nfse_descricao_nota" 
                             string="Descrição da Nota" 
                             placeholder="Descrição detalhada da nota fiscal"
-                            attrs="{'readonly': [('state', '=', 'concluida')]}"/>
+                            attrs="{'readonly': [('state', 'in', ['concluida', 'em_processamento'])]}"/>
                     </group>
                     
                     <group string="Informações Fiscais">
                         <field name="valor_servico" 
                             string="Valor do Serviço" 
                             widget="monetary"
-                            attrs="{'readonly': [('state', '=', 'concluida')]}"/>
+                            attrs="{'readonly': [('state', 'in', ['concluida', 'em_processamento'])]}"/>
                         <field name="nfse_retido" 
                             string="ISS Retido"
-                            attrs="{'readonly': [('state', '=', 'concluida')]}"/>
+                            attrs="{'readonly': [('state', 'in', ['concluida', 'em_processamento'])]}"/>
                         <field name="regime_especial_tributacao" 
                             string="Regime Especial de Tributação"
-                            attrs="{'invisible': [('nfse_provider', '!=', 'focusnfe')], 'readonly': [('state', '=', 'concluida')]}"/>
+                            attrs="{'invisible': [('nfse_provider', '!=', 'focusnfe')], 'readonly': [('state', 'in', ['concluida', 'em_processamento'])]}"/>
                     </group>
                 </group>
                 
@@ -162,32 +162,32 @@
                         <field name="nfse_CNAE" 
                             string="CNAE" 
                             options="{'no_create': True}"
-                            attrs="{'readonly': [('state', '=', 'concluida')]}"/>
+                            attrs="{'readonly': [('state', 'in', ['concluida', 'em_processamento'])]}"/>
                         <field name="nfse_serviço" 
                             string="Código de Serviço"
                             readonly="1"
                             attrs="{'invisible': [('nfse_CNAE', '=', False)]}"/>
                         <field name="nfse_descricao_servico" 
                             string="Descrição do Serviço"
-                            attrs="{'readonly': [('state', '=', 'concluida')]}"/>
+                            attrs="{'readonly': [('state', 'in', ['concluida', 'em_processamento'])]}"/>
                     </group>
                     
                     <group string="Local de Prestação do Serviço">
                         <field name="nfse_local_estado" 
                             string="Estado" 
                             options="{'no_create': True, 'no_open': True}"
-                            attrs="{'readonly': [('state', '=', 'concluida')]}"/>
+                            attrs="{'readonly': [('state', 'in', ['concluida', 'em_processamento'])]}"/>
                         <field name="nfse_local_cidade" 
                             string="Cidade" 
                             options="{'no_create': True, 'no_open': True}"
-                            attrs="{'readonly': [('state', '=', 'concluida')]}"/>
+                            attrs="{'readonly': [('state', 'in', ['concluida', 'em_processamento'])]}"/>
                     </group>
                 </group>
 
                 <notebook>
                     <page string="Respostas da API">
                         <field name="resposta_api_ids">
-                            <tree decoration-success="state=='sucesso'" decoration-danger="state=='erro'" decoration-warning="state=='processando'">
+                            <tree decoration-success="state=='sucesso'" decoration-danger="state=='erro'" decoration-warning="state=='processando'" delete="false" edit="false" create="false">
                                 <field name="data_resposta" string="Data/Hora"/>
                                 <field name="state" 
                                     widget="badge" 
@@ -217,7 +217,7 @@
                     </page>
                     
                     <page string="Itens do Serviço" attrs="{'invisible': [('nfse_provider', '!=', 'focusnfe')]}">
-                        <field name="item_ids" attrs="{'readonly': [('state', '=', 'concluida')]}">
+                        <field name="item_ids" attrs="{'readonly': [('state', 'in', ['concluida', 'em_processamento'])]}">
                             <tree editable="bottom">
                                 <field name="sequence" widget="handle"/>
                                 <field name="discriminacao" required="1"/>
@@ -242,11 +242,11 @@
                                 <field name="company_id" 
                                     string="Unidade" 
                                     options="{'no_create': True, 'no_open': True}"
-                                    attrs="{'readonly': [('state', '=', 'concluida')]}"/>
+                                    attrs="{'readonly': [('state', 'in', ['concluida', 'em_processamento'])]}"/>
                                 <field name="nfse_provider" 
                                     string="Provedor de NFS-e" 
                                     options="{'no_create': True}"
-                                    attrs="{'readonly': [('state', '=', 'concluida')]}"/>
+                                    attrs="{'readonly': [('state', 'in', ['concluida', 'em_processamento'])]}"/>
                                 <field name="nfse_provider_identifier" 
                                     readonly="1" 
                                     placeholder="Será definido após envio"
@@ -273,9 +273,30 @@
                 </notebook>
                 
             </sheet>
+            
+            <!-- Chatter para auditoria e mensagens -->
+            <div class="oe_chatter">
+                <field name="message_follower_ids" groups="base.group_user"/>
+                <field name="activity_ids"/>
+                <field name="message_ids"/>
+            </div>
         </form>
     </field>
 </record>
+
+<!-- Action Server para Envio em Lote -->
+<record id="action_server_enviar_nfse_lote" model="ir.actions.server">
+    <field name="name">Enviar NFS-e</field>
+    <field name="model_id" ref="model_geracad_nfse"/>
+    <field name="binding_model_id" ref="model_geracad_nfse"/>
+    <field name="binding_view_types">list</field>
+    <field name="state">code</field>
+    <field name="code">
+if records:
+    action = records.action_gerar_nfse()
+    </field>
+</record>
+
 <!-- Ação para geracad.nfse -->
 <record id="action_geracad_nfse" model="ir.actions.act_window">
     <field name="name">NFS-e</field>

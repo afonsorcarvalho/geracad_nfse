@@ -26,7 +26,7 @@ content_type = "application/json"
 
 class GeracadNfse(models.Model):
     _name = "geracad.nfse"
-
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Gerar NFS-e via PlugNotas"
 
     
@@ -34,8 +34,8 @@ class GeracadNfse(models.Model):
         string='Company', 
         comodel_name='res.company', 
         required=True, 
-        default=1
-        
+        default=1,
+        tracking=True
     )
     plugnotas_id = fields.Char(string='ID Plugnotas', copy=False)
     nfse_provider = fields.Selection(
@@ -54,7 +54,7 @@ class GeracadNfse(models.Model):
         copy=False,
         help='Armazena o identificador externo retornado/gerado pela API escolhida.'
     )
-    name = fields.Char("Número da NFS-e", copy=False)
+    name = fields.Char("Número da NFS-e", copy=False, tracking=True)
     state = fields.Selection(
         [('draft', 'Rascunho'),('vigente', 'Vigente'), ('enviada', 'Enviada'), ('erro', 'Erro'),('em_processamento',"Em Processamento"), ('concluida','Emitida')],
         string="Status", default='draft', tracking=True,copy=False
@@ -65,6 +65,7 @@ class GeracadNfse(models.Model):
     nfse_CNAE = fields.Many2one(
         'geracad.nfse.cnae',
         string='CNAE',
+        tracking=True,
         help='Código Nacional de Atividades Econômicas'
     )
     nfse_CNAE_codigo = fields.Char(
@@ -106,29 +107,30 @@ class GeracadNfse(models.Model):
     nfse_retido = fields.Boolean("Retido")
     regime_especial_tributacao = fields.Selection(
         [
-            ('1', 'Microempresa Municipal'),
+            ('0', 'Nenhum'),
+            ('1', 'Ato Cooperado (Cooperativa)'),
             ('2', 'Estimativa'),
-            ('3', 'Sociedade de Profissionais'),
-            ('4', 'Cooperativa'),
-            ('5', 'MEI - Simples Nacional'),
-            ('6', 'ME EPP - Simples Nacional')
+            ('3', 'Microempresa Municipal'),
+            ('4', 'Notário ou Registrador'),
+            ('5', 'Profissional Autônomo'),
+            ('6', 'Sociedade de Profissionais')
         ],
         string='Regime Especial de Tributação',
-        default='6',
-        help='Campo específico para alguns municípios como São Luís/MA'
+        default='0',
+        help='Tipos de Regimes Especiais de Tributação Municipal'
     )
     # nfse_id = fields.Many2one(
     #     'geracad.nfse',
     #     string='NFSe',
     #     )
-    valor_servico = fields.Float("Valor do Serviço", required=True)
+    valor_servico = fields.Float("Valor do Serviço", required=True, tracking=True)
     item_ids = fields.One2many(
         'geracad.nfse.item',
         'nfse_id',
         string='Itens do Serviço',
         help='Detalhamento dos itens conforme exigência de municípios como São Luís/MA'
     )
-    cliente_id = fields.Many2one('res.partner', string="Sacado", required=True)
+    cliente_id = fields.Many2one('res.partner', string="Sacado", required=True, tracking=True)
     cliente_endereco = fields.Char(related='cliente_id.street')
     cliente_bairro = fields.Char(related='cliente_id.l10n_br_district')
     cliente_cep = fields.Char(related='cliente_id.zip')
@@ -136,8 +138,8 @@ class GeracadNfse(models.Model):
     cliente_estado = fields.Char(related='cliente_id.state_id.name')
     aluno_id = fields.Many2one('res.partner', string="Aluno" )
     codigo_servico = fields.Char()
-    data_emissao = fields.Date("Data de Emissão", readonly=True,copy=False)
-    data_autorizacao = fields.Date("Data de autorizacao", readonly=True,copy=False)
+    data_emissao = fields.Date("Data de Emissão", readonly=True, copy=False, tracking=True)
+    data_autorizacao = fields.Date("Data de autorizacao", readonly=True, copy=False, tracking=True)
     resposta_api_ids = fields.One2many('geracad.nfse.resposta', 'nfse_id', string="Respostas da API")
     description = fields.Char()
 
@@ -149,11 +151,12 @@ class GeracadNfse(models.Model):
             self.nfse_local_cidade = False
 
     def unlink(self):
+        """Valida se a NFS-e pode ser excluída baseado no status."""
         for rec in self:
-            if rec.state in ['concluida', 'em_processamento','enviada']:
+            if rec.state in ['concluida', 'em_processamento', 'enviada']:
                 raise UserError(
-                    _('Não é possível excluir NFSe %s.') % (
-                    rec.state,))
+                    _('Não é possível excluir NFS-e com status "%s". '
+                      'Apenas notas em rascunho ou com erro podem ser excluídas.') % rec.state)
             
         return super(GeracadNfse, self).unlink()
     
@@ -168,19 +171,103 @@ class GeracadNfse(models.Model):
             else:
                 raise UserError(_('Selecione um provedor de NFS-e válido conforme documentação.'))
 
+    def _enviar_nfse_unica(self):
+        """
+        Envia uma única NFS-e para o provedor configurado.
+        Método privado usado internamente por action_gerar_nfse.
+        """
+        self.ensure_one()
+        
+        # Valida se a nota pode ser enviada
+        if self.state in ['concluida', 'em_processamento']:
+            raise UserError(_('Esta NFS-e não pode ser enviada pois está com status "%s".') % self.state)
+        
+        # Envia conforme o provedor
+        if self.nfse_provider == 'plugnotas':
+            payload = self._prepare_plugnotas_payload()
+            _logger.info("Payload PlugNotas preparado: %s", payload)
+            self.envia_plugnotas(payload)
+        elif self.nfse_provider == 'focusnfe':
+            referencia, payload = self._prepare_focus_payload()
+            _logger.info("Payload Focus NFSe preparado para referência %s: %s", referencia, payload)
+            self._send_focus_nfse(referencia, payload)
+        else:
+            raise UserError(_('Selecione um provedor de NFS-e válido conforme documentação.'))
+        
+        _logger.info(f"NFS-e ID {self.id} enviada com sucesso")
+
     def action_gerar_nfse(self):
         """Envia a NFS-e para o provedor configurado conforme a documentação de cada API."""
+        # Se for apenas um registro, envia diretamente
+        if len(self) == 1:
+            self._enviar_nfse_unica()
+            return
+        
+        # Para múltiplos registros, faz contabilização e retorna feedback
+        total = len(self)
+        enviadas = 0
+        puladas = 0
+        erros = 0
+        erros_lista = []
+        
         for rec in self:
-            if rec.nfse_provider == 'plugnotas':
-                payload = rec._prepare_plugnotas_payload()
-                _logger.info("Payload PlugNotas preparado: %s", payload)
-                rec.envia_plugnotas(payload)
-            elif rec.nfse_provider == 'focusnfe':
-                referencia, payload = rec._prepare_focus_payload()
-                _logger.info("Payload Focus NFSe preparado para referência %s: %s", referencia, payload)
-                rec._send_focus_nfse(referencia, payload)
-            else:
-                raise UserError(_('Selecione um provedor de NFS-e válido conforme documentação.'))
+            # Valida se a nota pode ser enviada
+            if rec.state in ['concluida', 'em_processamento']:
+                puladas += 1
+                _logger.warning(f"NFS-e ID {rec.id} não pode ser enviada: status '{rec.state}'")
+                continue
+            
+            # Tenta enviar usando o método único
+            try:
+                rec._enviar_nfse_unica()
+                enviadas += 1
+            except Exception as e:
+                erros += 1
+                erro_msg = str(e)
+                erros_lista.append(f"NFS-e {rec.name or rec.id}: {erro_msg[:80]}")
+                _logger.error(f"Erro ao enviar NFS-e {rec.id}: {erro_msg}")
+        
+        # Monta mensagem de feedback
+        mensagem_parts = [f"Total: {total}", f"✅ Enviadas: {enviadas}"]
+        
+        if puladas > 0:
+            mensagem_parts.append(f"⏭️ Puladas: {puladas}")
+        
+        if erros > 0:
+            mensagem_parts.append(f"❌ Erros: {erros}")
+            for erro in erros_lista[:3]:  # Mostra até 3 erros
+                mensagem_parts.append(f"  • {erro}")
+            if len(erros_lista) > 3:
+                mensagem_parts.append(f"  ... e mais {len(erros_lista) - 3}")
+        
+        mensagem = "\n".join(mensagem_parts)
+        
+        # Define tipo de notificação
+        if erros == 0 and enviadas > 0:
+            tipo = 'success'
+            titulo = 'Envio Concluído!'
+        elif erros > 0 and enviadas > 0:
+            tipo = 'warning'
+            titulo = 'Envio Parcial'
+        elif erros > 0:
+            tipo = 'danger'
+            titulo = 'Erro no Envio'
+        else:
+            tipo = 'info'
+            titulo = 'Nenhuma Enviada'
+        
+        # Usa o toast nativo do Odoo
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': titulo,
+                'message': mensagem,
+                'type': tipo,
+                'sticky': True,
+                'next': {'type': 'ir.actions.act_window_close'},
+            }
+        }
 
     def _prepare_plugnotas_payload(self):
         """Monta a estrutura esperada pela API PlugNotas seguindo o manual oficial."""
@@ -369,7 +456,7 @@ class GeracadNfse(models.Model):
             nfse["servico"] = {
                 "iss_retido": 1 if self.nfse_retido else 0,  # 0 ou 1 quando tem itens
                 "item_lista_servico": item_lista_servico,
-                "codigo_tributario_municipio": codigo_tributario,
+               # "codigo_tributario_municipio": codigo_tributario,
                 "aliquota": aliquota,  # Número quando tem itens
                 "discriminacao": discriminacao_sanitizada,
             }
@@ -397,7 +484,7 @@ class GeracadNfse(models.Model):
                 codigo_tributario = codigo_cnae_limpo.ljust(9, '0')
                 
                 nfse["servico"]["codigo_cnae"] = codigo_cnae_limpo
-                nfse["servico"]["codigo_tributario_municipio"] = codigo_tributario   
+               # nfse["servico"]["codigo_tributario_municipio"] = codigo_tributario   
 
         nfse["tomador"] = {
             "razao_social": cliente.l10n_br_legal_name or cliente.name,
