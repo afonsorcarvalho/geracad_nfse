@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Wizard de Cancelamento de NFS-e -->
+    <record id="view_geracad_nfse_cancel_wizard_form" model="ir.ui.view">
+        <field name="name">geracad.nfse.cancel.wizard.form</field>
+        <field name="model">geracad.nfse.cancel.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cancelar NFS-e">
+                <group>
+                    <field name="nfse_id" invisible="1"/>
+                    <field name="referencia" readonly="1" string="Referência da Nota"/>
+                </group>
+                
+                <group>
+                    <field name="justificativa" 
+                        placeholder="Informe a justificativa do cancelamento (mínimo 15 caracteres, máximo 255 caracteres)"
+                        required="1"
+                        nolabel="1"/>
+                </group>
+                
+                <div class="alert alert-warning" role="alert">
+                    <strong>⚠️ Atenção:</strong> O cancelamento é irreversível. 
+                    A justificativa deve ter entre 15 e 255 caracteres conforme exigência da FocusNFe.
+                </div>
+                
+                <footer>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                    <button string="Confirmar Cancelamento" 
+                        name="action_confirmar_cancelamento" 
+                        type="object" 
+                        class="btn-danger"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
+

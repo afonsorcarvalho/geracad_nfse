@@ -1,0 +1,12 @@
+# Dependências para ISS Digital São Luís
+
+# Biblioteca HTTP
+requests>=2.28.0
+
+# Bibliotecas XML
+lxml>=4.9.0
+
+# Bibliotecas para certificado digital e assinatura XML
+signxml>=3.2.0
+cryptography>=41.0.0
+
