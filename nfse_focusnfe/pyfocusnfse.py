@@ -10,6 +10,7 @@ Autor: Afonso Carvalho
 
 import requests
 import json
+import re
 from requests.auth import HTTPBasicAuth
 import base64
 
@@ -260,6 +261,31 @@ class FocusNFSeAPI:
             tuple: (status_code, response_json)
         """
         url = f"{self.base_url}/v2/empresas"
+        response = requests.get(url, auth=(self.api_token, ""))
+        
+        try:
+            return response.status_code, response.json()
+        except:
+            return response.status_code, {"erro": response.text}
+    
+    def consultar_cep(self, cep):
+        """
+        Consulta endereço através do CEP usando a API da FocusNFE.
+        Documentação: https://doc.focusnfe.com.br/reference/consultarceps
+        
+        Args:
+            cep (str): CEP a ser consultado (com ou sem formatação)
+            
+        Returns:
+            tuple: (status_code, response_json)
+        """
+        # Remove formatação do CEP (mantém apenas números)
+        cep_limpo = re.sub(r'[^0-9]', '', str(cep))
+        
+        if len(cep_limpo) != 8:
+            return 400, {"erro": "CEP deve conter 8 dígitos"}
+        
+        url = f"{self.base_url}/v2/ceps/{cep_limpo}"
         response = requests.get(url, auth=(self.api_token, ""))
         
         try:
