@@ -16,8 +16,9 @@ import base64
 
 class FocusNFSeAPI:
     """
-    Classe para integração com a API do Focus NFSe.
-    Documentação: https://focusnfe.com.br/doc/?python#nfse
+    Classe para integração com a API do Focus NFSe Nacional.
+    Documentação: https://focusnfe.com.br/doc/#nfse-nacional
+    Endpoint: /v2/nfsen (NFSe Nacional)
     """
     
     def __init__(self,  homologacao=True):
@@ -38,18 +39,19 @@ class FocusNFSeAPI:
     
     def send_nfse(self, referencia, data, debug=False):
         """
-        Envia uma NFSe para autorização.
-        Segue o padrão da documentação oficial: https://focusnfe.com.br/doc/?python#nfse
+        Envia uma NFSe Nacional para autorização.
+        Segue o padrão da documentação oficial: https://focusnfe.com.br/doc/#nfse-nacional
+        Endpoint: /v2/nfsen (NFSe Nacional)
         
         Args:
             referencia (str): Identificador único da nota (controlado pela aplicação)
-            data (dict): Dados da NFSe no formato da API Focus NFSe
+            data (dict): Dados da NFSe no formato da API Focus NFSe Nacional (campos na raiz)
             debug (bool): Se True, exibe informações detalhadas da requisição
             
         Returns:
             tuple: (status_code, response_json)
         """
-        url = f"{self.base_url}/v2/nfse"
+        url = f"{self.base_url}/v2/nfsen"
         params = {"ref": referencia}
         
         # DEBUG: Mostra o que está sendo enviado
@@ -97,7 +99,8 @@ class FocusNFSeAPI:
     
     def get_nfse(self, referencia):
         """
-        Consulta uma NFSe pela referência.
+        Consulta uma NFSe Nacional pela referência.
+        Endpoint: /v2/nfsen (NFSe Nacional)
         
         Args:
             referencia (str): Identificador único da nota usado no envio
@@ -105,7 +108,7 @@ class FocusNFSeAPI:
         Returns:
             tuple: (status_code, response_json)
         """
-        url = f"{self.base_url}/v2/nfse/{referencia}"
+        url = f"{self.base_url}/v2/nfsen/{referencia}"
         response = requests.get(url, auth=(self.api_token, ""))
         
         try:
@@ -115,7 +118,8 @@ class FocusNFSeAPI:
     
     def cancel_nfse(self, referencia, justificativa):
         """
-        Cancela uma NFSe.
+        Cancela uma NFSe Nacional.
+        Endpoint: /v2/nfsen (NFSe Nacional)
         
         Args:
             referencia (str): Identificador único da nota usado no envio
@@ -124,7 +128,7 @@ class FocusNFSeAPI:
         Returns:
             tuple: (status_code, response_json)
         """
-        url = f"{self.base_url}/v2/nfse/{referencia}"
+        url = f"{self.base_url}/v2/nfsen/{referencia}"
         data = {"justificativa": justificativa}
         response = requests.delete(url, data=json.dumps(data), auth=(self.api_token, ""))
         
@@ -135,7 +139,8 @@ class FocusNFSeAPI:
     
     def get_pdf_nfse(self, referencia, caminho_arquivo="nfse_baixada.pdf"):
         """
-        Baixa o PDF de uma NFSe autorizada.
+        Baixa o PDF de uma NFSe Nacional autorizada.
+        Endpoint: /v2/nfsen (NFSe Nacional)
         
         Args:
             referencia (str): Identificador único da nota usado no envio
@@ -144,7 +149,7 @@ class FocusNFSeAPI:
         Returns:
             tuple: (status_code, response)
         """
-        url = f"{self.base_url}/v2/nfse/{referencia}.pdf"
+        url = f"{self.base_url}/v2/nfsen/{referencia}.pdf"
         response = requests.get(url, auth=(self.api_token, ""), stream=True)
         
         if response.status_code == 200:
@@ -160,7 +165,8 @@ class FocusNFSeAPI:
     
     def resend_email(self, referencia, emails):
         """
-        Reenvia o email de uma NFSe autorizada.
+        Reenvia o email de uma NFSe Nacional autorizada.
+        Endpoint: /v2/nfsen (NFSe Nacional)
         
         Args:
             referencia (str): Identificador único da nota usado no envio
@@ -169,7 +175,7 @@ class FocusNFSeAPI:
         Returns:
             tuple: (status_code, response_json)
         """
-        url = f"{self.base_url}/v2/nfse/{referencia}/email"
+        url = f"{self.base_url}/v2/nfsen/{referencia}/email"
         data = {"emails": emails}
         response = requests.post(url, data=json.dumps(data), auth=(self.api_token, ""))
         

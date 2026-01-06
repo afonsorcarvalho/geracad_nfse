@@ -1,4 +1,6 @@
 import requests
+import zipfile
+import io
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
@@ -92,6 +94,7 @@ class GeracadNfse(models.Model):
     nfse_pdf = fields.Binary(copy=False)
     nfse_pdf_url = fields.Char(copy=False)
     nfse_xml = fields.Binary(copy=False)
+    nfse_xml_filename = fields.Char(string='Nome do Arquivo XML', compute='_compute_nfse_xml_filename', store=False)
     nfse_local_estado = fields.Many2one(
         'res.country.state',
         string='Estado',
@@ -160,6 +163,21 @@ class GeracadNfse(models.Model):
             
         return super(GeracadNfse, self).unlink()
     
+    @api.depends('nfse_xml', 'name')
+    def _compute_nfse_xml_filename(self):
+        """
+        Gera o nome do arquivo XML para download.
+        Formato: geracad.nfse-{numero_nfse}-nfse_xml.xml
+        """
+        for rec in self:
+            if rec.nfse_xml:
+                # Gera nome do arquivo: geracad.nfse-{numero_nfse}-nfse_xml.xml
+                # Usa o número da NFSe se disponível, senão usa o ID
+                numero_nfse = rec.name if rec.name else (rec.id if rec.id else 'temp')
+                rec.nfse_xml_filename = f"geracad.nfse-{numero_nfse}-nfse_xml.xml"
+            else:
+                rec.nfse_xml_filename = False
+    
     def action_get_nfse(self, id=""):
         """Consulta a NFSe no provedor configurado utilizando o identificador externo disponível."""
         for rec in self:
@@ -170,6 +188,135 @@ class GeracadNfse(models.Model):
                 rec._fetch_focus_nfse(referencia)
             else:
                 raise UserError(_('Selecione um provedor de NFS-e válido conforme documentação.'))
+
+    def action_download_xml_zip(self):
+        """
+        Faz download dos XMLs das NFSe selecionadas em um arquivo ZIP.
+        Retorna um action para download do arquivo ZIP.
+        """
+        # Filtra apenas registros que têm XML
+        nfse_com_xml = self.filtered(lambda r: r.nfse_xml)
+        
+        if not nfse_com_xml:
+            raise UserError(_('Nenhuma NFSe selecionada possui XML disponível para download.'))
+        
+        # Cria um arquivo ZIP em memória
+        zip_buffer = io.BytesIO()
+        
+        try:
+            with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+                for nfse in nfse_com_xml:
+                    # Decodifica o XML do base64
+                    xml_content = base64.b64decode(nfse.nfse_xml)
+                    
+                    # Gera o nome do arquivo
+                    if nfse.nfse_xml_filename:
+                        filename = nfse.nfse_xml_filename
+                    else:
+                        # Fallback: gera nome baseado no número ou ID
+                        numero_nfse = nfse.name if nfse.name else str(nfse.id)
+                        filename = f"geracad.nfse-{numero_nfse}-nfse_xml.xml"
+                    
+                    # Adiciona o XML ao ZIP
+                    zip_file.writestr(filename, xml_content)
+                    _logger.info('XML adicionado ao ZIP: %s (NFSe ID: %s)', filename, nfse.id)
+            
+            # Prepara o conteúdo do ZIP em base64
+            zip_buffer.seek(0)
+            zip_content = zip_buffer.read()
+            zip_base64 = base64.b64encode(zip_content)
+            
+            # Gera nome do arquivo ZIP com data/hora
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            zip_filename = f"nfse_xml_{timestamp}.zip"
+            
+            # Cria um attachment temporário para o download
+            attachment = self.env['ir.attachment'].create({
+                'name': zip_filename,
+                'datas': zip_base64,
+                'type': 'binary',
+                'res_model': 'geracad.nfse',
+                'mimetype': 'application/zip',
+            })
+            
+            _logger.info('ZIP criado com sucesso: %s arquivos, tamanho: %s bytes', 
+                        len(nfse_com_xml), len(zip_content))
+            
+            # Retorna action para download
+            return {
+                'type': 'ir.actions.act_url',
+                'url': f'/web/content/{attachment.id}?download=true',
+                'target': 'self',
+            }
+            
+        except Exception as e:
+            _logger.error('Erro ao criar ZIP de XMLs: %s', str(e))
+            raise UserError(_('Erro ao criar arquivo ZIP: %s') % str(e))
+        finally:
+            zip_buffer.close()
+
+    def action_download_pdf_zip(self):
+        """
+        Faz download dos PDFs das NFSe selecionadas em um arquivo ZIP.
+        Retorna um action para download do arquivo ZIP.
+        """
+        # Filtra apenas registros que têm PDF
+        nfse_com_pdf = self.filtered(lambda r: r.nfse_pdf)
+        
+        if not nfse_com_pdf:
+            raise UserError(_('Nenhuma NFSe selecionada possui PDF disponível para download.'))
+        
+        # Cria um arquivo ZIP em memória
+        zip_buffer = io.BytesIO()
+        
+        try:
+            with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+                for nfse in nfse_com_pdf:
+                    # Decodifica o PDF do base64
+                    pdf_content = base64.b64decode(nfse.nfse_pdf)
+                    
+                    # Gera o nome do arquivo PDF
+                    # Formato: geracad.nfse-{numero_nfse}-nfse.pdf
+                    numero_nfse = nfse.name if nfse.name else str(nfse.id)
+                    filename = f"geracad.nfse-{numero_nfse}-nfse.pdf"
+                    
+                    # Adiciona o PDF ao ZIP
+                    zip_file.writestr(filename, pdf_content)
+                    _logger.info('PDF adicionado ao ZIP: %s (NFSe ID: %s)', filename, nfse.id)
+            
+            # Prepara o conteúdo do ZIP em base64
+            zip_buffer.seek(0)
+            zip_content = zip_buffer.read()
+            zip_base64 = base64.b64encode(zip_content)
+            
+            # Gera nome do arquivo ZIP com data/hora
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            zip_filename = f"nfse_pdf_{timestamp}.zip"
+            
+            # Cria um attachment temporário para o download
+            attachment = self.env['ir.attachment'].create({
+                'name': zip_filename,
+                'datas': zip_base64,
+                'type': 'binary',
+                'res_model': 'geracad.nfse',
+                'mimetype': 'application/zip',
+            })
+            
+            _logger.info('ZIP de PDFs criado com sucesso: %s arquivos, tamanho: %s bytes', 
+                        len(nfse_com_pdf), len(zip_content))
+            
+            # Retorna action para download
+            return {
+                'type': 'ir.actions.act_url',
+                'url': f'/web/content/{attachment.id}?download=true',
+                'target': 'self',
+            }
+            
+        except Exception as e:
+            _logger.error('Erro ao criar ZIP de PDFs: %s', str(e))
+            raise UserError(_('Erro ao criar arquivo ZIP: %s') % str(e))
+        finally:
+            zip_buffer.close()
 
     def _enviar_nfse_unica(self):
         """
@@ -371,7 +518,11 @@ class GeracadNfse(models.Model):
         return text.strip()
 
     def _prepare_focus_payload(self):
-        """Monta a estrutura esperada pela Focus NFSe conforme `ESTRUTURA_DADOS.md`."""
+        """
+        Monta a estrutura esperada pela Focus NFSe Nacional.
+        Conforme manual: https://focusnfe.com.br/doc/#nfse-nacional_campos
+        Todos os campos devem estar na raiz do JSON, sem objetos aninhados.
+        """
         self.ensure_one()
 
         company_partner = self.company_id.partner_id
@@ -398,147 +549,151 @@ class GeracadNfse(models.Model):
             raise UserError(_('Endereço completo do tomador é obrigatório para Focus NFSe.'))
         if not self.nfse_serviço:
             raise UserError(_('Informe o serviço LC 116 para montar o payload da Focus NFSe.'))
+        if not self.nfse_local_estado or not self.nfse_local_cidade:
+            raise UserError(_('Informe o estado e cidade onde o serviço foi prestado (campos obrigatórios).'))
+        if not self.nfse_local_estado.l10n_br_ibge_code or not self.nfse_local_cidade.l10n_br_ibge_code:
+            raise UserError(_('Informe o código IBGE do estado e cidade de prestação do serviço.'))
 
         referencia = self.nfse_provider_identifier or f"FOCUS_{self.id or datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
 
+        # Data de emissão no formato ISO 8601
         data_emissao_dt = fields.Datetime.context_timestamp(self, datetime.utcnow())
         data_emissao = data_emissao_dt.isoformat() if data_emissao_dt else datetime.utcnow().isoformat()
+        
+        # Data de competência (mesmo dia da emissão)
+        data_competencia = fields.Date.today().strftime('%Y-%m-%d')
+        
+        # Valores do serviço
         aliquota = 5.0
         valor_servico = self.valor_servico or 0.0
-        valor_iss = round(valor_servico * aliquota / 100, 2)
-        valor_liquido = round(valor_servico - valor_iss, 2)
 
+        # Código do serviço LC 116
         item_lista_servico = self.nfse_serviço.codigo or ''
         if item_lista_servico and len(item_lista_servico) == 4 and item_lista_servico.isdigit():
             item_lista_servico = f"{item_lista_servico[:2]}.{item_lista_servico[2:]}"
 
-        nfse = {}
-        nfse["data_emissao"] = data_emissao
-        nfse["incentivador_cultural"] = "false"
-        nfse["natureza_operacao"] = "1"
-        optante_simples = getattr(self.company_id, 'l10n_br_tax_regime', None)
-        nfse["optante_simples_nacional"] = "true" if optante_simples in ("1", 1, 'Simples Nacional') else "false"
-        
-        # Adiciona regime especial de tributação se informado (obrigatório em alguns municípios)
-        if self.regime_especial_tributacao:
-            nfse["regime_especial_tributacao"] = int(self.regime_especial_tributacao)
-        
-        nfse["status"] = "1"
-
+        # Códigos IBGE
         prestador_codigo_municipio = self._compose_ibge_municipio(company_partner.state_id, company_partner.city_id)
         tomador_codigo_municipio = self._compose_ibge_municipio(cliente.state_id, cliente.city_id)
+        codigo_municipio_prestacao = self._compose_ibge_municipio(self.nfse_local_estado, self.nfse_local_cidade)
 
-        nfse["prestador"] = {
-            "cnpj": prestador_cnpj,
-            "inscricao_municipal": re.sub(r'\D', '', company_partner.l10n_br_inscr_mun or ''),
-            "codigo_municipio": prestador_codigo_municipio,
-        }
+        # Sanitiza a discriminação/descrição do serviço
+        descricao_servico = self._sanitize_focus_text(
+            self.nfse_descricao_nota if self.nfse_descricao_nota else (self.nfse_descricao_servico or 'SERVICOS PRESTADOS')
+        )
 
-        # Verifica se deve usar o formato com múltiplos itens (obrigatório em São Luís/MA)
-        tem_itens = bool(self.item_ids)
-        
-        if tem_itens:
-            # Formato com itens separados (usado em São Luís/MA)
-            # Calcula o valor total dos itens tributáveis
-            valor_total_itens = sum(item.valor_total for item in self.item_ids)
-            valor_tributavel = sum(item.valor_total for item in self.item_ids if item.tributavel)
-            valor_iss_calc = round(valor_tributavel * aliquota / 100, 2) if valor_tributavel > 0 else 0
-            
-            # Sanitiza a discriminação removendo caracteres de controle
-            discriminacao_sanitizada = self._sanitize_focus_text(
-                self.nfse_descricao_nota or (self.nfse_descricao_servico or 'SERVICOS PRESTADOS')
-            )
-            
-            # Prepara código CNAE e código tributário (9 dígitos = CNAE + '00')
-            codigo_cnae_limpo = re.sub(r'\D', '', self.nfse_CNAE_codigo) if self.nfse_CNAE_codigo else ""
-            codigo_tributario = codigo_cnae_limpo.ljust(9, '0') if codigo_cnae_limpo else ""
-            
-            nfse["servico"] = {
-                "iss_retido": 1 if self.nfse_retido else 0,  # 0 ou 1 quando tem itens
-                "item_lista_servico": item_lista_servico,
-               # "codigo_tributario_municipio": codigo_tributario,
-                "aliquota": aliquota,  # Número quando tem itens
-                "discriminacao": discriminacao_sanitizada,
-            }
+        # Código de opção do Simples Nacional
+        # Valores aceitos: 1=Não Optante, 2=Optante MEI, 3=Optante ME/EPP
+        # Não pode ser 0!
+        optante_simples = getattr(self.company_id, 'l10n_br_tax_regime', None)
+        if optante_simples in ("1", 1, 'Simples Nacional'):
+            # Se for Simples Nacional, usar 3 (ME/EPP) como padrão
+            # TODO: Verificar se há campo específico para MEI vs ME/EPP
+            codigo_opcao_simples_nacional = 3
         else:
-            # Formato tradicional (sem itens)
-            # Sanitiza a discriminação removendo caracteres de controle
-            discriminacao_sanitizada = self._sanitize_focus_text(
-                self.nfse_descricao_nota if self.nfse_descricao_nota else (self.nfse_descricao_servico or '')
-            )
-            
-            nfse["servico"] = {
-                "aliquota": f"{aliquota:.2f}",
-                "base_calculo": f"{valor_servico:.2f}",
-                "discriminacao": discriminacao_sanitizada,
-                "iss_retido": "true" if self.nfse_retido else "false",
-                "item_lista_servico": item_lista_servico,
-                "valor_iss": f"{valor_iss:.2f}",
-                "valor_liquido": f"{valor_liquido:.2f}",
-                "valor_servicos": f"{valor_servico:.2f}",
-            }
-            
-            # Adiciona código CNAE e código tributário (9 dígitos = CNAE + '00')
-            if self.nfse_CNAE_codigo:
-                codigo_cnae_limpo = re.sub(r'\D', '', self.nfse_CNAE_codigo)
-                codigo_tributario = codigo_cnae_limpo.ljust(9, '0')
-                
-                nfse["servico"]["codigo_cnae"] = codigo_cnae_limpo
-               # nfse["servico"]["codigo_tributario_municipio"] = codigo_tributario   
+            # Não optante
+            codigo_opcao_simples_nacional = 1
 
-        nfse["tomador"] = {
-            "razao_social": cliente.l10n_br_legal_name or cliente.name,
-            "email": cliente.email,
-            "endereco": {
-                "bairro": cliente.l10n_br_district,
-                "cep": cliente.zip,
-                "codigo_municipio": tomador_codigo_municipio,
-                "logradouro": cliente.street,
-                "numero": cliente.l10n_br_number,
-                "complemento": cliente.street2,
-                "uf": cliente.state_id.code,
-            }
+        # Código tributação nacional ISS (formato: código LC 116 sem ponto)
+        # Deve ter exatamente 6 dígitos: [0-9]{6}
+        # Formato: XX.XX.XX (6 dígitos) ou XX.XX (4 dígitos que vira XX.XX.00)
+        # Conforme lista nacional do Sistema Nacional NFS-e
+        # Exemplos: "08.01" → "080100", "8.01" → "080100", "08.01.02" → "080102"
+        codigo_tributacao_nacional_iss = ''
+        if item_lista_servico:
+            # Normaliza o código: separa por pontos, normaliza cada parte para 2 dígitos
+            partes = str(item_lista_servico).split('.')
+            partes_normalizadas = []
+            
+            for parte in partes:
+                # Remove caracteres não numéricos e normaliza para 2 dígitos
+                parte_limpa = re.sub(r'\D', '', parte)
+                if parte_limpa:
+                    # Adiciona zero à esquerda se necessário (ex: "8" → "08")
+                    partes_normalizadas.append(parte_limpa.zfill(2))
+            
+            # Monta o código de 6 dígitos
+            if len(partes_normalizadas) >= 3:
+                # Código completo de 6 dígitos (ex: 08.01.02 → 080102)
+                codigo_tributacao_nacional_iss = ''.join(partes_normalizadas[:3])
+            elif len(partes_normalizadas) >= 2:
+                # Código de 4 dígitos, adiciona "00" (ex: 08.01 → 080100)
+                codigo_tributacao_nacional_iss = ''.join(partes_normalizadas[:2]) + '00'
+            elif len(partes_normalizadas) >= 1:
+                # Código incompleto, preenche com zeros
+                codigo_tributacao_nacional_iss = partes_normalizadas[0].zfill(2) + '0000'
+            else:
+                # Fallback: tenta extrair números do código original
+                codigo_limpo = re.sub(r'\D', '', item_lista_servico)
+                if len(codigo_limpo) >= 4:
+                    codigo_tributacao_nacional_iss = codigo_limpo[:4] + '00'
+                else:
+                    codigo_tributacao_nacional_iss = codigo_limpo.zfill(4) + '00'
+            
+            # Garante que tenha exatamente 6 dígitos
+            codigo_tributacao_nacional_iss = codigo_tributacao_nacional_iss[:6].zfill(6)
+            
+            # Log para debug: verifica o código gerado
+            _logger.info('Código de tributação nacional gerado: %s (de: %s)', 
+                        codigo_tributacao_nacional_iss, item_lista_servico)
+        else:
+            raise UserError(_('Código de serviço LC 116 não informado. É obrigatório para gerar o código de tributação nacional.'))
+
+        # Tributação ISS: 1=Tributável, 2=Isento, 3=Imune, etc.
+        tributacao_iss = 1  # Padrão: Tributável
+
+        # Tipo de retenção ISS: 1=Sim, 0=Não
+        tipo_retencao_iss = 1 if self.nfse_retido else 0
+
+        # Monta o JSON conforme estrutura do manual NFSe Nacional (todos os campos na raiz)
+        nfse = {
+            # Dados gerais
+            "data_emissao": data_emissao,
+            "data_competencia": data_competencia,
+            
+            # Prestador (na raiz)
+            "codigo_municipio_emissora": prestador_codigo_municipio,
+            "cnpj_prestador": prestador_cnpj,
+            "inscricao_municipal_prestador": re.sub(r'\D', '', company_partner.l10n_br_inscr_mun or ''),
+            "codigo_opcao_simples_nacional": codigo_opcao_simples_nacional,
+            
+            # Regime especial de tributação (se informado)
+            "regime_especial_tributacao": int(self.regime_especial_tributacao) if self.regime_especial_tributacao else 0,
+            
+            # Tomador (na raiz)
+            "razao_social_tomador": cliente.l10n_br_legal_name or cliente.name,
+            "codigo_municipio_tomador": tomador_codigo_municipio,
+            "cep_tomador": re.sub(r'\D', '', cliente.zip or ''),
+            "logradouro_tomador": cliente.street or '',
+            "numero_tomador": cliente.l10n_br_number or '',
+            "complemento_tomador": cliente.street2 or '',
+            "bairro_tomador": cliente.l10n_br_district or '',
         }
 
+        # CPF ou CNPJ do tomador
         if len(tomador_doc) == 14:
-            nfse["tomador"]["cnpj"] = tomador_doc
+            nfse["cnpj_tomador"] = tomador_doc
         else:
-            nfse["tomador"]["cpf"] = tomador_doc
+            nfse["cpf_tomador"] = tomador_doc
 
-        # Adiciona telefone do tomador se disponível (obrigatório em alguns municípios)
+        # Telefone do tomador (se disponível)
         if cliente.phone or cliente.mobile:
             telefone = cliente.phone or cliente.mobile
-            # Remove caracteres não numéricos
             telefone_limpo = re.sub(r'\D', '', telefone)
-            # Adiciona o telefone no formato esperado pela API
             if len(telefone_limpo) >= 10:
-                nfse["tomador"]["telefone"] = telefone
-        
-        # Adiciona inscrição municipal do tomador se disponível (alguns municípios exigem)
-        if cliente.l10n_br_inscr_mun:
-            nfse["tomador"]["inscricao_municipal"] = re.sub(r'\D', '', cliente.l10n_br_inscr_mun)
+                nfse["telefone_tomador"] = telefone
 
-        # Adiciona código do município de prestação do serviço (obrigatório em alguns municípios)
-        if self.nfse_local_estado and self.nfse_local_cidade:
-            codigo_municipio_prestacao = self._compose_ibge_municipio(self.nfse_local_estado, self.nfse_local_cidade)
-            nfse["codigo_municipio_prestacao"] = codigo_municipio_prestacao
+        # Email do tomador
+        if cliente.email:
+            nfse["email_tomador"] = cliente.email
 
-        # Adiciona array de itens se houver (obrigatório em São Luís/MA)
-        if tem_itens:
-            nfse["itens"] = []
-            for item in self.item_ids:
-                # Sanitiza a discriminação do item removendo caracteres de controle
-                item_discriminacao = self._sanitize_focus_text(
-                    item.discriminacao or (self.nfse_descricao_servico or 'SERVICOS PRESTADOS')
-                )
-                
-                nfse["itens"].append({
-                    "discriminacao": item_discriminacao,
-                    "quantidade": item.quantidade,
-                    "valor_unitario": item.valor_unitario,
-                    "valor_total": item.valor_total,
-                    "tributavel": item.tributavel
-                })
+        # Serviço (todos os campos na raiz conforme manual)
+        nfse["codigo_municipio_prestacao"] = codigo_municipio_prestacao
+        nfse["codigo_tributacao_nacional_iss"] = codigo_tributacao_nacional_iss
+        nfse["descricao_servico"] = descricao_servico
+        nfse["valor_servico"] = valor_servico
+        nfse["tributacao_iss"] = tributacao_iss
+        nfse["tipo_retencao_iss"] = tipo_retencao_iss
 
         return referencia, nfse
 
@@ -641,7 +796,8 @@ class GeracadNfse(models.Model):
                 'erro': 'erro',
                 'rejeitado': 'erro',
                 'rejeitada': 'erro',
-                'cancelado': 'concluida',
+                'cancelado': 'cancelada',
+                'cancelada': 'cancelada',
                 'substituido': 'concluida',
             }
             valores_write['state'] = status_map.get(status_api, 'erro')
@@ -865,6 +1021,9 @@ class GeracadNfse(models.Model):
                 
                 if xml_response.status_code == 200 and xml_response.content:
                     valores_write['nfse_xml'] = base64.b64encode(xml_response.content)
+                    # Define o nome do arquivo com extensão .xml incluindo o número da NFSe
+                    numero_nfse = self.name if self.name else (self.id if self.id else 'temp')
+                    valores_write['nfse_xml_filename'] = f"geracad.nfse-{numero_nfse}-nfse_xml.xml"
                     _logger.info('✅ XML da Focus NFSe baixado com sucesso: %s bytes', len(xml_response.content))
             except requests.exceptions.RequestException as exc:
                 _logger.warning('❌ Falha ao baixar XML da Focus NFSe de %s: %s', xml_url, exc)
@@ -931,11 +1090,14 @@ class GeracadNfse(models.Model):
 
                 if situacao == 'PROCESSANDO':
                     _append_log('processando', mensagem)
-                    if novo_estado not in ('concluida', 'erro'):
+                    if novo_estado not in ('concluida', 'erro', 'cancelada'):
                         novo_estado = 'em_processamento'
                 elif situacao == 'REJEITADO':
                     _append_log('erro', mensagem)
                     novo_estado = 'erro'
+                elif situacao in ('CANCELADO', 'CANCELADA'):
+                    _append_log('sucesso', mensagem)
+                    novo_estado = 'cancelada'
                 elif situacao == 'CONCLUIDO':
                     _append_log('sucesso', json.dumps(registro, ensure_ascii=False))
                     novo_estado = 'concluida'
@@ -973,6 +1135,9 @@ class GeracadNfse(models.Model):
                             xml_response = requests.get(xml_url, headers=xml_headers, stream=True)
                             if xml_response.status_code == 200:
                                 write_vals['nfse_xml'] = base64.b64encode(xml_response.content)
+                                # Define o nome do arquivo com extensão .xml incluindo o número da NFSe
+                                numero_nfse = self.name if self.name else (self.id if self.id else 'temp')
+                                write_vals['nfse_xml_filename'] = f"geracad.nfse-{numero_nfse}-nfse_xml.xml"
                         except requests.exceptions.RequestException as exc:
                             _logger.warning('Falha ao baixar XML da PlugNotas (%s): %s', xml_url, exc)
 

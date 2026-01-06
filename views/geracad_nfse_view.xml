@@ -6,6 +6,20 @@
     <field name="model">geracad.nfse</field>
     <field name="arch" type="xml">
         <tree string="NFS-e" default_order="id desc" decoration-muted="state=='draft'" decoration-warning="state=='em_processamento'" decoration-success="state=='concluida'" decoration-danger="state=='erro'">
+            <header>
+                <button name="action_download_xml_zip" 
+                    string="Baixar XMLs (ZIP)" 
+                    type="object" 
+                    class="btn-primary"
+                    icon="fa-download"
+                    groups="geracad_curso.group_geracad_curso_finaceiro"/>
+                <button name="action_download_pdf_zip" 
+                    string="Baixar PDFs (ZIP)" 
+                    type="object" 
+                    class="btn-primary"
+                    icon="fa-file-pdf-o"
+                    groups="geracad_curso.group_geracad_curso_finaceiro"/>
+            </header>
             <field name="name"/>
             <field name="nfse_provider"/>
             <field name="state" widget="badge" decoration-muted="state=='draft'" decoration-warning="state=='em_processamento'" decoration-success="state=='concluida'" decoration-danger="state=='erro'"/>
@@ -86,7 +100,7 @@
                     string="Enviar NFSe" 
                     type="object"  
                     class="btn-primary"  
-                    attrs="{'invisible': [('state', 'in', ['concluida', 'em_processamento'])]}"/>
+                    attrs="{'invisible': [('state', 'in', ['concluida', 'em_processamento', 'cancelada'])]}"/>
                
                 <button name="action_get_nfse" 
                     groups="geracad_curso.group_geracad_curso_finaceiro"
@@ -99,7 +113,7 @@
                     string="Cancelar NFSe" 
                     type="object"  
                     class="btn-danger"
-                    attrs="{'invisible': [('state', '!=', 'concluida'), ('nfse_provider', '!=', 'focusnfe')], 'readonly': [('state', '!=', 'concluida')]}"/>
+                    attrs="{'invisible': [('state', 'in', ['cancelada']), ('state', '!=', 'concluida'), ('nfse_provider', '!=', 'focusnfe')], 'readonly': [('state', '!=', 'concluida')]}"/>
                
                 <field name="state" 
                     widget="statusbar" 
@@ -122,6 +136,10 @@
                     title="Em Processamento"  
                     bg_color="bg-warning" 
                     attrs="{'invisible': [('state', '!=', 'em_processamento')]}"/>
+                <widget name="web_ribbon" 
+                    title="Cancelada"  
+                    bg_color="bg-danger" 
+                    attrs="{'invisible': [('state', '!=', 'cancelada')]}"/>
               
                 <div class="oe_title">
                     <label for="name" string="Número da NFS-e"/>
@@ -220,26 +238,6 @@
                     <page string="XML da NFS-e" attrs="{'invisible': [('nfse_xml', '=', False)]}">
                         <group>
                             <field name="nfse_xml" filename="nfse_xml_filename"/>
-                        </group>
-                    </page>
-                    
-                    <page string="Itens do Serviço" attrs="{'invisible': [('nfse_provider', '!=', 'focusnfe')]}">
-                        <field name="item_ids" attrs="{'readonly': [('state', 'in', ['concluida', 'em_processamento'])]}">
-                            <tree editable="bottom">
-                                <field name="sequence" widget="handle"/>
-                                <field name="discriminacao" required="1"/>
-                                <field name="quantidade"/>
-                                <field name="valor_unitario" widget="monetary"/>
-                                <field name="valor_total" readonly="1" sum="Total" widget="monetary"/>
-                                <field name="tributavel"/>
-                            </tree>
-                        </field>
-                        <group>
-                            <div class="alert alert-info" role="alert">
-                                <strong>ℹ️ Informação:</strong> Os itens são obrigatórios para municípios como São Luís/MA.
-                                Quando houver itens cadastrados, o payload será montado no formato com array de itens conforme 
-                                <a href="https://focusnfe.com.br/guides/nfse/municipios-integrados/sao-luis-ma" target="_blank">documentação oficial</a>.
-                            </div>
                         </group>
                     </page>
                     
