@@ -146,12 +146,37 @@ class GeracadNfse(models.Model):
     resposta_api_ids = fields.One2many('geracad.nfse.resposta', 'nfse_id', string="Respostas da API")
     description = fields.Char()
 
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        """Preenche automaticamente estado e cidade de prestação com dados do emitente quando empresa é selecionada."""
+        if self.company_id and self.company_id.partner_id:
+            # Preenche apenas se os campos estiverem vazios
+            if not self.nfse_local_estado and self.company_id.partner_id.state_id:
+                self.nfse_local_estado = self.company_id.partner_id.state_id
+            
+            if not self.nfse_local_cidade and self.company_id.partner_id.city_id:
+                self.nfse_local_cidade = self.company_id.partner_id.city_id
+    
     @api.onchange('nfse_local_estado')
     def _onchange_nfse_local_estado(self):
         """Limpa o campo cidade quando o estado for alterado para evitar inconsistências."""
         if self.nfse_local_estado:
             # Limpa a cidade para forçar o usuário a selecionar novamente
             self.nfse_local_cidade = False
+    
+    def _preencher_local_prestacao_do_emitente(self):
+        """
+        Preenche automaticamente o estado e cidade de prestação de serviço
+        com os dados do endereço do emitente quando não estiverem preenchidos.
+        """
+        self.ensure_one()
+        
+        # Se não tiver estado ou cidade de prestação, usa os dados do emitente
+        if not self.nfse_local_estado and self.company_id.partner_id.state_id:
+            self.nfse_local_estado = self.company_id.partner_id.state_id
+        
+        if not self.nfse_local_cidade and self.company_id.partner_id.city_id:
+            self.nfse_local_cidade = self.company_id.partner_id.city_id
 
     def unlink(self):
         """Valida se a NFS-e pode ser excluída baseado no status."""
@@ -422,8 +447,13 @@ class GeracadNfse(models.Model):
 
         if not self.nfse_serviço:
             raise UserError(_('Informe o serviço para montar a NFS-e (campo obrigatório na PlugNotas).'))
+        
+        # Preenche automaticamente com dados do emitente se não estiverem preenchidos
+        self._preencher_local_prestacao_do_emitente()
+        
         if not self.nfse_local_estado or not self.nfse_local_cidade:
-            raise UserError(_('Informe cidade e estado de prestação antes de enviar à PlugNotas.'))
+            raise UserError(_('Informe cidade e estado de prestação antes de enviar à PlugNotas. '
+                            'Ou configure o endereço completo do emitente (empresa).'))
 
         descricao_nota = (self.nfse_descricao_nota or '').replace('\n', '  ')
         cliente = self.cliente_id
@@ -549,10 +579,16 @@ class GeracadNfse(models.Model):
             raise UserError(_('Endereço completo do tomador é obrigatório para Focus NFSe.'))
         if not self.nfse_serviço:
             raise UserError(_('Informe o serviço LC 116 para montar o payload da Focus NFSe.'))
+        
+        # Preenche automaticamente com dados do emitente se não estiverem preenchidos
+        self._preencher_local_prestacao_do_emitente()
+        
         if not self.nfse_local_estado or not self.nfse_local_cidade:
-            raise UserError(_('Informe o estado e cidade onde o serviço foi prestado (campos obrigatórios).'))
+            raise UserError(_('Informe o estado e cidade onde o serviço foi prestado (campos obrigatórios). '
+                            'Ou configure o endereço completo do emitente (empresa).'))
         if not self.nfse_local_estado.l10n_br_ibge_code or not self.nfse_local_cidade.l10n_br_ibge_code:
-            raise UserError(_('Informe o código IBGE do estado e cidade de prestação do serviço.'))
+            raise UserError(_('Informe o código IBGE do estado e cidade de prestação do serviço. '
+                            'Ou configure o código IBGE no endereço do emitente (empresa).'))
 
         referencia = self.nfse_provider_identifier or f"FOCUS_{self.id or datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
 
@@ -642,8 +678,17 @@ class GeracadNfse(models.Model):
         # Tributação ISS: 1=Tributável, 2=Isento, 3=Imune, etc.
         tributacao_iss = 1  # Padrão: Tributável
 
-        # Tipo de retenção ISS: 1=Sim, 0=Não
-        tipo_retencao_iss = 1 if self.nfse_retido else 0
+        # Tipo de retenção ISS conforme schema XML (tpRetISSQN):
+        # 1 = Não Retido
+        # 2 = Retido pelo Tomador
+        # 3 = Retido pelo Intermediário
+        # Não pode ser 0!
+        if self.nfse_retido:
+            # Quando retido, assume retenção pelo tomador (caso mais comum)
+            # TODO: Adicionar campo para distinguir retenção pelo tomador vs intermediário se necessário
+            tipo_retencao_iss = 2  # Retido pelo Tomador
+        else:
+            tipo_retencao_iss = 1  # Não Retido
 
         # Monta o JSON conforme estrutura do manual NFSe Nacional (todos os campos na raiz)
         nfse = {
