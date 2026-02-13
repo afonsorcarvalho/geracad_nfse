@@ -1,372 +1,2363 @@
-1. Introdução 
-2. Interfaces Disponíveis 
-3.Arquitetura de Comunicação 
-4.Serviços e Métodos 
+1. Introduï¿½ï¿½o 
+2. Interfaces Disponï¿½veis 
+3.Arquitetura de Comunicaï¿½ï¿½o 
+4.Serviï¿½os e Mï¿½todos 
 5.Anexos 
  
  
-1 – Introdução 
+1 ï¿½ Introduï¿½ï¿½o 
  
-Nota Fiscal de Serviços Eletrônica (NFS-e) é o documento  emitido  e armazenado eletronica- mente em sistema próprio  da Prefeitura, com o objetivo  de registrar as operações relativas à prestação de serviços. 
- 
- 
-Para os contribuintes que emitem uma grande quantidade de notas, foi criado o Regime Especial de entrega em lote, no qual o contribuinte pode emitir Registros Provisórios de Serviços(RPS) através de seus próprios sistemas e estes em um determinado momento, serão convertidos em notas fiscais. Para converter estes RPS em NFS-e o sistema do contribuinte deve se conectar ao Web Service da prefeitura e enviar as informações de RPS gerados no formato XML, geran- do um lote de entrega. 
+Nota Fiscal de Serviï¿½os Eletrï¿½nica (NFS-e) ï¿½ o documento  emitido  e armazenado eletronica- mente em sistema prï¿½prio  da Prefeitura, com o objetivo  de registrar as operaï¿½ï¿½es relativas ï¿½ prestaï¿½ï¿½o de serviï¿½os. 
  
  
-O Recibo Provisório de Serviços (RPS) é um documento  que deverá ser usado por emitentes da NFS-e no eventual impedimento da emissão “on-line” da Nota. Também poderá ser utilizado pelos prestadores sujeitos à emissão de grande quantidade de NFS-e (exemplo: estacionamen- tos). Nesse caso, o prestador emitirá o RPS para cada transação e providenciará sua conversão em NFS-e mediante o envio de lotes (processamento em lote). No anexo 7 deste manual pode se obter o modelo de RPS a ser seguido. 
+Para os contribuintes que emitem uma grande quantidade de notas, foi criado o Regime Especial de entrega em lote, no qual o contribuinte pode emitir Registros Provisï¿½rios de Serviï¿½os(RPS) atravï¿½s de seus prï¿½prios sistemas e estes em um determinado momento, serï¿½o convertidos em notas fiscais. Para converter estes RPS em NFS-e o sistema do contribuinte deve se conectar ao Web Service da prefeitura e enviar as informaï¿½ï¿½es de RPS gerados no formato XML, geran- do um lote de entrega. 
  
-O contribuinte que esta no Regime Especial de entrega em lote deve se credenciar no site da NFSe para liberar a entrega em lote através do Web Service da prefeitura. Foi disponibilizado um ambiente de homologação  e testes, onde o contribuinte pode realizar testes de entrega em lote enquanto esta em processo de integração. Estes testes simulam o ambiente de produção, porém os testes realizados neste ambiente não têm validade. Para utilizar o ambiente de homo- logação o contribuinte deve se credenciar para este ambiente no site de homologação.  O en- dereço para acessar o ambiente de produção e homologação  estão no anexo 2 deste manual. 
  
-Neste manual encontram-se instruções para a integração  de sistemas de informação de emissores de RPS e o Sistema de Nota Fiscal de Serviços Eletrônica(NFS-e) baseado no serviço WebService do portal da NFS- e. O serviço webservice foi desenvolvido para possibilitar a troca de dados entre os Sistemas de Informa- ção dos contribuintes e o Sistema de NFS-e. Através do Web Service as empresas  poderão integrar seus próprios sistemas de informações com o Sistema de NFS-e para automatizar  o processo de emissão, con- sulta e processamento. 
+O Recibo Provisï¿½rio de Serviï¿½os (RPS) ï¿½ um documento  que deverï¿½ ser usado por emitentes da NFS-e no eventual impedimento da emissï¿½o ï¿½on-lineï¿½ da Nota. Tambï¿½m poderï¿½ ser utilizado pelos prestadores sujeitos ï¿½ emissï¿½o de grande quantidade de NFS-e (exemplo: estacionamen- tos). Nesse caso, o prestador emitirï¿½ o RPS para cada transaï¿½ï¿½o e providenciarï¿½ sua conversï¿½o em NFS-e mediante o envio de lotes (processamento em lote). No anexo 7 deste manual pode se obter o modelo de RPS a ser seguido. 
  
-Através do serviço, o Sistema de NFS-e disponibiliza uma série de funcionalidades que poderão ser acessa- das pelos sistemas dos contribuintes. A seguir, estão resumidas as interfaces disponíveis e suas respectivas funcionalidades básicas. 
+O contribuinte que esta no Regime Especial de entrega em lote deve se credenciar no site da NFSe para liberar a entrega em lote atravï¿½s do Web Service da prefeitura. Foi disponibilizado um ambiente de homologaï¿½ï¿½o  e testes, onde o contribuinte pode realizar testes de entrega em lote enquanto esta em processo de integraï¿½ï¿½o. Estes testes simulam o ambiente de produï¿½ï¿½o, porï¿½m os testes realizados neste ambiente nï¿½o tï¿½m validade. Para utilizar o ambiente de homo- logaï¿½ï¿½o o contribuinte deve se credenciar para este ambiente no site de homologaï¿½ï¿½o.  O en- dereï¿½o para acessar o ambiente de produï¿½ï¿½o e homologaï¿½ï¿½o  estï¿½o no anexo 2 deste manual. 
  
+Neste manual encontram-se instruï¿½ï¿½es para a integraï¿½ï¿½o  de sistemas de informaï¿½ï¿½o de emissores de RPS e o Sistema de Nota Fiscal de Serviï¿½os Eletrï¿½nica(NFS-e) baseado no serviï¿½o WebService do portal da NFS- e. O serviï¿½o webservice foi desenvolvido para possibilitar a troca de dados entre os Sistemas de Informa- ï¿½ï¿½o dos contribuintes e o Sistema de NFS-e. Atravï¿½s do Web Service as empresas  poderï¿½o integrar seus prï¿½prios sistemas de informaï¿½ï¿½es com o Sistema de NFS-e para automatizar  o processo de emissï¿½o, con- sulta e processamento. 
+ 
+Atravï¿½s do serviï¿½o, o Sistema de NFS-e disponibiliza uma sï¿½rie de funcionalidades que poderï¿½o ser acessa- das pelos sistemas dos contribuintes. A seguir, estï¿½o resumidas as interfaces disponï¿½veis e suas respectivas funcionalidades bï¿½sicas. 
 Como utilizar o WebService : 
-A aplicação cliente deve enviar um pacote XML criado conforme as definições deste manual.Este pacote é entregue ao Web Service que o analisa e aciona a Aplicação usada para implementar o serviço, e devolve outro pacote XML como resposta. 
+A aplicaï¿½ï¿½o cliente deve enviar um pacote XML criado conforme as definiï¿½ï¿½es deste manual.Este pacote ï¿½ entregue ao Web Service que o analisa e aciona a Aplicaï¿½ï¿½o usada para implementar o serviï¿½o, e devolve outro pacote XML como resposta. 
 
-2 – Interfaces Disponíveis 
-A seguir estão resumidas interfaces disponíveis no WebService da NFS-e bem como suas funcionalidades: 
-• Envio de Lote 
-Nesta interface, os prestadores de serviços através de seus sistemas  poderão enviar lotes de RPS para que sejam susbstituídos por NFS-e. 
-• Consulta de Lote 
-Permite consulta as NFS-e emititadas pelo prestador pelo número de lote informado. Neste método o Web Service retorna diversas informações, entre elas o número do lote processado, NFS-e geradas neste lote ou possíveis erros de processamento. 
-• Consulta de Notas 
+2 ï¿½ Interfaces Disponï¿½veis 
+A seguir estï¿½o resumidas interfaces disponï¿½veis no WebService da NFS-e bem como suas funcionalidades: 
+ï¿½ Envio de Lote 
+Nesta interface, os prestadores de serviï¿½os atravï¿½s de seus sistemas  poderï¿½o enviar lotes de RPS para que sejam susbstituï¿½dos por NFS-e. 
+ï¿½ Consulta de Lote 
+Permite consulta as NFS-e emititadas pelo prestador pelo nï¿½mero de lote informado. Neste mï¿½todo o Web Service retorna diversas informaï¿½ï¿½es, entre elas o nï¿½mero do lote processado, NFS-e geradas neste lote ou possï¿½veis erros de processamento. 
+ï¿½ Consulta de Notas 
 Permite a consulta das NFS-e emitidas pelo prestador. 
-• Cancelamento de Notas 
+ï¿½ Cancelamento de Notas 
 Permite o cancelamento das NFS-e. 
 . Consulta de NFS-e ou RPS 
-Permite recuperar as informações de uma NFS-e ou RPS convertido. 
-3 – Arquitetura de Comunicação 
-3.1 Serviços 
-A mensagem XML será recebida pelo Web Service LoteRps para validação de seu respectivo Schema XML (arquivo XSD). Ao realizar o processamento o serviço irá retornar uma mensagem XML com os dados de re- torno de processamento. Caso ocorram erros de validação do Schema XML, será retornada na mensagem XML na Tag <Erros> contendo o erro de processamento conforme tabela Erros de Retorno apresentada no Anexo 01 deste manual. 
+Permite recuperar as informaï¿½ï¿½es de uma NFS-e ou RPS convertido. 
+3 ï¿½ Arquitetura de Comunicaï¿½ï¿½o 
+3.1 Serviï¿½os 
+A mensagem XML serï¿½ recebida pelo Web Service LoteRps para validaï¿½ï¿½o de seu respectivo Schema XML (arquivo XSD). Ao realizar o processamento o serviï¿½o irï¿½ retornar uma mensagem XML com os dados de re- torno de processamento. Caso ocorram erros de validaï¿½ï¿½o do Schema XML, serï¿½ retornada na mensagem XML na Tag <Erros> contendo o erro de processamento conforme tabela Erros de Retorno apresentada no Anexo 01 deste manual. 
 Processamento Sincrono : 
-O resultado do processamento e retornado na mesma conexão, ou seja no momento de chama- da da função Enviar é realizado o processamento  do lote e as notas geradas ou erros são re- tornados; 
+O resultado do processamento e retornado na mesma conexï¿½o, ou seja no momento de chama- da da funï¿½ï¿½o Enviar ï¿½ realizado o processamento  do lote e as notas geradas ou erros sï¿½o re- tornados; 
 Processamento Assincrono  : 
-O lote é gravado numa fila de espera para processamento,  para obter o resultado do proces- samento é necessário uma segunda conexão ao web service fazendo chamada a consulta de lote. 
+O lote ï¿½ gravado numa fila de espera para processamento,  para obter o resultado do proces- samento ï¿½ necessï¿½rio uma segunda conexï¿½o ao web service fazendo chamada a consulta de lote. 
 Etapas do processo ideal: 
-1. O sistema do contribuinte inicia a conexão enviando uma mensagem XML de pedido do serviço para o Web Service; 
-2. O Web Service recebe a mensagem XML de pedido do serviço e encaminha ao sistema da NFS-e; 3. O sistema da NFS-e recebe a mensagem XML de pedido do serviço e realiza o processamento, devolvendo uma mensagem XML de retorno ao Web Service; 
+1. O sistema do contribuinte inicia a conexï¿½o enviando uma mensagem XML de pedido do serviï¿½o para o Web Service; 
+2. O Web Service recebe a mensagem XML de pedido do serviï¿½o e encaminha ao sistema da NFS-e; 3. O sistema da NFS-e recebe a mensagem XML de pedido do serviï¿½o e realiza o processamento, devolvendo uma mensagem XML de retorno ao Web Service; 
 4. O Web Service recebe a mensagem XML de retorno e a encaminha ao sistema do contribuinte; 
-5. O sistema do contribuinte recebe a mensagem XML de retorno e encerra a conexão. 
+5. O sistema do contribuinte recebe a mensagem XML de retorno e encerra a conexï¿½o. 
 3.2 Regras de preenchimento dos campos 
-Campos que representam CPF e CNPJ (respectivamente 11 e 14 caracteres) devem ser informados com o tamanho fixo previsto, sem formatação e com o preenchimento dos zeros não significativos; 
-Campos numéricos que representam valores e quantidades são de tamanho variável, respeitando o tamanho máximo previsto para o campo e a quantidade de casas decimais (quando houver). O preenchimento de zeros não significativos causa erro de validação do Schema XML. 
-Os campos numéricos devem ser informados sem o separador  de milhar, com uso do ponto decimal para indicar a parte fracionária (quando houver) respeitando-se a quantidade de dígitos prevista no layout; 
+Campos que representam CPF e CNPJ (respectivamente 11 e 14 caracteres) devem ser informados com o tamanho fixo previsto, sem formataï¿½ï¿½o e com o preenchimento dos zeros nï¿½o significativos; 
+Campos numï¿½ricos que representam valores e quantidades sï¿½o de tamanho variï¿½vel, respeitando o tamanho mï¿½ximo previsto para o campo e a quantidade de casas decimais (quando houver). O preenchimento de zeros nï¿½o significativos causa erro de validaï¿½ï¿½o do Schema XML. 
+Os campos numï¿½ricos devem ser informados sem o separador  de milhar, com uso do ponto decimal para indicar a parte fracionï¿½ria (quando houver) respeitando-se a quantidade de dï¿½gitos prevista no layout; 
 As datas devem ser informadas no formato AAAA-MM-DD; 
-Para reduzir o tamanho final das mensagens XML alguns cuidados de programação deverão ser assumidos: 
-Não incluir “espaços” no início e/ou no final de campos alfanuméricos; 
-Não incluir comentários  na mensagem XML; 
-Não incluir anotação e documentação na mensagem XML (TAG annotation e TAG documentation); 
-Não incluir caracteres de formatação na mensagem XML: LF (Line  Feed ou salto de linha, caractere ASCII 10), “CR” (Carriage Return ou retorno do carro, caractere ASCII 13), “tab”, caractere de “espaço” entre as TAGs). 
+Para reduzir o tamanho final das mensagens XML alguns cuidados de programaï¿½ï¿½o deverï¿½o ser assumidos: 
+Nï¿½o incluir ï¿½espaï¿½osï¿½ no inï¿½cio e/ou no final de campos alfanumï¿½ricos; 
+Nï¿½o incluir comentï¿½rios  na mensagem XML; 
+Nï¿½o incluir anotaï¿½ï¿½o e documentaï¿½ï¿½o na mensagem XML (TAG annotation e TAG documentation); 
+Nï¿½o incluir caracteres de formataï¿½ï¿½o na mensagem XML: LF (Line  Feed ou salto de linha, caractere ASCII 10), ï¿½CRï¿½ (Carriage Return ou retorno do carro, caractere ASCII 13), ï¿½tabï¿½, caractere de ï¿½espaï¿½oï¿½ entre as TAGs). 
  
  
-4 – Serviços e Métodos: 
+4 ï¿½ Serviï¿½os e Mï¿½todos: 
  
-4.1.Envio de Lote de RPS Método:  Enviar 
+4.1.Envio de Lote de RPS Mï¿½todo:  Enviar 
  
  
-Esta funcionalidade  tem por finalidade receber a mensagem XML enviada pelo sistema do contribuinte, validar a estrutura  do XML que deve estar de acordo com os Schemas definidos e gravar e processar as informações. 
+Esta funcionalidade  tem por finalidade receber a mensagem XML enviada pelo sistema do contribuinte, validar a estrutura  do XML que deve estar de acordo com os Schemas definidos e gravar e processar as informaï¿½ï¿½es. 
  
-A mensagem XML de envio de lote deve ser assinada com certificado digital no ambiente de produção. No ambiente de homologação não é obrigatório assinar o lote de envio de lote. 
-A tag <Lote Id=”lote:1ABCDZ”>que deve ser referenciada na URI da assinatura. Exemplo : <Reference URI=”#lote:1ABCDZ”>. 
+A mensagem XML de envio de lote deve ser assinada com certificado digital no ambiente de produï¿½ï¿½o. No ambiente de homologaï¿½ï¿½o nï¿½o ï¿½ obrigatï¿½rio assinar o lote de envio de lote. 
+A tag <Lote Id=ï¿½lote:1ABCDZï¿½>que deve ser referenciada na URI da assinatura. Exemplo : <Reference URI=ï¿½#lote:1ABCDZï¿½>. 
  
-Na tabela  seguinte  apresenta-se a definição dos campos  do XML de remessa de Lote RPS, exemplos de arquivos XML encontram-se no link presente no Anexo 06 deste manual : 
+Na tabela  seguinte  apresenta-se a definiï¿½ï¿½o dos campos  do XML de remessa de Lote RPS, exemplos de arquivos XML encontram-se no link presente no Anexo 06 deste manual : 
  Estrutura definida no schema XML: 
  
-Registro Cabeçalho CAMPO TIPO TAM. CONTEÚDO OBRIG. CodCidade N 10 Código da cidade da declaração padrão SIAFI. S CPFCNPJRemetente A 14 CPF /CNPJ do remetente autorizado a transmitir o RPS S RazaoSocialRemetente A 120 Razão Social do Remetente S Transacao A 5 true - Se os RPS fazem parte de uma mesma transação.  Padrão “true” S DtInicio D  Data de início do período transmitido. Data do primeiro RPS contido no lote  Formato: YYYY-MM-DD S DtFim D  Data Final do período transmitido. Data do último RPS contida no lote Formato: YYYY-MM-DD S QtdRPS N 15 Quantidade de RPS contidos na remessa S 
-ValorTotalServicos N 15,2 Valor total dos Serviços prestados nos RPS S ValorTotalDeducoes N 15,2 Valor total das deduções nos RPS S Versão N 3 Informe a versão do SChema XML. Padrão “1”. S MetodoEnvio A 3 Padrão “WS” S  
- Registros de RPS CAMPO TIPO TAM. CONTEÚDO OBRIG. Assinatura A 2000 Código  hash  de  validação  do  conteúdo,  detalhado mais a frente. S InscricaoMunicipalPrestador A 11 Inscrição Municipal do Prestador. 
-Verificar regra de preenchimento do campo no Anexo 03. S RazaoSocialPrestador A 120 Razão Social do Prestador S TipoRPS A 20 Tipo de RPS Padrão “RPS” S SerieRPS A 2 Série do RPS - Padrão “NF” S NumeroRPS N 12 Número da RPS S DataEmissaoRPS D  Data e Hora de Emissão 
-Formato: AAAA-MM-DDTHH:MM:SS S SituacaoRPS A 1 Situação da RPS 
-“N”-Normal 
-“C”-Cancelada S SerieRPSSubstituido A 10 Série do RPS a ser substituído – Padrão “NF”. Se não for substituto não preencher. N NumeroNFSeSubstituida N 10 Número da NFSe Substituida 
-Se não for subtituto não preencher N NumeroRPSSubstituido N 10 Número do RPS a ser substituído. 
-Se não for substituto não preencher. N DataEmissaoNFSeSubstituida D  Data de emissão da NFSe Formato= AAAA-MM-DD. Se não for substituto preencher com “01/01/1900” N SeriePrestacao N 2 Número do equipamento emissor do RPS ou série de prestação. Caso não utilize a série, preencha o campo com o valor ‘99’ que indica modelo único. Caso queira utilizar o campo série para indicar o número  do equi- pamento emissor do RPS deve-se solicitar liberação da prefeitura. S InscricaoMunicipalTomador A 11 Inscrição Municipal do Tomador 
-Caso o tomador  não for do municipio preencher com ‘0000000’, caso o tomador  for do município preencher com a Inscrição Municipal formatada Seguindo Anexo 03. S CPFCNPJTomador A 14 CPF ou CNPJ do Tomador Ex: “00000000000191” S RazaoSocialTomador A 120 Razão Social do Tomador S TipoLogradouroTomador A 10 Tipo de Logradouro do Tomador. 
-Campo de preenchimento livre. Verificar exemplos no anexo 04 S LogradouroTomador A 50 Logradouro do Tomador S NumeroEnderecoTomador A 9 Numero de Endereço do Tomador S ComplementoEnderecoTomador A 30 Complemento do Endereço do Tomador N TipoBairroTomador A 10 Tipo de Bairro do Tomador .  Campo de preenchimen- to livre. Verificar exemplos no Anexo 05. S  
-BairroTomador A 50 Bairro do Tomador S CidadeTomador N 10 Código da Cidade do Tomador padrão SIAFI. S CidadeTomadorDescricao A 50 Nome da Cidade do Tomador S CEPTomador A 8 CEP do Tomador Ex: “37900000” S EmailTomador A 60 Email do Tomador. Caso o Tomador não possua email informar o valor “-”. Caso queira informar mais de um email colocar “;” separando os emails e no final. Exemplo:nome@bol.com. 
-br;outro@bol.com.br; S CodigoAtividade A 9 Código da Atividade da RPS S AliquotaAtividade N 6,4 Alíquota de ISS da Atividade S TipoRecolhimento A 1 Tipo de Recolhimento 
-“A” – A Receber 
-“R” - Retido na Fonte S MunicipioPrestacao N 10 Código do Município de Prestação – Padrão SIAFI S MunicipioPrestacaoDescricao A 30 Município de Prestação do Serviço S Operacao A 1 Operação 
-“A”-Sem Dedução 
-“B”-Com Dedução/Materiais 
-“C” - Imune/Isenta de ISSQN 
-“D” - Devolução/Simples Remessa 
-“J” - Intemediação S Tributacao A 1 Tributação: 
+
+
+Registro Cabeï¿½alho 
+CAMPO 
+TIPO
+ TAM. 
+CONTEï¿½DO 
+OBRIG. 
+CodCidade 
+N 
+10 
+Cï¿½digo da cidade da declaraï¿½ï¿½o padrï¿½o SIAFI. 
+S 
+CPFCNPJRemetente 
+A 
+14 
+CPF /CNPJ do remetente autorizado a transmitir o RPS 
+S 
+RazaoSocialRemetente 
+A 
+120 
+Razï¿½o Social do Remetente 
+S 
+Transacao 
+A 
+5 
+true - Se os RPS fazem parte de uma mesma transaï¿½ï¿½o.  Padrï¿½o ï¿½trueï¿½ 
+S 
+DtInicio 
+D 
+ 
+Data de inï¿½cio do perï¿½odo transmitido. Data do primeiro RPS contido no lote  Formato: YYYY-MM-DD 
+S 
+DtFim 
+D 
+ 
+Data Final do perï¿½odo transmitido. Data do ï¿½ltimo RPS contida no lote Formato: YYYY-MM-DD 
+S 
+QtdRPS 
+N 
+15 
+Quantidade de RPS contidos na remessa 
+S 
+
+ValorTotalServicos 
+N 
+15,2 
+Valor total dos Serviï¿½os prestados nos RPS 
+S 
+ValorTotalDeducoes 
+N 
+15,2 
+Valor total das deduï¿½ï¿½es nos RPS 
+S 
+Versï¿½o 
+N 
+3 
+Informe a versï¿½o do SChema XML. Padrï¿½o ï¿½1ï¿½. 
+S 
+MetodoEnvio 
+A 
+3 
+Padrï¿½o ï¿½WSï¿½ 
+S 
+ 
+ 
+Registros de RPS 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+OBRIG. 
+Assinatura 
+A 
+2000 
+Cï¿½digo  hash  de  validaï¿½ï¿½o  do  conteï¿½do,  detalhado mais a frente. 
+S 
+InscricaoMunicipalPrestador 
+A 
+11 
+Inscriï¿½ï¿½o Municipal do Prestador. 
+Verificar regra de preenchimento do campo no Anexo 03. 
+S 
+RazaoSocialPrestador 
+A 
+120 
+Razï¿½o Social do Prestador 
+S 
+TipoRPS 
+A 
+20 
+Tipo de RPS Padrï¿½o ï¿½RPSï¿½ 
+S 
+SerieRPS 
+A 
+2 
+Sï¿½rie do RPS - Padrï¿½o ï¿½NFï¿½ 
+S 
+NumeroRPS 
+N 
+12 
+Nï¿½mero da RPS 
+S 
+DataEmissaoRPS 
+D 
+ 
+Data e Hora de Emissï¿½o 
+Formato: AAAA-MM-DDTHH:MM:SS 
+S 
+SituacaoRPS 
+A 
+1 
+Situaï¿½ï¿½o da RPS 
+ï¿½Nï¿½-Normal 
+ï¿½Cï¿½-Cancelada 
+S 
+SerieRPSSubstituido 
+A 
+10 
+Sï¿½rie do RPS a ser substituï¿½do ï¿½ Padrï¿½o ï¿½NFï¿½. Se nï¿½o for substituto nï¿½o preencher. 
+N 
+NumeroNFSeSubstituida 
+N 
+10 
+Nï¿½mero da NFSe Substituida 
+Se nï¿½o for subtituto nï¿½o preencher 
+N 
+NumeroRPSSubstituido 
+N 
+10 
+Nï¿½mero do RPS a ser substituï¿½do. 
+Se nï¿½o for substituto nï¿½o preencher. 
+N 
+DataEmissaoNFSeSubstituida 
+D 
+ 
+Data de emissï¿½o da NFSe Formato= AAAA-MM-DD. Se nï¿½o for substituto preencher com ï¿½01/01/1900ï¿½ 
+N 
+SeriePrestacao 
+N 
+2 
+Nï¿½mero do equipamento emissor do RPS ou sï¿½rie de prestaï¿½ï¿½o. Caso nï¿½o utilize a sï¿½rie, preencha o campo com o valor ï¿½99ï¿½ que indica modelo ï¿½nico. Caso queira utilizar o campo sï¿½rie para indicar o nï¿½mero  do equi- pamento emissor do RPS deve-se solicitar liberaï¿½ï¿½o da prefeitura. 
+S 
+InscricaoMunicipalTomador 
+A 
+11 
+Inscriï¿½ï¿½o Municipal do Tomador 
+Caso o tomador  nï¿½o for do municipio preencher com ï¿½0000000ï¿½, caso o tomador  for do municï¿½pio preencher com a Inscriï¿½ï¿½o Municipal formatada Seguindo Anexo 03. 
+S 
+CPFCNPJTomador 
+A 
+14 
+CPF ou CNPJ do Tomador Ex: ï¿½00000000000191ï¿½ 
+S 
+RazaoSocialTomador 
+A 
+120 
+Razï¿½o Social do Tomador 
+S 
+TipoLogradouroTomador 
+A 
+10 
+Tipo de Logradouro do Tomador. 
+Campo de preenchimento livre. Verificar exemplos no anexo 04 
+S 
+LogradouroTomador 
+A 
+50 
+Logradouro do Tomador 
+S 
+NumeroEnderecoTomador 
+A 
+9 
+Numero de Endereï¿½o do Tomador 
+S 
+ComplementoEnderecoTomador 
+A 
+30 
+Complemento do Endereï¿½o do Tomador 
+N 
+TipoBairroTomador 
+A 
+10 
+Tipo de Bairro do Tomador .  Campo de preenchimen- to livre. Verificar exemplos no Anexo 05. 
+S 
+ 
+BairroTomador 
+A 
+50 
+Bairro do Tomador 
+S 
+CidadeTomador 
+N 
+10 
+Cï¿½digo da Cidade do Tomador padrï¿½o SIAFI. 
+S 
+CidadeTomadorDescricao 
+A 
+50 
+Nome da Cidade do Tomador 
+S 
+CEPTomador 
+A 
+8 
+CEP do Tomador Ex: ï¿½37900000ï¿½ 
+S 
+EmailTomador 
+A 
+60 
+Email do Tomador. Caso o Tomador nï¿½o possua email informar o valor ï¿½-ï¿½. Caso queira informar mais de um email colocar ï¿½;ï¿½ separando os emails e no final. Exemplo:nome@bol.com. 
+br;outro@bol.com.br; 
+S 
+CodigoAtividade 
+A 
+9 
+Cï¿½digo da Atividade da RPS 
+S 
+AliquotaAtividade 
+N 
+6,4 
+Alï¿½quota de ISS da Atividade 
+S 
+TipoRecolhimento 
+A 
+1 
+Tipo de Recolhimento 
+ï¿½Aï¿½ ï¿½ A Receber 
+ï¿½Rï¿½ - Retido na Fonte 
+S 
+MunicipioPrestacao 
+N 
+10 
+Cï¿½digo do Municï¿½pio de Prestaï¿½ï¿½o ï¿½ Padrï¿½o SIAFI 
+S 
+MunicipioPrestacaoDescricao 
+A 
+30 
+Municï¿½pio de Prestaï¿½ï¿½o do Serviï¿½o 
+S 
+Operacao 
+A 
+1 
+Operaï¿½ï¿½o 
+ï¿½Aï¿½-Sem Deduï¿½ï¿½o 
+ï¿½Bï¿½-Com Deduï¿½ï¿½o/Materiais 
+ï¿½Cï¿½ - Imune/Isenta de ISSQN 
+ï¿½Dï¿½ - Devoluï¿½ï¿½o/Simples Remessa 
+ï¿½Jï¿½ - Intemediaï¿½ï¿½o 
+S 
+Tributacao 
+A 
+1 
+Tributaï¿½ï¿½o: 
 C - Isenta de ISS 
-E - Não Incidência no Município 
+E - Nï¿½o Incidï¿½ncia no Municï¿½pio 
 F - Imune 
 K - Exigibilidd Susp.Dec.J/Proc.A 
-N - Não Tributável 
-T – Tributável G - Tributável Fixo 
-H - Tributável S.N. 
-M - Micro Empreendedor Individual (MEI) S ValorPIS N 15,2 Valor PIS S ValorCOFINS N 15,2 Valor COFINS S ValorINSS N 15,2 Valor do INSS S ValorIR N 15,2 Valor do IR S ValorCSLL N 15,2 Valor do CSLL S AliquotaPIS N 6,4 Alíquota PIS S AliquotaCOFINS N 6,4 Alíquota COFINS S AliquotaINSS N 6,4 Alíquota INSS S AliquotaIR N 6,4 Alíquota IR S AliquotaCSLL N 6,4 Alíquota CSLL S DescricaoRPS A 1500 Descrição/ Dados Complementares do RPS S DDDPrestador A 3 DDD Telefone do Prestador N TelefonePrestador A 8 Telefone do Prestador N DDDTomador A 3 DDD do telefone do tomador N TelefoneTomador A 8 Telefone do Tomador N MotCancelamento A 80 Motivo do Cancelamento 
-Obs.:Obrigatório caso o RPS for cancelado N CpfCnpjIntermediario A 14 CPF/CNPJ Intemediário N  
+N - Nï¿½o Tributï¿½vel 
+T ï¿½ Tributï¿½vel G - Tributï¿½vel Fixo 
+H - Tributï¿½vel S.N. 
+M - Micro Empreendedor Individual (MEI) 
+S 
+ValorPIS 
+N 
+15,2 
+Valor PIS 
+S 
+ValorCOFINS 
+N 
+15,2 
+Valor COFINS 
+S 
+ValorINSS 
+N 
+15,2 
+Valor do INSS 
+S 
+ValorIR 
+N 
+15,2 
+Valor do IR 
+S 
+ValorCSLL 
+N 
+15,2 
+Valor do CSLL 
+S 
+AliquotaPIS 
+N 
+6,4 
+Alï¿½quota PIS 
+S 
+AliquotaCOFINS 
+N 
+6,4 
+Alï¿½quota COFINS 
+S 
+AliquotaINSS 
+N 
+6,4 
+Alï¿½quota INSS 
+S 
+AliquotaIR 
+N 
+6,4 
+Alï¿½quota IR 
+S 
+AliquotaCSLL 
+N 
+6,4 
+Alï¿½quota CSLL 
+S 
+DescricaoRPS 
+A 
+1500 
+Descriï¿½ï¿½o/ Dados Complementares do RPS 
+S 
+DDDPrestador 
+A 
+3 
+DDD Telefone do Prestador 
+N 
+TelefonePrestador 
+A 
+8 
+Telefone do Prestador 
+N 
+DDDTomador 
+A 
+3 
+DDD do telefone do tomador 
+N 
+TelefoneTomador 
+A 
+8 
+Telefone do Tomador 
+N 
+MotCancelamento 
+A 
+80 
+Motivo do Cancelamento 
+Obs.:Obrigatï¿½rio caso o RPS for cancelado 
+N 
+CpfCnpjIntermediario 
+A 
+14 
+CPF/CNPJ Intemediï¿½rio 
+N 
+ 
   
-* A operação J-Intermediação é utilizada apenas na prefeitura de Campo Grande, nas demais prefeituras não deve ser utilizada. Quando informado o tipo de operação J-Intermediação deve se informar o CPF/CNPJ do Intermediário. 
-Caso o tomador for um consumidor não identificado informar no campo CPFCNPJTomador o valor ‘77777777777’, no campo RazaoSocialTomador informar ‘Consumidor’ e nos campos TipoLogra- douroTomador, LogradouroTomador, TipoBairroTomador, BairroTomador EmailTomador informar o valor ‘-’ quando não possuir essa informação. No campo NumeroEnderecoTomador informar valor zero e no campo CEPTomador informar ‘00000000’. 
-Caso o tomador for estrangeiro informar no campo CidadeTomador o valor ‘0009999’ e no campo CidadeTomadorDescricao informar o nome do país, no campo CepTomador informar ‘00000000’. Caso o município de prestação for no exterior informar no campo MunicipioPrestacao informar o valor ‘0009999’ e no campo MunicipioPrestacaoDescricao informar o nome do país. 
-Quando a situação do RPS for cancelada, deve se informar o motivo do cancelamento no campo MotCancelamento. 
-No campo SeriePrestação deve ser informado por padrão o valor ‘99’ - Modelo único, porém quan- do liberado pela prefeitura o contribuinte pode utilizar este campo para indicar o número do equipa- mento emissor do RPS, podendo ser utilizado a numeração de 01 a 99. A numeração seqüencial do RPS é por Série de Prestação, sendo assim cada série têm uma numeração seqüencial. 
-Registros de Itens da RPS CAMPO TIPO TAM. CONTEÚDO OBRIG.DiscriminacaoServico A 80 Discriminação do Serviço S Quantidade N 10,4 Quantidade do serviço tomado S ValorUnitario N 15,4 Valor Unitário S ValorTotal N 15,2 Valor total do serviço S Tributavel A 1 Tributável S- Item tributável , N- Não tributável. Verifique o anexo 08 para identificar quais ativi- dades são permitidas no município.  *Obs: São pemitidos no máximo 25 itens por RPS. 
-Registro de Dedução CAMPO TIPO TAM. CONTEÚDO OBRIG.DeducaoPor A 20 “Percentual” 
-“Valor” S TipoDeducao A 255 Caso  a dedução  for por “Valor” os valores possíveis são : 
-“Despesas com Materiais” ou 
-“Despesas com Sub-empreitada” 
-Caso a dedução for por “Percentual” informar o campo com valor vazio. S CPFCNPJReferencia A 14 CPF ou CNPJ do Fornecedor ou Prestador do Serviço N NumeroNFReferencia N 10 Número da Nota Fiscal de Referência N ValorTotalReferencia N 15,2 Valor  total da Nota Fiscal de Referência N PercentualDeduzir N 5,2 Percentual a Deduzir S ValorDeduzir N 15,2 Valor a ser Deduzido S Obs. Cada RPS pode ter no máximo 200 registros de dedução. 
-* Os campos  CPFCNPJReferencia,  NumeroNFReferencia  e ValorTotalReferencia  devem  ser preenchidos quando a atividade permite dedução por material e houver dedução pela compra de matérias, quando não for este caso não preencher estes campos. 
+* A operaï¿½ï¿½o J-Intermediaï¿½ï¿½o ï¿½ utilizada apenas na prefeitura de Campo Grande, nas demais prefeituras nï¿½o deve ser utilizada. Quando informado o tipo de operaï¿½ï¿½o J-Intermediaï¿½ï¿½o deve se informar o CPF/CNPJ do Intermediï¿½rio. 
+Caso o tomador for um consumidor nï¿½o identificado informar no campo CPFCNPJTomador o valor ï¿½77777777777ï¿½, no campo RazaoSocialTomador informar ï¿½Consumidorï¿½ e nos campos TipoLogra- douroTomador, LogradouroTomador, TipoBairroTomador, BairroTomador EmailTomador informar o valor ï¿½-ï¿½ quando nï¿½o possuir essa informaï¿½ï¿½o. No campo NumeroEnderecoTomador informar valor zero e no campo CEPTomador informar ï¿½00000000ï¿½. 
+Caso o tomador for estrangeiro informar no campo CidadeTomador o valor ï¿½0009999ï¿½ e no campo CidadeTomadorDescricao informar o nome do paï¿½s, no campo CepTomador informar ï¿½00000000ï¿½. Caso o municï¿½pio de prestaï¿½ï¿½o for no exterior informar no campo MunicipioPrestacao informar o valor ï¿½0009999ï¿½ e no campo MunicipioPrestacaoDescricao informar o nome do paï¿½s. 
+Quando a situaï¿½ï¿½o do RPS for cancelada, deve se informar o motivo do cancelamento no campo MotCancelamento. 
+No campo SeriePrestaï¿½ï¿½o deve ser informado por padrï¿½o o valor ï¿½99ï¿½ - Modelo ï¿½nico, porï¿½m quan- do liberado pela prefeitura o contribuinte pode utilizar este campo para indicar o nï¿½mero do equipa- mento emissor do RPS, podendo ser utilizado a numeraï¿½ï¿½o de 01 a 99. A numeraï¿½ï¿½o seqï¿½encial do RPS ï¿½ por Sï¿½rie de Prestaï¿½ï¿½o, sendo assim cada sï¿½rie tï¿½m uma numeraï¿½ï¿½o seqï¿½encial. 
+
+Registros de Itens da RPS 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+OBRIG.
+DiscriminacaoServico 
+A 
+80 
+Discriminaï¿½ï¿½o do Serviï¿½o 
+S 
+Quantidade 
+N 
+10,4 
+Quantidade do serviï¿½o tomado 
+S 
+ValorUnitario 
+N 
+15,4 
+Valor Unitï¿½rio 
+S 
+ValorTotal 
+N 
+15,2 
+Valor total do serviï¿½o 
+S 
+Tributavel 
+A 
+1 
+Tributï¿½vel S- Item tributï¿½vel , N- Nï¿½o tributï¿½vel. Verifique o anexo 08 para identificar quais ativi- dades sï¿½o permitidas no municï¿½pio. 
  
-*Assinatura = Campo utilizado para verificação do conteúdo da mensagem recebida, formado pela conca- tenação dos principais campos do RPS e depois essa linha de texto é codificada utilizando o padrão SHA-1 
+*Obs: Sï¿½o pemitidos no mï¿½ximo 25 itens por RPS. 
+Registro de Deduï¿½ï¿½o 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+OBRIG.
+DeducaoPor 
+A 
+20 
+ï¿½Percentualï¿½ 
+ï¿½Valorï¿½ 
+S 
+TipoDeducao 
+A 
+255 
+Caso  a deduï¿½ï¿½o  for por ï¿½Valorï¿½ os valores possï¿½veis sï¿½o : 
+ï¿½Despesas com Materiaisï¿½ ou 
+ï¿½Despesas com Sub-empreitadaï¿½ 
+Caso a deduï¿½ï¿½o for por ï¿½Percentualï¿½ informar o campo com valor vazio. 
+S 
+CPFCNPJReferencia 
+A 
+14 
+CPF ou CNPJ do Fornecedor ou Prestador do Serviï¿½o 
+N 
+NumeroNFReferencia 
+N 
+10 
+Nï¿½mero da Nota Fiscal de Referï¿½ncia 
+N 
+ValorTotalReferencia 
+N 
+15,2 
+Valor  total da Nota Fiscal de Referï¿½ncia 
+N 
+PercentualDeduzir 
+N 
+5,2 
+Percentual a Deduzir 
+S 
+ValorDeduzir 
+N 
+15,2 
+Valor a ser Deduzido 
+S 
+Obs. Cada RPS pode ter no mï¿½ximo 200 registros de deduï¿½ï¿½o. 
+* Os campos  CPFCNPJReferencia,  NumeroNFReferencia  e ValorTotalReferencia  devem  ser preenchidos quando a atividade permite deduï¿½ï¿½o por material e houver deduï¿½ï¿½o pela compra de matï¿½rias, quando nï¿½o for este caso nï¿½o preencher estes campos. 
+ 
+*Assinatura = Campo utilizado para verificaï¿½ï¿½o do conteï¿½do da mensagem recebida, formado pela conca- tenaï¿½ï¿½o dos principais campos do RPS e depois essa linha de texto ï¿½ codificada utilizando o padrï¿½o SHA-1 
  
  
  
  
-CAMPO TAM. OBS: 01 - Inscrição municipal do contribuinte 11 Preencher com zeros a esquerda 02 – Série do RPS 5 Preencher com espaços em branco a direita. 03 – Número do RPS 12 Preencher com zeros a esquerda 04 – Data de Emissão do RPS formato yyyyMMdd 8  05 – Tributação 2 Preencher com espaço a direita 06 - Situação do RPS 1  07 - Tipo Recolhimento, se for “A” preenche com “N” senão “S” 1  08 - Valor do serviço subtraindo a dedução 15 Somente números, preencher com zeros  a esquerda 09 - Valor da dedução 15 Somente números, preencher com zeros  a esquerda 10 - Código da atividade 10 Somente números, preencher com zeros  a esquerda 11- CPF/CNPJ do tomador 14 Somente números, preencher com zeros  a esquerda  
-Após gerar a linha de assinatura, é gerado um código hash utilizando o padrão SHA-1 e o código e passado no campo Assinatura. 
+CAMPO 
+TAM. 
+OBS: 
+01 - Inscriï¿½ï¿½o municipal do contribuinte 
+11 
+Preencher com zeros a esquerda 
+02 ï¿½ Sï¿½rie do RPS 
+5 
+Preencher com espaï¿½os em branco a direita. 
+03 ï¿½ Nï¿½mero do RPS 
+12 
+Preencher com zeros a esquerda 
+04 ï¿½ Data de Emissï¿½o do RPS formato yyyyMMdd 
+8 
  
- Segue abaixo um exemplo de geração da Assinatura do RPS: 
-CAMPO TAM. CONTEÚDO DE EXEMPLO 01 - Inscrição municipal do contribuinte 11 00000317330 02 – Série do RPS 5 NF 03 – Número do RPS 12 000000038663 04 – Data de Emissão do RPS formato yyyyMMdd 8 20090905 05 – Tributação 2 T 06 - Situação do RPS 1 N 07 - Tipo Recolhimento, se for “A” preenche com “N” senão “S” 1 N 08 - Valor do serviço subtraindo a dedução 15 000000000001686 09 - Valor da Dedução 15 000000000000000 10 - Código da atividade 10 0829979900 11- CPF/CNPJ do tomador 14 08764130000102  
+05 ï¿½ Tributaï¿½ï¿½o 
+2 
+Preencher com espaï¿½o a direita 
+06 - Situaï¿½ï¿½o do RPS 
+1 
+ 
+07 - Tipo Recolhimento, se for ï¿½Aï¿½ preenche com ï¿½Nï¿½ senï¿½o ï¿½Sï¿½ 
+1 
+ 
+08 - Valor do serviï¿½o subtraindo a deduï¿½ï¿½o 
+15 
+Somente nï¿½meros, preencher com zeros  a esquerda 
+09 - Valor da deduï¿½ï¿½o 
+15 
+Somente nï¿½meros, preencher com zeros  a esquerda 
+10 - Cï¿½digo da atividade 
+10 
+Somente nï¿½meros, preencher com zeros  a esquerda 
+11- CPF/CNPJ do tomador 
+14 
+Somente nï¿½meros, preencher com zeros  a esquerda 
+ 
+Apï¿½s gerar a linha de assinatura, ï¿½ gerado um cï¿½digo hash utilizando o padrï¿½o SHA-1 e o cï¿½digo e passado no campo Assinatura. 
+ 
+ Segue abaixo um exemplo de geraï¿½ï¿½o da Assinatura do RPS: 
+CAMPO 
+TAM. 
+CONTEï¿½DO DE EXEMPLO 
+01 - Inscriï¿½ï¿½o municipal do contribuinte 
+11 
+00000317330 
+02 ï¿½ Sï¿½rie do RPS 
+5 
+NF 
+03 ï¿½ Nï¿½mero do RPS 
+12 
+000000038663 
+04 ï¿½ Data de Emissï¿½o do RPS formato yyyyMMdd 
+8 
+20090905 
+05 ï¿½ Tributaï¿½ï¿½o 
+2 
+T 
+06 - Situaï¿½ï¿½o do RPS 
+1 
+N 
+07 - Tipo Recolhimento, se for ï¿½Aï¿½ preenche com ï¿½Nï¿½ senï¿½o ï¿½Sï¿½ 
+1 
+N 
+08 - Valor do serviï¿½o subtraindo a deduï¿½ï¿½o 
+15 
+000000000001686 
+09 - Valor da Deduï¿½ï¿½o 
+15 
+000000000000000 
+10 - Cï¿½digo da atividade 
+10 
+0829979900 
+11- CPF/CNPJ do tomador 
+14 
+08764130000102 
+ 
 TEXTO01: 
 00000317330NF  00000003866320090905T NN000000000001686000000000000000082997990008764130000102 SHA1: 
 6bcbb93fd7e6d7f0417656f4931ba9f92a7ac1da 
  
 TEXTO02: 
 00000720097NF  00000000000120091207T NN000000000009000000000000000000045200030001902994000102 CODIGO HASH: a6dd79664dd34d6bec80c781aef3c2b291c56dac 
-O valor do gerado no padrão SHA1 deve ser enviado no campo Assinatura do RPS. 
+O valor do gerado no padrï¿½o SHA1 deve ser enviado no campo Assinatura do RPS. 
 Certificado Digital 
-Os certificados digitais utilizados no sistema de Notas Fiscais de Serviço Eletrônicas, serão emitidos por Autoridade Certificadora Brasileira no padrão ICP-Brasil, pode ser do tipo A1 ou A3, devendo conter o CNPJ da entidade proprietária do certificado. O certificado digital será exigido para assinar o XML dos métodos de envio de lote, consulta  de notas, consulta  de NFS-e ou RPS e cancelamento de Notas. O certificado digital utilizado para essa função deverá conter o CNPJ do estabelecimento emissor da NFS-e ou CPF do responsável legal. 
+Os certificados digitais utilizados no sistema de Notas Fiscais de Serviï¿½o Eletrï¿½nicas, serï¿½o emitidos por Autoridade Certificadora Brasileira no padrï¿½o ICP-Brasil, pode ser do tipo A1 ou A3, devendo conter o CNPJ da entidade proprietï¿½ria do certificado. O certificado digital serï¿½ exigido para assinar o XML dos mï¿½todos de envio de lote, consulta  de notas, consulta  de NFS-e ou RPS e cancelamento de Notas. O certificado digital utilizado para essa funï¿½ï¿½o deverï¿½ conter o CNPJ do estabelecimento emissor da NFS-e ou CPF do responsï¿½vel legal. 
  
-O campo de assinatura digital “Signature” deve vir logo após a tag de Lote, contendo o certificado digital do remetente da mensagem, o CNPJ/CPF do emissor do certificado deve ser o mesmo do remetente da mensagem. As assinaturas digitais das mensagens serão verificadas considerando a lista de cadeia confiá- vel de certificados da NFSe. No web service de homologação e teste não é necessário assinar o XML com certificado para enviar o lote, caso seja assinado o web service de homologação irá verificar a assinatura. Já no ambiente de produção  é obrigatório a assinar o XML com um certificado válido. Apresentamos um exemplo de Envio com assinatura digital no Anexo 06 deste manual. 
- 
- 
- 
-Retorno do Serviço : 
-• Caso a mensagem XML enviada tenha sido processada com sucesso no cabeçalho do retorno a Tag <Su- cesso> estará com valor “true”, em seguida estará as demais informações do lote processado. Na tabela a seguir temos a definição dos tipos de dados do XML de retorno, com exemplo Anexo 6 deste manual. Caso a TAG <Assincrono> conter o valor “S” siginifica que o processamento do lote será assíncrono, então, deve- se se chamar o método ConsultarLote para obter o resultado. 
+O campo de assinatura digital ï¿½Signatureï¿½ deve vir logo apï¿½s a tag de Lote, contendo o certificado digital do remetente da mensagem, o CNPJ/CPF do emissor do certificado deve ser o mesmo do remetente da mensagem. As assinaturas digitais das mensagens serï¿½o verificadas considerando a lista de cadeia confiï¿½- vel de certificados da NFSe. No web service de homologaï¿½ï¿½o e teste nï¿½o ï¿½ necessï¿½rio assinar o XML com certificado para enviar o lote, caso seja assinado o web service de homologaï¿½ï¿½o irï¿½ verificar a assinatura. Jï¿½ no ambiente de produï¿½ï¿½o  ï¿½ obrigatï¿½rio a assinar o XML com um certificado vï¿½lido. Apresentamos um exemplo de Envio com assinatura digital no Anexo 06 deste manual. 
  
  
-Cabeçalho do Retorno do Serviço CAMPO TIPO TAM. CONTEÚDO CodCidade N 10 Código da Cidade – Padrão SIAFI Sucesso A 5 “true” se processado com sucerro, “false” se ocorreram erros. NumeroLote N 12 Número do Lote processado CPFCNPJRemetente A 14 CPF/CNPJ Remetente DataEnvioLote D  Data e hora de envio 
-Formato = AAAA-MM-DDTHH:MM:SS QtdNotasProcessadas N 10 Quantidade de notas processadas no lote TempoProcessamento N 10 Tempo gasto no processamento ValorTotalServicos N 15,2 Valor total dos serviços ValorTotalDeducoes N 15,2 Valor total das deduções Versao N 3 Versão do Shema XML Assincrono A 1 Tipo do Serviço 
-“S”-Assincrono 
-“N”-Sincrono  
-Chave ChaveNFe CAMPO TIPO TAM. CONTEÚDO InscricaoPrestador A 11 Inscrição municipal do contribuinte NumeroNFe N 12 Número da NFS-e CodigoVerificacao A 255 Código de verificação, gerado para identificação da NFSe. RazaoSocialPrestador A 120 Razão Social do Contribuinte prestador de serviços  
+ 
+Retorno do Serviï¿½o : 
+ï¿½ Caso a mensagem XML enviada tenha sido processada com sucesso no cabeï¿½alho do retorno a Tag <Su- cesso> estarï¿½ com valor ï¿½trueï¿½, em seguida estarï¿½ as demais informaï¿½ï¿½es do lote processado. Na tabela a seguir temos a definiï¿½ï¿½o dos tipos de dados do XML de retorno, com exemplo Anexo 6 deste manual. Caso a TAG <Assincrono> conter o valor ï¿½Sï¿½ siginifica que o processamento do lote serï¿½ assï¿½ncrono, entï¿½o, deve- se se chamar o mï¿½todo ConsultarLote para obter o resultado. 
+ 
  
 
-CAMPO TIPO TAM. CONTEÚDO InscricaoPrestador A 11 Inscrição Municipal do Contribuinte SerieRPS A 2 Série da RPS: Padrão “NF” - Nota Fiscal de Serviços NumeroRPS N 12 Número da RPS DataEmissaoRPS D  Data e Hora de Emissão da RPS 
-Formato = AAAA-MM-DDTHH:MM:SS RazaoSocialPrestador A 120 Razão Social do Contribuinte Prestador de Serviços  
-Caso o serviço apresente erro no processamento dos RPS enviados será retornado uma mensagem XML com a Tag Erros com os erros de processamento. No Anexo 06 deste  manual encontra-se um exemplo. Caso o serviço apre- sente erro no processamento dos RPS enviados será retornado uma mensagem XML com a Tag Erros com os erros de processamento. Segue abaixo um exemplo de retorno com erro no processamento. No Anexo 06 deste manual encontra-se um exemplo. 
+Cabeï¿½alho do Retorno do Serviï¿½o 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+CodCidade 
+N 
+10 
+Cï¿½digo da Cidade ï¿½ Padrï¿½o SIAFI 
+Sucesso 
+A 
+5 
+ï¿½trueï¿½ se processado com sucerro, ï¿½falseï¿½ se ocorreram erros. 
+NumeroLote 
+N 
+12 
+Nï¿½mero do Lote processado 
+CPFCNPJRemetente 
+A 
+14 
+CPF/CNPJ Remetente 
+DataEnvioLote 
+D 
+ 
+Data e hora de envio 
+Formato = AAAA-MM-DDTHH:MM:SS 
+QtdNotasProcessadas 
+N 
+10 
+Quantidade de notas processadas no lote 
+TempoProcessamento 
+N 
+10 
+Tempo gasto no processamento 
+ValorTotalServicos 
+N 
+15,2 
+Valor total dos serviï¿½os 
+ValorTotalDeducoes 
+N 
+15,2 
+Valor total das deduï¿½ï¿½es 
+Versao 
+N 
+3 
+Versï¿½o do Shema XML 
+Assincrono 
+A 
+1 
+Tipo do Serviï¿½o 
+ï¿½Sï¿½-Assincrono 
+ï¿½Nï¿½-Sincrono 
+ 
+
+
+Chave ChaveNFe 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+InscricaoPrestador 
+A 
+11 
+Inscriï¿½ï¿½o municipal do contribuinte 
+NumeroNFe 
+N 
+12 
+Nï¿½mero da NFS-e 
+CodigoVerificacao 
+A 
+255 
+Cï¿½digo de verificaï¿½ï¿½o, gerado para identificaï¿½ï¿½o da NFSe. 
+RazaoSocialPrestador 
+A 
+120 
+Razï¿½o Social do Contribuinte prestador de serviï¿½os 
+ 
+ 
+
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+InscricaoPrestador 
+A 
+11 
+Inscriï¿½ï¿½o Municipal do Contribuinte 
+SerieRPS 
+A 
+2 
+Sï¿½rie da RPS: Padrï¿½o ï¿½NFï¿½ - Nota Fiscal de Serviï¿½os 
+NumeroRPS 
+N 
+12 
+Nï¿½mero da RPS 
+DataEmissaoRPS 
+D 
+ 
+Data e Hora de Emissï¿½o da RPS 
+Formato = AAAA-MM-DDTHH:MM:SS 
+RazaoSocialPrestador 
+A 
+120 
+Razï¿½o Social do Contribuinte Prestador de Serviï¿½os 
+ 
+Caso o serviï¿½o apresente erro no processamento dos RPS enviados serï¿½ retornado uma mensagem XML com a Tag Erros com os erros de processamento. No Anexo 06 deste  manual encontra-se um exemplo. Caso o serviï¿½o apre- sente erro no processamento dos RPS enviados serï¿½ retornado uma mensagem XML com a Tag Erros com os erros de processamento. Segue abaixo um exemplo de retorno com erro no processamento. No Anexo 06 deste manual encontra-se um exemplo. 
  
   4.2. Consulta de Lote 
  
  
-Método: consultarLote 
-Permite consulta  as NFS-e emitidas pelo prestador pelo número  de lote informado.  Após o envio bem sucedido de um Lote de RPS, o Web Service retorna diversas informações, entre elas o número do lote pro- cessado, NFS-e geradas neste lote. Caso o lote contenha informações incorretas, serão geradas críticas de processamento, essas críticas serão retorndas como erros e o lote será recusado. Caso não contenha erros este método irá retornar as notas geradas. 
+Mï¿½todo: consultarLote 
+Permite consulta  as NFS-e emitidas pelo prestador pelo nï¿½mero  de lote informado.  Apï¿½s o envio bem sucedido de um Lote de RPS, o Web Service retorna diversas informaï¿½ï¿½es, entre elas o nï¿½mero do lote pro- cessado, NFS-e geradas neste lote. Caso o lote contenha informaï¿½ï¿½es incorretas, serï¿½o geradas crï¿½ticas de processamento, essas crï¿½ticas serï¿½o retorndas como erros e o lote serï¿½ recusado. Caso nï¿½o contenha erros este mï¿½todo irï¿½ retornar as notas geradas. 
  
- Parâmetros passados para o método : 
-Registro de Cabeçalho CAMPO TIPO TAM. CONTEÚDO OBRIG.CodCidade N 10 Codigo da Cidade – Padrão SIAFI S CPFCNPJRemetente A 14 CPF ou CNPJ do Contribuinte S Versao N 3 Versão do Layout do Schema XML Padrão “1” S NumeroLote N 12 Número do Lote a ser consultado S  
-Após o envio da mensagem XML que faz chamada ao método ReqConsultaLote o WebService irá retornar os dados  de processamento do Lote e as NFSe’s do método, conforme  definições abaixo, exemplos  de retorno no Anexo 06. 
+ Parï¿½metros passados para o mï¿½todo : 
+
+Registro de Cabeï¿½alho 
+
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+OBRIG.
+CodCidade 
+N 
+10 
+Codigo da Cidade ï¿½ Padrï¿½o SIAFI 
+S 
+CPFCNPJRemetente 
+A 
+14 
+CPF ou CNPJ do Contribuinte 
+S 
+Versao 
+N 
+3 
+Versï¿½o do Layout do Schema XML Padrï¿½o ï¿½1ï¿½ 
+S 
+NumeroLote 
+N 
+12 
+Nï¿½mero do Lote a ser consultado 
+S 
+ 
+Apï¿½s o envio da mensagem XML que faz chamada ao mï¿½todo ReqConsultaLote o WebService irï¿½ retornar os dados  de processamento do Lote e as NFSeï¿½s do mï¿½todo, conforme  definiï¿½ï¿½es abaixo, exemplos  de retorno no Anexo 06. 
  
 Extrutura da mensagem XML de retorno : 
  
-Registro de Cabeçalho CAMPO TIPO TAM. CONTEÚDO CodCidade N 10 Codigo da Cidade – Padrão SIAFI Sucesso A 5 “true” – Consulta realizada com sucesso 
-“false” – Erro na consulta NumeroLote N 12 Número do Lote CPFCNPJRemetente A 14 CPF ou CNPJ do Remetente RazaoSocialRemetente A 120 Razão Social Remetente DataEnvioLote D  Data de Envio do Lote 
-Formato = AAAA-MM-DDTHH:MM:SS QtdNotasProcessadas N 15 Quantidade de Notas Processadas no Lote TempoProcessamento N 15 Tempo total de processamento ValorTotalServicos N 15,2 Valor Total dos Serviços ValorTotalDeducoes N 15,2 Valor total das Deduções Versao N 3 Versão do Shema XML Registro de NFSe CAMPO TIPO TAM. CONTEÚDO InscricaoPrestador A 11 Inscrição Municipal do Contribuinte NumeroNFe N 12 Numero da Nota Fiscal de Serviços CodigoVerificacao A 255 Código de Verificação SerieRPS A 2 Serie da RPS : Padrão “NF” Nota Fiscal de Serviços NumeroRPS N 12 Número do RPS DataEmissaoRPS D  Data de Emissão do RPS 
-Formato = AAAA-MM-DDTHH:MM:SS RazaoSocialPrestador A 120 Razão Social do Contribuinte TipoRecolhimento A 1 Tipo de Recolhimento 
-“A” – A Receber 
-“R” - Retido na Fonte ValorDeduzir N 15,2 Valor a Deduzir ValorTotal N 15,2 Valor total Aliquota N 6,4 Alíquota de ISS  
+
+Registro de Cabeï¿½alho 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+CodCidade 
+N 
+10 
+Codigo da Cidade ï¿½ Padrï¿½o SIAFI 
+Sucesso 
+A 
+5 
+ï¿½trueï¿½ ï¿½ Consulta realizada com sucesso 
+ï¿½falseï¿½ ï¿½ Erro na consulta 
+NumeroLote 
+N 
+12 
+Nï¿½mero do Lote 
+CPFCNPJRemetente 
+A 
+14 
+CPF ou CNPJ do Remetente 
+RazaoSocialRemetente 
+A 
+120 
+Razï¿½o Social Remetente 
+DataEnvioLote 
+D 
+ 
+Data de Envio do Lote 
+Formato = AAAA-MM-DDTHH:MM:SS 
+QtdNotasProcessadas 
+N 
+15 
+Quantidade de Notas Processadas no Lote 
+TempoProcessamento 
+N 
+15 
+Tempo total de processamento 
+ValorTotalServicos 
+N 
+
+15,2 
+Valor Total dos Serviï¿½os 
+ValorTotalDeducoes 
+N 
+
+15,2 
+Valor total das Deduï¿½ï¿½es 
+Versao 
+N 
+
+3 
+Versï¿½o do Shema XML 
+
+
+Registro de NFSe 
+CAMPO 
+TIPO 
+
+TAM. 
+CONTEï¿½DO 
+InscricaoPrestador 
+A 
+
+11 
+Inscriï¿½ï¿½o Municipal do Contribuinte 
+NumeroNFe 
+N 
+
+12 
+Numero da Nota Fiscal de Serviï¿½os 
+CodigoVerificacao 
+A 
+
+255 
+Cï¿½digo de Verificaï¿½ï¿½o 
+SerieRPS 
+A 
+
+2 
+Serie da RPS : Padrï¿½o ï¿½NFï¿½ Nota Fiscal de Serviï¿½os 
+NumeroRPS 
+N 
+
+12 
+Nï¿½mero do RPS 
+DataEmissaoRPS 
+D 
+
+ 
+Data de Emissï¿½o do RPS 
+Formato = AAAA-MM-DDTHH:MM:SS 
+RazaoSocialPrestador 
+A 
+
+120 
+Razï¿½o Social do Contribuinte 
+TipoRecolhimento 
+A 
+
+1 
+Tipo de Recolhimento 
+ï¿½Aï¿½ ï¿½ A Receber 
+ï¿½Rï¿½ - Retido na Fonte 
+ValorDeduzir 
+N 
+
+15,2 
+Valor a Deduzir 
+ValorTotal 
+N 
+
+15,2 
+Valor total 
+Aliquota 
+N 
+
+6,4 
+Alï¿½quota de ISS 
  
  
-4.3 – Consulta de Notas Método: ConsultarNota 
+ 
+4.3 ï¿½ Consulta de Notas Mï¿½todo: ConsultarNota 
  
  
-Na tabela seguinte  apresenta-se a definição dos campos do XML de consulta de notas. Através deste método serão retornadas as notas geradas a partir de RPS convertidos entre a datas inicial e final informadas como parâmetro. 
+Na tabela seguinte  apresenta-se a definiï¿½ï¿½o dos campos do XML de consulta de notas. Atravï¿½s deste mï¿½todo serï¿½o retornadas as notas geradas a partir de RPS convertidos entre a datas inicial e final informadas como parï¿½metro. 
  
-O Web service pode retornar apenas uma quantidade limitada de no máximo 100 notas por requisição. Com isso é necessário realizar mais de uma consulta para obter todas as notas. Por exemplo se o web service retorna no máximo 100 notas e no período a ser consultado existem mais de 100 notas, na primeira consulta deve-se passar a nota inicial como sendo a de número 0(zero), assim o web service irá retornar as notas do período onde o número da nota for maior ou igual a 0(zero), sendo retornado até 100 notas no máximo, então pega-se o número da última nota retornada acrescentando mais 1(um) e deve-se realizar novamente a consulta, o web service irá retornar as próximas 100 notas a partir desta. A consulta deve ser repetida até que não retorne mais nenhuma nota. Indican- do que já foram retornados todos as notas do período, segue exemplo no Anexo 06 deste manual. 
+O Web service pode retornar apenas uma quantidade limitada de no mï¿½ximo 100 notas por requisiï¿½ï¿½o. Com isso ï¿½ necessï¿½rio realizar mais de uma consulta para obter todas as notas. Por exemplo se o web service retorna no mï¿½ximo 100 notas e no perï¿½odo a ser consultado existem mais de 100 notas, na primeira consulta deve-se passar a nota inicial como sendo a de nï¿½mero 0(zero), assim o web service irï¿½ retornar as notas do perï¿½odo onde o nï¿½mero da nota for maior ou igual a 0(zero), sendo retornado atï¿½ 100 notas no mï¿½ximo, entï¿½o pega-se o nï¿½mero da ï¿½ltima nota retornada acrescentando mais 1(um) e deve-se realizar novamente a consulta, o web service irï¿½ retornar as prï¿½ximas 100 notas a partir desta. A consulta deve ser repetida atï¿½ que nï¿½o retorne mais nenhuma nota. Indican- do que jï¿½ foram retornados todos as notas do perï¿½odo, segue exemplo no Anexo 06 deste manual. 
  
-A requisição de consulta de notas deve ser assinada com certificado digital no ambiente de produção. No ambiente de homo- logação não é obrigatório assinar a requisição 
-A  tag   <Cabecalho   Id=”Consulta:notas”>   que   deve   ser   referenciada   na   URI   da   assinatura.   Exemplo  :   <Reference URI=”#Consulta:notas”>. 
+A requisiï¿½ï¿½o de consulta de notas deve ser assinada com certificado digital no ambiente de produï¿½ï¿½o. No ambiente de homo- logaï¿½ï¿½o nï¿½o ï¿½ obrigatï¿½rio assinar a requisiï¿½ï¿½o 
+A  tag   <Cabecalho   Id=ï¿½Consulta:notasï¿½>   que   deve   ser   referenciada   na   URI   da   assinatura.   Exemplo  :   <Reference URI=ï¿½#Consulta:notasï¿½>. 
  
-Parâmetros passado para o método : 
-Requisição da Função de Consulta de Notas - ReqconsultaNotas CAMPO TIPO TAM. CONTEÚDO OBRIG. CodCidade N 10 Código da Cidade – Padrão SIAFI S CPFCNPJRemetente A 14 CPF/CNPJ do remetente ou responsável legal. S InscricaoMunicipalPrestador N 11 Inscrição Municipal do Prestador S dtInicio D  Data de início do período transmitido. Data da primeira RPS contida no lote Formato: YYYY-MM-DD S dtFim D  Data Final do período  transmitido. Data da última RPS contida  no lote Formato: YYYY-MM-DD S NotaInicial N 10 Informe o número da primeira nota, serão retornados as notas onde o numero seja maior ou igual ao valor informado neste campo. s Versao N 3 Informe a versão do SChema XML. Padrão “1” S  
-Retorno do método : 
-Na tabela seguinte  apresenta-se a definição dos campos do XML de retorno da função de consulta de no- tas. Exemplos presentes no Anexo 06, deste manual. 
+Parï¿½metros passado para o mï¿½todo : 
+Requisiï¿½ï¿½o da Funï¿½ï¿½o de Consulta de Notas - ReqconsultaNotas 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+OBRIG. 
+CodCidade 
+N 
+10 
+Cï¿½digo da Cidade ï¿½ Padrï¿½o SIAFI 
+S 
+CPFCNPJRemetente 
+A 
+14 
+CPF/CNPJ do remetente ou responsï¿½vel legal. 
+S 
+InscricaoMunicipalPrestador 
+N 
+11 
+Inscriï¿½ï¿½o Municipal do Prestador 
+S 
+dtInicio 
+D 
+ 
+Data de inï¿½cio do perï¿½odo transmitido. Data da primeira RPS contida no lote Formato: YYYY-MM-DD 
+S 
+dtFim 
+D 
+ 
+Data Final do perï¿½odo  transmitido. Data da ï¿½ltima RPS contida  no lote Formato: YYYY-MM-DD 
+S 
+NotaInicial 
+N 
+10 
+Informe o nï¿½mero da primeira nota, serï¿½o retornados as notas onde o numero seja maior ou igual ao valor informado neste campo. 
+s 
+Versao 
+N 
+3 
+Informe a versï¿½o do SChema XML. Padrï¿½o ï¿½1ï¿½ 
+S 
+ 
+Retorno do mï¿½todo : 
+Na tabela seguinte  apresenta-se a definiï¿½ï¿½o dos campos do XML de retorno da funï¿½ï¿½o de consulta de no- tas. Exemplos presentes no Anexo 06, deste manual. 
  
 Estrutura definida no schema XML: 
  
  
-Registro Cabeçalho CAMPO TIPO TAM. CONTEÚDO CodCidade N 10 Código da Cidade – Padrão SIAFI CPFCNPJRemetente A 14 CPF ou CNPJ do remetente autorizado a transmitir o RPS InscricaoMunicipalPrestador N 11 Inscrição Municipal do Prestador DtInicio D  Data de início do período transmitido. Data do primeiro RPS contido no lote Formato: YYYY-MM-YY DtFim D  Data Final do período transmitido. Data do último RPS contido no lote Formato: YYYY-MM-YY Versão N 3 Informe a versão do SChema XML. Padrão “1”.  
-Registro de Notas CAMPO TIPO TAM. CONTEÚDO NumeroNota N 12 Número da Nota Fiscal DataProcessamento D  Data do Processamento 
-Formato = AAAA-MM-DDTHH:MM:SS NumeroLote N 12 Número do Lote CodigoVerificacao A 255 Código de Verificação Indentificador da NFSe Assinatura A 2000 Assinatura do RPS InscricaoMunicipalPrestador A 11 Inscrição Municipal do Prestador RazaoSocialPrestador A 120 Razao Social do Prestador TipoRPS A 20 Tipo de RPS : Padrão “RPS” SerieRPS A 2 Série do RPS : Padrão “NF” NumeroRPS N 12 Número do RPS DataEmissaoRPS D  Data de Emissão do RPS 
-Formato = AAAA-MM-DDTHH:MM:SS SituacaoRPS A 1 Situação do RPS 
-“N”-Normal 
-“C”-Cancelada SerieRPSSubstituido A 10 Série do RPS Substituído NumeroRPSSubstituido N 12 Número do RPS Substituído NumeroNFSeSubstituida N 12 Numero da NFSe Substituída DataEmissaoNFSeSubstituida D  Data de Emissão da NFSe Substituída Formato: YYYY-MM-YY SeriePrestacao N 2 Número do equipamento emissor do RPS ou série de prestação InscricaoMunicipalTomador A 11 Inscrição Municipal do Tomador CPFCNPJTomador A 14 CPF ou CNPJ do Tomador RazaoSocialTomador A 120 Razão Social do Tomador TipoLogradouroTomador A 10 Tipo do Logradouro do Tomador LogradouroTomador A 50 Logradouro do Tomador NumeroEnderecoTomador A 9 Número de Endereço do Tomador ComplementoEnderecoTomador A 30 Complemento Endereço do Tomador. TipoBairroTomador A 10 Tipo de Bairro Tomador BairroTomador A 50 Bairro do Tomador CidadeTomador N 10 Código da Cidade do Tomador padrão SIAFI CidadeTomadorDescricao A 30 Cidade do Tomador CEPTomador A 8 CEP do Tomador EmailTomador A 60 Email do Tomador CodigoAtividade A 9 Código da Atividade AliquotaAtividade N 6,4 Alíquota da Atividade TipoRecolhimento A 1 Tipo de Recolhimento 
-“A” - A recolher 
-“R” – Retido na fonte MunicipioPrestacao N 10 Código do Município de Prestação – Padrão SIAFI MunicipioPrestacaoDescricao A 30 Município de Prestação Operacao A 1 Operação 
-“A”-Sem Dedução 
-“B”-Com Dedução/Materiais 
-“C” - Imune/Isenta de ISSQN 
-“D” - Devolução/Simples Remessa 
-“J” - Intermediação Tributacao A 1 Tributação: 
+
+Registro Cabeï¿½alho 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+CodCidade 
+N 
+10 
+Cï¿½digo da Cidade ï¿½ Padrï¿½o SIAFI 
+CPFCNPJRemetente 
+A 
+14 
+CPF ou CNPJ do remetente autorizado a transmitir o RPS 
+InscricaoMunicipalPrestador 
+N 
+11 
+Inscriï¿½ï¿½o Municipal do Prestador 
+DtInicio 
+D 
+ 
+Data de inï¿½cio do perï¿½odo transmitido. Data do primeiro RPS contido no lote Formato: YYYY-MM-YY 
+DtFim 
+D 
+ 
+Data Final do perï¿½odo transmitido. Data do ï¿½ltimo RPS contido no lote Formato: YYYY-MM-YY 
+Versï¿½o 
+N 
+3 
+Informe a versï¿½o do SChema XML. Padrï¿½o ï¿½1ï¿½. 
+ 
+
+
+Registro de Notas 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+NumeroNota 
+N 
+12 
+Nï¿½mero da Nota Fiscal 
+DataProcessamento 
+D 
+ 
+Data do Processamento 
+Formato = AAAA-MM-DDTHH:MM:SS 
+NumeroLote 
+N 
+12 
+Nï¿½mero do Lote 
+CodigoVerificacao 
+A 
+255 
+Cï¿½digo de Verificaï¿½ï¿½o Indentificador da NFSe 
+Assinatura 
+A 
+2000 
+Assinatura do RPS 
+InscricaoMunicipalPrestador 
+A 
+11 
+Inscriï¿½ï¿½o Municipal do Prestador 
+RazaoSocialPrestador 
+A 
+120 
+Razao Social do Prestador 
+TipoRPS 
+A 
+20 
+Tipo de RPS : Padrï¿½o ï¿½RPSï¿½ 
+SerieRPS 
+A 
+2 
+Sï¿½rie do RPS : Padrï¿½o ï¿½NFï¿½ 
+NumeroRPS 
+N 
+12 
+Nï¿½mero do RPS 
+DataEmissaoRPS 
+D 
+ 
+Data de Emissï¿½o do RPS 
+Formato = AAAA-MM-DDTHH:MM:SS 
+SituacaoRPS 
+A 
+1 
+Situaï¿½ï¿½o do RPS 
+ï¿½Nï¿½-Normal 
+ï¿½Cï¿½-Cancelada 
+SerieRPSSubstituido 
+A 
+10 
+Sï¿½rie do RPS Substituï¿½do 
+NumeroRPSSubstituido 
+N 
+12 
+Nï¿½mero do RPS Substituï¿½do 
+NumeroNFSeSubstituida 
+N 
+12 
+Numero da NFSe Substituï¿½da 
+DataEmissaoNFSeSubstituida 
+D 
+ 
+Data de Emissï¿½o da NFSe Substituï¿½da Formato: YYYY-MM-YY 
+SeriePrestacao 
+N 
+2 
+Nï¿½mero do equipamento emissor do RPS ou sï¿½rie de prestaï¿½ï¿½o 
+InscricaoMunicipalTomador 
+A 
+11 
+Inscriï¿½ï¿½o Municipal do Tomador 
+CPFCNPJTomador 
+A 
+14 
+CPF ou CNPJ do Tomador 
+RazaoSocialTomador 
+A 
+120 
+Razï¿½o Social do Tomador 
+TipoLogradouroTomador 
+A 
+10 
+Tipo do Logradouro do Tomador 
+LogradouroTomador 
+A 
+50 
+Logradouro do Tomador 
+NumeroEnderecoTomador 
+A 
+9 
+Nï¿½mero de Endereï¿½o do Tomador 
+ComplementoEnderecoTomador 
+A 
+30 
+Complemento Endereï¿½o do Tomador. 
+TipoBairroTomador 
+A 
+10 
+Tipo de Bairro Tomador 
+BairroTomador 
+A 
+50 
+Bairro do Tomador 
+CidadeTomador 
+N 
+10 
+Cï¿½digo da Cidade do Tomador padrï¿½o SIAFI 
+CidadeTomadorDescricao 
+A 
+30 
+Cidade do Tomador 
+CEPTomador 
+A 
+8 
+CEP do Tomador 
+EmailTomador 
+A 
+60 
+Email do Tomador 
+CodigoAtividade 
+A 
+9 
+Cï¿½digo da Atividade 
+AliquotaAtividade 
+N 
+6,4 
+Alï¿½quota da Atividade 
+TipoRecolhimento 
+A 
+1 
+Tipo de Recolhimento 
+ï¿½Aï¿½ - A recolher 
+ï¿½Rï¿½ ï¿½ Retido na fonte 
+MunicipioPrestacao 
+N 
+10 
+Cï¿½digo do Municï¿½pio de Prestaï¿½ï¿½o ï¿½ Padrï¿½o SIAFI 
+MunicipioPrestacaoDescricao 
+A 
+30 
+Municï¿½pio de Prestaï¿½ï¿½o 
+Operacao 
+A 
+1 
+Operaï¿½ï¿½o 
+ï¿½Aï¿½-Sem Deduï¿½ï¿½o 
+ï¿½Bï¿½-Com Deduï¿½ï¿½o/Materiais 
+ï¿½Cï¿½ - Imune/Isenta de ISSQN 
+ï¿½Dï¿½ - Devoluï¿½ï¿½o/Simples Remessa 
+ï¿½Jï¿½ - Intermediaï¿½ï¿½o 
+Tributacao 
+A 
+1 
+Tributaï¿½ï¿½o: 
 C - Isenta de ISS 
-E - Não Incidência no Município 
+E - Nï¿½o Incidï¿½ncia no Municï¿½pio 
 F - Imune 
 K - Exigibilidd Susp.Dec.J/Proc.A 
-N - Não Tributável 
-T – Tributável G - Tributável Fixo 
-H - Tributável S.N. 
-M - Micro Empreendedor Individual (MEI) ValorPIS N 15,2 Valor PIS ValorCOFINS N 15,2 Valor COFINS ValorINSS N 15,2 Valor INSS ValorIR N 15,2 Valor IR ValorCSLL N 15,2 Valor CSLL AliquotaPIS N 6,4 Aliquota PIS AliquotaCOFINS N 6,4 Aliquota COFINS AliquotaINSS N 6,4 Aliquota INSS AliquotaIR N 6,4 Aliquota IR AliquotaCSLL N 6,4 Aliquota CSLL DescricaoRPS A 1500 Descrição/ Dados Complementares DDDPrestador A 3 DDD do telefone do Prestador TelefonePrestador A 8 Telefone do Prestador DDDTomador A 3 DDD do Tomador TelefoneTomador A 8 Telefone do Tomador MotCancelamento A 80 Motivo do Cancelamento CpfCnpjIntermediario A 14 CPF/CNPJ do intermediário Registro de itens da Nota 
-CAMPO TIPO TAM. CONTEÚDO DiscriminacaoServico A 80 Discriminação do Serviço Quantidade N 10,4 Quantidade do serviço tomado ValorUnitario N 15,4 Valor Unitário ValorTotal N 15,2 Valor total do serviço Tributavel A 1 Tributável S- Item tributável , N- Não tributável.  
- Registro de Deduções da Nota 
-CAMPO TIPO TAM. CONTEÚDO DeducaoPor A 20 “Percentual” 
-“Valor” TipoDeducao A 255 Caso a dedução   for por “Valor” os valores possíveis são: “Despesas com Materiais” ou “Despesas com Sub-empreitada”. Caso a dedução for por “Percentual” informar este campo com valor vazio. CPFCNPJReferencia A 14 CPF ou CNPJ do Fornecedor ou Prestador do Serviço NumeroNFReferencia N 10 Número da Nota Fiscal de Referência ValorTotalReferencia N 15,2 Valor  total da Nota Fiscal de Referência PercentualDeduzir N 5,2 Percentual a Deduzir ValorDeduzir N 15,2 Valor a ser Deduzido  
-4.4- Consulta Seqüencial RPS 
-O método de consulta seqüencial Rps retorna um XML com o número seqüencial do último RPS do pres- tador convertido em nota. O seqüencial é utilizado para controle de numeração de RPS, o serviço deve ser acessado  sempre que necessário obter o número  do último RPS processado. Não é necessário acessar o serviço em cada conversão de lote. Na tabela seguinte  apresenta-se a definição dos campos do XML de consulta ao seqüencial de RPS. Exemplos encontram-se no Anexo 06, deste manual. A numeração sequen- cial dos RPS é por Serie de Prestação, ou seja cada serie tera seu controle sequencial. 
+N - Nï¿½o Tributï¿½vel 
+T ï¿½ Tributï¿½vel G - Tributï¿½vel Fixo 
+H - Tributï¿½vel S.N. 
+M - Micro Empreendedor Individual (MEI) 
+ValorPIS 
+N 
+15,2 
+Valor PIS 
+ValorCOFINS 
+N 
+15,2 
+Valor COFINS 
+ValorINSS 
+N 
+15,2 
+Valor INSS 
+ValorIR 
+N 
+15,2 
+Valor IR 
+ValorCSLL 
+N 
+15,2 
+Valor CSLL 
+AliquotaPIS 
+N 
+6,4 
+Aliquota PIS 
+AliquotaCOFINS 
+N 
+6,4 
+Aliquota COFINS 
+AliquotaINSS 
+N 
+6,4 
+Aliquota INSS 
+AliquotaIR 
+N 
+6,4 
+Aliquota IR 
+AliquotaCSLL 
+N 
+6,4 
+Aliquota CSLL 
+DescricaoRPS 
+A 
+1500 
+Descriï¿½ï¿½o/ Dados Complementares 
+DDDPrestador 
+A 
+3 
+DDD do telefone do Prestador 
+TelefonePrestador 
+A 
+8 
+Telefone do Prestador 
+DDDTomador 
+A 
+3 
+DDD do Tomador 
+TelefoneTomador 
+A 
+8 
+Telefone do Tomador 
+MotCancelamento 
+A 
+80 
+Motivo do Cancelamento 
+CpfCnpjIntermediario 
+A 
+14 
+CPF/CNPJ do intermediï¿½rio 
+Registro de itens da Nota 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+DiscriminacaoServico 
+A 
+80 
+Discriminaï¿½ï¿½o do Serviï¿½o 
+Quantidade 
+N 
+10,4 
+Quantidade do serviï¿½o tomado 
+ValorUnitario 
+N 
+15,4 
+Valor Unitï¿½rio 
+ValorTotal 
+N 
+15,2 
+Valor total do serviï¿½o 
+Tributavel 
+A 
+1 
+Tributï¿½vel S- Item tributï¿½vel , N- Nï¿½o tributï¿½vel. 
  
-Parâmetros passado para o método : 
- Requisição da Função de  Consulta Sequencial RPS 
-CAMPO TIPO TAM. CONTEÚDO OBRIG.CodCidade N 10 Código da Cidade padrão SIAFI S CPFCNPJRemetente A 14 CPF ou CNPJ do remetente S IMPrestador N 11 Inscrição Municipal do Prestador. 
-Verificar  regra  de  preenchimento do  campo  no Anexo 03  SeriePrestacao N 2 Número do equipamento emissor do RPS ou série de prestação. Por padrão informe o valor “99” para modelo único. Caso esteja autorizado  pela prefei- tura, pode se passar um valor de 01 a 99 para indi- car o número do equipamento. S Versao N 3 Informe a versão do SChema XML. Padrão “1” S  
-Retorno do método 
+ Registro de Deduï¿½ï¿½es da Nota 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+DeducaoPor 
+A 
+20 
+ï¿½Percentualï¿½ 
+ï¿½Valorï¿½ 
+TipoDeducao 
+A 
+255 
+Caso a deduï¿½ï¿½o   for por ï¿½Valorï¿½ os valores possï¿½veis sï¿½o: ï¿½Despesas com Materiaisï¿½ ou ï¿½Despesas com Sub-empreitadaï¿½. Caso a deduï¿½ï¿½o for por ï¿½Percentualï¿½ informar este campo com valor vazio. 
+CPFCNPJReferencia 
+A 
+14 
+CPF ou CNPJ do Fornecedor ou Prestador do Serviï¿½o 
+NumeroNFReferencia 
+N 
+10 
+Nï¿½mero da Nota Fiscal de Referï¿½ncia 
+ValorTotalReferencia 
+N 
+15,2 
+Valor  total da Nota Fiscal de Referï¿½ncia 
+PercentualDeduzir 
+N 
+5,2 
+Percentual a Deduzir 
+ValorDeduzir 
+N 
+15,2 
+Valor a ser Deduzido 
+ 
+4.4- Consulta Seqï¿½encial RPS 
+O mï¿½todo de consulta seqï¿½encial Rps retorna um XML com o nï¿½mero seqï¿½encial do ï¿½ltimo RPS do pres- tador convertido em nota. O seqï¿½encial ï¿½ utilizado para controle de numeraï¿½ï¿½o de RPS, o serviï¿½o deve ser acessado  sempre que necessï¿½rio obter o nï¿½mero  do ï¿½ltimo RPS processado. Nï¿½o ï¿½ necessï¿½rio acessar o serviï¿½o em cada conversï¿½o de lote. Na tabela seguinte  apresenta-se a definiï¿½ï¿½o dos campos do XML de consulta ao seqï¿½encial de RPS. Exemplos encontram-se no Anexo 06, deste manual. A numeraï¿½ï¿½o sequen- cial dos RPS ï¿½ por Serie de Prestaï¿½ï¿½o, ou seja cada serie tera seu controle sequencial. 
+ 
+Parï¿½metros passado para o mï¿½todo : 
+ Requisiï¿½ï¿½o da Funï¿½ï¿½o de  Consulta Sequencial RPS 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+OBRIG.
+CodCidade 
+N 
+10 
+Cï¿½digo da Cidade padrï¿½o SIAFI 
+S 
+CPFCNPJRemetente 
+A 
+14 
+CPF ou CNPJ do remetente 
+S 
+IMPrestador 
+N 
+11 
+Inscriï¿½ï¿½o Municipal do Prestador. 
+Verificar  regra  de  preenchimento do  campo  no Anexo 03 
+ 
+SeriePrestacao 
+N 
+2 
+Nï¿½mero do equipamento emissor do RPS ou sï¿½rie de prestaï¿½ï¿½o. Por padrï¿½o informe o valor ï¿½99ï¿½ para modelo ï¿½nico. Caso esteja autorizado  pela prefei- tura, pode se passar um valor de 01 a 99 para indi- car o nï¿½mero do equipamento. 
+S 
+Versao 
+N 
+3 
+Informe a versï¿½o do SChema XML. Padrï¿½o ï¿½1ï¿½ 
+S 
+ 
+Retorno do mï¿½todo 
  
 Exemplos de retorno no Anexo 06, deste maual. 
  
  
 4.5- Cancelamento de Notas Fiscais 
-Método: Cancelar 
-Para cancelar um Nota Fiscal deve ser um enviado uma requizição de cancelamento para o método Can- celar do web service, esse método recebe um lote contend as notas fiscais a serem canceladas. As notas que não foram emitidas Guias de Recolhimento serão canceladas. Exemplos deste método encontram-se no anexo 06 deste manual. 
+Mï¿½todo: Cancelar 
+Para cancelar um Nota Fiscal deve ser um enviado uma requiziï¿½ï¿½o de cancelamento para o mï¿½todo Can- celar do web service, esse mï¿½todo recebe um lote contend as notas fiscais a serem canceladas. As notas que nï¿½o foram emitidas Guias de Recolhimento serï¿½o canceladas. Exemplos deste mï¿½todo encontram-se no anexo 06 deste manual. 
  
  
-A requisição de cancelamento de notas deve ser assinada com certificado digital no ambiente de produção. 
-No ambiente de homologação não é obrigatório assinar a requisição. 
-A tag  <Lote Id=”lote:1ABCDZ”>que deve  ser referenciada  na URI da assinatura.  Exemplo : <Reference URI=”#lote:1ABCDZ”>. 
+A requisiï¿½ï¿½o de cancelamento de notas deve ser assinada com certificado digital no ambiente de produï¿½ï¿½o. 
+No ambiente de homologaï¿½ï¿½o nï¿½o ï¿½ obrigatï¿½rio assinar a requisiï¿½ï¿½o. 
+A tag  <Lote Id=ï¿½lote:1ABCDZï¿½>que deve  ser referenciada  na URI da assinatura.  Exemplo : <Reference URI=ï¿½#lote:1ABCDZï¿½>. 
 Estrutura definida no Schema XML: 
-CAMPO TIPO TAM. CONTEÚDO OBRIG.CodCidade N 10 Código da cidade da declaração padrão SIAFI. S CPFCNPJRemetente A 14 CPF /CNPJ do remetente autorizado a transmitir S Transacao A 5 Padrão “true” S Versão N 3 Informe a versão do SChema XML. Padrão “1”. S Registro de Notas 
-CAMPO TIPO TAM. CONTEÚDO OBRIG.InscricaoMunicipalPrestador N 11 Inscrição Municipal do Prestador  formatado  seguindo anexo 03 deste manual S NumeroNota N 12 Número da nota a ser cancelada S CodigoVerificacao A 255 Código de verificação da nota. S MotivoCancelamento A 80 Motivo do cancelamento S Retorno do Método: 
-A tabela a seguir contém definicições  do XML de retorno. Exemplos de retorno deste método encontram-se  no anexo 03 deste manual. 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+OBRIG.
+CodCidade 
+N 
+10 
+Cï¿½digo da cidade da declaraï¿½ï¿½o padrï¿½o SIAFI. 
+S 
+CPFCNPJRemetente 
+A 
+14 
+CPF /CNPJ do remetente autorizado a transmitir 
+S 
+Transacao 
+A 
+5 
+Padrï¿½o ï¿½trueï¿½ 
+S 
+Versï¿½o 
+N 
+3 
+Informe a versï¿½o do SChema XML. Padrï¿½o ï¿½1ï¿½. 
+S 
+Registro de Notas 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+OBRIG.
+InscricaoMunicipalPrestador 
+N 
+11 
+Inscriï¿½ï¿½o Municipal do Prestador  formatado  seguindo anexo 03 deste manual 
+S 
+NumeroNota 
+N 
+12 
+Nï¿½mero da nota a ser cancelada 
+S 
+CodigoVerificacao 
+A 
+255 
+Cï¿½digo de verificaï¿½ï¿½o da nota. 
+S 
+MotivoCancelamento 
+A 
+80 
+Motivo do cancelamento 
+S 
+Retorno do Mï¿½todo: 
+A tabela a seguir contï¿½m definiciï¿½ï¿½es  do XML de retorno. Exemplos de retorno deste mï¿½todo encontram-se  no anexo 03 deste manual. 
 Estrutura definida no Schema XML: 
-CAMPO TIPO TAM. CONTEÚDO OBRIG.CodCidade N 10 Código da cidade da declaração padrão SIAFI. S CPFCNPJRemetente A 14 CPF /CNPJ do remetente autorizado a transmitir S Transacao A 5 Padrão “true” S Versão N 3 Informe a versão do SChema XML. Padrão “1”. S Registro de Notas 
-CAMPO TIPO TAM. CONTEÚDO OBRIG.InscricaoMunicipalPrestador N 11 Inscrição Municipal do Prestador  formatado  seguindo anexo 03 deste manual S NumeroNota N 12 Número da nota a ser cancelada S CodigoVerificacao A 255 Código de verificação da nota. S 4.6- Consulta NFSe ou RPS 
-Método: ConsultarNFSeRps 
-Para consultar uma Nota Fiscal ou um RPS deve ser um enviado ao WebService uma requisição de consulta para o método ConsultarNFSeRps do Webservice  contendo  as Notas Fiscais ou RPS a serem consultados.  Exemplos deste método encontram-se  no anexo 08 deste manual. 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+OBRIG.
+CodCidade 
+N 
+10 
+Cï¿½digo da cidade da declaraï¿½ï¿½o padrï¿½o SIAFI. 
+S 
+CPFCNPJRemetente 
+A 
+14 
+CPF /CNPJ do remetente autorizado a transmitir 
+S 
+Transacao 
+A 
+5 
+Padrï¿½o ï¿½trueï¿½ 
+S 
+Versï¿½o 
+N 
+3 
+Informe a versï¿½o do SChema XML. Padrï¿½o ï¿½1ï¿½. 
+S 
+Registro de Notas 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+OBRIG.
+InscricaoMunicipalPrestador 
+N 
+11 
+Inscriï¿½ï¿½o Municipal do Prestador  formatado  seguindo anexo 03 deste manual 
+S 
+NumeroNota 
+N 
+12 
+Nï¿½mero da nota a ser cancelada 
+S 
+CodigoVerificacao 
+A 
+255 
+Cï¿½digo de verificaï¿½ï¿½o da nota. 
+S 
+4.6- Consulta NFSe ou RPS 
+Mï¿½todo: ConsultarNFSeRps 
+Para consultar uma Nota Fiscal ou um RPS deve ser um enviado ao WebService uma requisiï¿½ï¿½o de consulta para o mï¿½todo ConsultarNFSeRps do Webservice  contendo  as Notas Fiscais ou RPS a serem consultados.  Exemplos deste mï¿½todo encontram-se  no anexo 08 deste manual. 
  
  
-A requisição de consulta de NFS-e ou RPS deve ser assinada com certificado  digital no ambi- ente de produção. No ambiente de homologação  não é obrigatório  assinar a requisição. A tag <Lote Id=”lote:1ABCDZ”>que deve ser referenciada  na URI da assinatura. Exemplo : <Refer- ence URI=”#lote:1ABCDZ”>. 
+A requisiï¿½ï¿½o de consulta de NFS-e ou RPS deve ser assinada com certificado  digital no ambi- ente de produï¿½ï¿½o. No ambiente de homologaï¿½ï¿½o  nï¿½o ï¿½ obrigatï¿½rio  assinar a requisiï¿½ï¿½o. A tag <Lote Id=ï¿½lote:1ABCDZï¿½>que deve ser referenciada  na URI da assinatura. Exemplo : <Refer- ence URI=ï¿½#lote:1ABCDZï¿½>. 
  
  
- Parâmetros passado para o método: 
-CAMPO TIPO TAM. CONTEÚDO OBRIGCodCidade N 10 Código da Cidade – Padrão SIAFI .S  CPFCNPJRemetente A 14 CPF/CNPJ do remetente ou responsável legal. S Transacao A 5 Padrão “true” S Versao N 3 Informe a versão do SChema XML. Padrão “1” S  
+ Parï¿½metros passado para o mï¿½todo: 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+OBRIG
+CodCidade 
+N 
+10 
+Cï¿½digo da Cidade ï¿½ Padrï¿½o SIAFI 
+.S  
+CPFCNPJRemetente 
+A 
+14 
+CPF/CNPJ do remetente ou responsï¿½vel legal. 
+S 
+Transacao 
+A 
+5 
+Padrï¿½o ï¿½trueï¿½ 
+S 
+Versao 
+N 
+3 
+Informe a versï¿½o do SChema XML. Padrï¿½o ï¿½1ï¿½ 
+S 
+ 
  Registro de Notas 
-CAMPO TIPO TAM. CONTEÚDO OBRIG.InscricaoMunicipalPrestador N 11 Inscrição Municipal do Prestador  formatado  seguindo anexo 03 deste manual S NumeroNota N 12 Número da nota a ser cancelada S CodigoVerificacao A 255 Código de verificação da nota. S   Registro de RPS 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+OBRIG.
+InscricaoMunicipalPrestador 
+N 
+11 
+Inscriï¿½ï¿½o Municipal do Prestador  formatado  seguindo anexo 03 deste manual 
+S 
+NumeroNota 
+N 
+12 
+Nï¿½mero da nota a ser cancelada 
+S 
+CodigoVerificacao 
+A 
+255 
+Cï¿½digo de verificaï¿½ï¿½o da nota. 
+S 
+  Registro de RPS 
  
-CAMPO TIPO TAM. CONTEÚDO OBRIGInscricaoMunicipalPrestador N 11 Inscrição Municipal do Prestador  formatado  se- guindo anexo 03 deste manual .S  NumeroRPS N 12 Número do RPS a ser consultado S SeriePrestacao N 2 Número do equipamento emissor do RPS ou sé- rie de prestação. Por padrão informe o valor “99” para modelo único. Caso esteja autorizado  pela prefeitura, pode  se passar um valor de 01 a 99 para indicar o número do equipamento. S Retorno do método : 
-Na tabela seguinte apresenta-se a definição dos campos do XML de retorno da função de consulta de NFSe ou RPS. Exemplos presentes no Anexo 06, deste manual. 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+OBRIG
+InscricaoMunicipalPrestador 
+N 
+11 
+Inscriï¿½ï¿½o Municipal do Prestador  formatado  se- guindo anexo 03 deste manual 
+.S  
+NumeroRPS 
+N 
+12 
+Nï¿½mero do RPS a ser consultado 
+S 
+SeriePrestacao 
+N 
+2 
+Nï¿½mero do equipamento emissor do RPS ou sï¿½- rie de prestaï¿½ï¿½o. Por padrï¿½o informe o valor ï¿½99ï¿½ para modelo ï¿½nico. Caso esteja autorizado  pela prefeitura, pode  se passar um valor de 01 a 99 para indicar o nï¿½mero do equipamento. 
+S 
+Retorno do mï¿½todo : 
+Na tabela seguinte apresenta-se a definiï¿½ï¿½o dos campos do XML de retorno da funï¿½ï¿½o de consulta de NFSe ou RPS. Exemplos presentes no Anexo 06, deste manual. 
 Estrutura definida no schema XML: 
-Registro Cabeçalho CAMPO TIPO TAM. CONTEÚDO CodCidade N 10 Código da Cidade – Padrão SIAFI CPFCNPJRemetente A 14 CPF ou CNPJ do remetente autorizado a transmitir o RPS InscricaoMunicipalPrestador N 11 Inscrição Municipal do Prestador DtInicio D  Data de início do período transmitido. Data do primeiro RPS contido no lote Formato: YYYY-MM-YY DtFim D  Data Final do período transmitido. Data do último RPS contido no lote Formato: YYYY-MM-YY Versão N 3 Informe a versão do SChema XML. Padrão “1”. Registro de Notas CAMPO TIPO TAM. CONTEÚDO NumeroNota N 12 Número da Nota Fiscal DataProcessamento D  Data do Processamento 
-Formato = AAAA-MM-DDTHH:MM:SS NumeroLote N 12 Número do Lote CodigoVerificacao A 255 Código de Verificação Indentificador da NFSe Assinatura A 2000 Assinatura do RPS InscricaoMunicipalPrestador A 11 Inscrição Municipal do Prestador RazaoSocialPrestador A 120 Razao Social do Prestador TipoRPS A 20 Tipo de RPS : Padrão “RPS” SerieRPS A 2 Série do RPS : Padrão “NF” NumeroRPS N 12 Número do RPS DataEmissaoRPS D  Data de Emissão do RPS 
-Formato = AAAA-MM-DDTHH:MM:SS SituacaoRPS A 1 Situação do RPS 
-“N”-Normal 
-“C”-Cancelada SerieRPSSubstituido A 10 Série do RPS Substituído NumeroRPSSubstituido N 12 Número do RPS Substituído NumeroNFSeSubstituida N 12 Numero da NFSe Substituída DataEmissaoNFSeSubstituida D  Data de Emissão da NFSe Substituída Formato: YYYY-MM-YY SeriePrestacao N 2 Número do equipamento emissor do RPS ou série de prestação InscricaoMunicipalTomador A 11 Inscrição Municipal do Tomador CPFCNPJTomador A 14 CPF ou CNPJ do Tomador RazaoSocialTomador A 120 Razão Social do Tomador TipoLogradouroTomador A 10 Tipo do Logradouro do Tomador LogradouroTomador A 50 Logradouro do Tomador NumeroEnderecoTomador A 9 Número de Endereço do Tomador ComplementoEnderecoTomador A 30 Complemento Endereço do Tomador. TipoBairroTomador A 10 Tipo de Bairro Tomador  
-BairroTomador A 50 Bairro do Tomador CidadeTomador N 10 Código da Cidade do Tomador padrão SIAFI CidadeTomadorDescricao A 30 Cidade do Tomador CEPTomador A 8 CEP do Tomador EmailTomador A 60 Email do Tomador CodigoAtividade A 9 Código da Atividade AliquotaAtividade N 6,4 Alíquota da Atividade TipoRecolhimento A 1 Tipo de Recolhimento 
-“A” - A recolher 
-“R” – Retido na fonte MunicipioPrestacao N 10 Código do Município de Prestação – Padrão SIAFI MunicipioPrestacaoDescricao A 30 Município de Prestação Operacao A 1 Operação 
-“A”-Sem Dedução 
-“B”-Com Dedução/Materiais 
-“C” - Imune/Isenta de ISSQN 
-“D” - Devolução/Simples Remessa 
-“J” - Intermediação Tributacao A 1 Tributação: 
+
+Registro Cabeï¿½alho 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+CodCidade 
+N 
+10 
+Cï¿½digo da Cidade ï¿½ Padrï¿½o SIAFI 
+CPFCNPJRemetente 
+A 
+14 
+CPF ou CNPJ do remetente autorizado a transmitir o RPS 
+InscricaoMunicipalPrestador 
+N 
+11 
+Inscriï¿½ï¿½o Municipal do Prestador 
+DtInicio 
+D 
+ 
+Data de inï¿½cio do perï¿½odo transmitido. Data do primeiro RPS contido no lote Formato: YYYY-MM-YY 
+DtFim 
+D 
+ 
+Data Final do perï¿½odo transmitido. Data do ï¿½ltimo RPS contido no lote Formato: YYYY-MM-YY 
+Versï¿½o 
+N 
+3 
+Informe a versï¿½o do SChema XML. Padrï¿½o ï¿½1ï¿½. 
+
+
+Registro de Notas 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+NumeroNota 
+N 
+12 
+Nï¿½mero da Nota Fiscal 
+DataProcessamento 
+D 
+ 
+Data do Processamento 
+Formato = AAAA-MM-DDTHH:MM:SS 
+NumeroLote 
+N 
+12 
+Nï¿½mero do Lote 
+CodigoVerificacao 
+A 
+255 
+Cï¿½digo de Verificaï¿½ï¿½o Indentificador da NFSe 
+Assinatura 
+A 
+2000 
+Assinatura do RPS 
+InscricaoMunicipalPrestador 
+A 
+11 
+Inscriï¿½ï¿½o Municipal do Prestador 
+RazaoSocialPrestador 
+A 
+120 
+Razao Social do Prestador 
+TipoRPS 
+A 
+20 
+Tipo de RPS : Padrï¿½o ï¿½RPSï¿½ 
+SerieRPS 
+A 
+2 
+Sï¿½rie do RPS : Padrï¿½o ï¿½NFï¿½ 
+NumeroRPS 
+N 
+12 
+Nï¿½mero do RPS 
+DataEmissaoRPS 
+D 
+ 
+Data de Emissï¿½o do RPS 
+Formato = AAAA-MM-DDTHH:MM:SS 
+SituacaoRPS 
+A 
+1 
+Situaï¿½ï¿½o do RPS 
+ï¿½Nï¿½-Normal 
+ï¿½Cï¿½-Cancelada 
+SerieRPSSubstituido 
+A 
+10 
+Sï¿½rie do RPS Substituï¿½do 
+NumeroRPSSubstituido 
+N 
+12 
+Nï¿½mero do RPS Substituï¿½do 
+NumeroNFSeSubstituida 
+N 
+12 
+Numero da NFSe Substituï¿½da 
+DataEmissaoNFSeSubstituida 
+D 
+ 
+Data de Emissï¿½o da NFSe Substituï¿½da Formato: YYYY-MM-YY 
+SeriePrestacao 
+N 
+2 
+Nï¿½mero do equipamento emissor do RPS ou sï¿½rie de prestaï¿½ï¿½o 
+InscricaoMunicipalTomador 
+A 
+11 
+Inscriï¿½ï¿½o Municipal do Tomador 
+CPFCNPJTomador 
+A 
+14 
+CPF ou CNPJ do Tomador 
+RazaoSocialTomador 
+A 
+120 
+Razï¿½o Social do Tomador 
+TipoLogradouroTomador 
+A 
+10 
+Tipo do Logradouro do Tomador 
+LogradouroTomador 
+A 
+50 
+Logradouro do Tomador 
+NumeroEnderecoTomador 
+A 
+9 
+Nï¿½mero de Endereï¿½o do Tomador 
+ComplementoEnderecoTomador 
+A 
+30 
+Complemento Endereï¿½o do Tomador. 
+TipoBairroTomador 
+A 
+10 
+Tipo de Bairro Tomador 
+ 
+BairroTomador 
+A 
+50 
+Bairro do Tomador 
+CidadeTomador 
+N 
+10 
+Cï¿½digo da Cidade do Tomador padrï¿½o SIAFI 
+CidadeTomadorDescricao 
+A 
+30 
+Cidade do Tomador 
+CEPTomador 
+A 
+8 
+CEP do Tomador 
+EmailTomador 
+A 
+60 
+Email do Tomador 
+CodigoAtividade 
+A 
+9 
+Cï¿½digo da Atividade 
+AliquotaAtividade 
+N 
+6,4 
+Alï¿½quota da Atividade 
+TipoRecolhimento 
+A 
+1 
+Tipo de Recolhimento 
+ï¿½Aï¿½ - A recolher 
+ï¿½Rï¿½ ï¿½ Retido na fonte 
+MunicipioPrestacao 
+N 
+10 
+Cï¿½digo do Municï¿½pio de Prestaï¿½ï¿½o ï¿½ Padrï¿½o SIAFI 
+MunicipioPrestacaoDescricao 
+A 
+30 
+Municï¿½pio de Prestaï¿½ï¿½o 
+Operacao 
+A 
+1 
+Operaï¿½ï¿½o 
+ï¿½Aï¿½-Sem Deduï¿½ï¿½o 
+ï¿½Bï¿½-Com Deduï¿½ï¿½o/Materiais 
+ï¿½Cï¿½ - Imune/Isenta de ISSQN 
+ï¿½Dï¿½ - Devoluï¿½ï¿½o/Simples Remessa 
+ï¿½Jï¿½ - Intermediaï¿½ï¿½o 
+Tributacao 
+A 
+1 
+Tributaï¿½ï¿½o: 
 C - Isenta de ISS 
-E - Não Incidência no Município 
+E - Nï¿½o Incidï¿½ncia no Municï¿½pio 
 F - Imune 
 K - Exigibilidd Susp.Dec.J/Proc.A 
-N - Não Tributável 
-T – Tributável G - Tributável Fixo 
-H - Tributável S.N. 
-M - Micro Empreendedor Individual (MEI) ValorPIS N 15,2 Valor PIS ValorCOFINS N 15,2 Valor COFINS ValorINSS N 15,2 Valor INSS ValorIR N 15,2 Valor IR ValorCSLL N 15,2 Valor CSLL AliquotaPIS N 6,4 Aliquota PIS AliquotaCOFINS N 6,4 Aliquota COFINS AliquotaINSS N 6,4 Aliquota INSS AliquotaIR N 6,4 Aliquota IR AliquotaCSLL N 6,4 Aliquota CSLL DescricaoRPS A 1500 Descrição/ Dados Complementares DDDPrestador A 3 DDD do telefone do Prestador TelefonePrestador A 8 Telefone do Prestador DDDTomador A 3 DDD do Tomador TelefoneTomador A 8 Telefone do Tomador MotCancelamento A 80 Motivo do Cancelamento CpfCnpjIntermediario A 14 CPF/CNPJ do intermediário   Registro de itens da Nota 
+N - Nï¿½o Tributï¿½vel 
+T ï¿½ Tributï¿½vel G - Tributï¿½vel Fixo 
+H - Tributï¿½vel S.N. 
+M - Micro Empreendedor Individual (MEI) 
+ValorPIS 
+N 
+15,2 
+Valor PIS 
+ValorCOFINS 
+N 
+15,2 
+Valor COFINS 
+ValorINSS 
+N 
+15,2 
+Valor INSS 
+ValorIR 
+N 
+15,2 
+Valor IR 
+ValorCSLL 
+N 
+15,2 
+Valor CSLL 
+AliquotaPIS 
+N 
+6,4 
+Aliquota PIS 
+AliquotaCOFINS 
+N 
+6,4 
+Aliquota COFINS 
+AliquotaINSS 
+N 
+6,4 
+Aliquota INSS 
+AliquotaIR 
+N 
+6,4 
+Aliquota IR 
+AliquotaCSLL 
+N 
+6,4 
+Aliquota CSLL 
+DescricaoRPS 
+A 
+1500 
+Descriï¿½ï¿½o/ Dados Complementares 
+DDDPrestador 
+A 
+3 
+DDD do telefone do Prestador 
+TelefonePrestador 
+A 
+8 
+Telefone do Prestador 
+DDDTomador 
+A 
+3 
+DDD do Tomador 
+TelefoneTomador 
+A 
+8 
+Telefone do Tomador 
+MotCancelamento 
+A 
+80 
+Motivo do Cancelamento 
+CpfCnpjIntermediario 
+A 
+14 
+CPF/CNPJ do intermediï¿½rio 
+  Registro de itens da Nota 
  
-CAMPO TIPO TAM. CONTEÚDO DiscriminacaoServico A 80 Discriminação do Serviço Quantidade N 10,4 Quantidade do serviço tomado ValorUnitario N 15,4 Valor Unitário ValorTotal N 15,2 Valor total do serviço Tributavel A 1 Tributável S- Item tributável , N- Não tributável. Registro de Deduções da Nota 
-CAMPO TIPO TAM. CONTEÚDO DeducaoPor A 20 “Percentual” 
-“Valor” TipoDeducao A 255 Caso a dedução   for por “Valor” os valores possíveis são: “Despesas com Materiais” ou “Despesas com Sub-empreitada”. Caso a dedução for por “Percentual” informar este campo com valor vazio. CPFCNPJReferencia A 14 CPF ou CNPJ do Fornecedor ou Prestador do Serviço NumeroNFReferencia N 10 Número da Nota Fiscal de Referência ValorTotalReferencia N 15,2 Valor  total da Nota Fiscal de Referência PercentualDeduzir N 5,2 Percentual a Deduzir ValorDeduzir N 15,2 Valor a ser Deduzido 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+DiscriminacaoServico 
+A 
+80 
+Discriminaï¿½ï¿½o do Serviï¿½o 
+Quantidade 
+N 
+10,4 
+Quantidade do serviï¿½o tomado 
+ValorUnitario 
+N 
+15,4 
+Valor Unitï¿½rio 
+ValorTotal 
+N 
+15,2 
+Valor total do serviï¿½o 
+Tributavel 
+A 
+1 
+Tributï¿½vel S- Item tributï¿½vel , N- Nï¿½o tributï¿½vel. 
+Registro de Deduï¿½ï¿½es da Nota 
+CAMPO 
+TIPO 
+TAM. 
+CONTEï¿½DO 
+DeducaoPor 
+A 
+20 
+ï¿½Percentualï¿½ 
+ï¿½Valorï¿½ 
+TipoDeducao 
+A 
+255 
+Caso a deduï¿½ï¿½o   for por ï¿½Valorï¿½ os valores possï¿½veis sï¿½o: ï¿½Despesas com Materiaisï¿½ ou ï¿½Despesas com Sub-empreitadaï¿½. Caso a deduï¿½ï¿½o for por ï¿½Percentualï¿½ informar este campo com valor vazio. 
+CPFCNPJReferencia 
+A 
+14 
+CPF ou CNPJ do Fornecedor ou Prestador do Serviï¿½o 
+NumeroNFReferencia 
+N 
+10 
+Nï¿½mero da Nota Fiscal de Referï¿½ncia 
+ValorTotalReferencia 
+N 
+15,2 
+Valor  total da Nota Fiscal de Referï¿½ncia 
+PercentualDeduzir 
+N 
+5,2 
+Percentual a Deduzir 
+ValorDeduzir 
+N 
+15,2 
+Valor a ser Deduzido 
+
 
 5 - Anexos 
  
 Anexo 01 - Erros de Retorno 
-Abaixo seguem as mensagens de erro de processamento que podem ser retornadas pelo serviço. 
+Abaixo seguem as mensagens de erro de processamento que podem ser retornadas pelo serviï¿½o. 
  
  
-COD DESCRICAO PROCEDIMENTO 104 A Data Inicial de emissão das Notas Fiscais enviadas não pode ser inferior a 01/06/2006. Data Inicial no cabeçalho do lote deve ser superior a 01/06/2006. 106 A Data Final de emissão das Notas Fiscais en- viadas não pode ser inferior a 01/06/2006. A Data Final no cabeçalho do lote deve ser supe- rior 01/06/2006. 107 A Data Final de emissão das Notas Fiscais enviadas não pode  ser Superior a Data At- ual. A Data Final no cabeçalho deve ser igual a data do último RPS contido no lote e esta data não pode ser superior a data atual. 108 A Data Final de emissão das Notas Fiscais enviadas devera ser superior a Data Inicial. Verifique a Data Final no cabeçalho do lote. 207 Data  de  Emissão do  RPS não  está  com- preendia  entre  data  início da emissão  do lote e data fim da emissão do lote conforme especificado no cabecalho do lote. A data inicial do cabeçalho do lote deve ser igual a data do primeiro RPS contido no lote e a data final do cabeçalho do lote deve ser igual a data do último RPS do lote. 209 O código do serviço prestado não permite retenção  de ISS. Verifique a tributação para a atividade informada no RPS. 215 RPS em duplicidade na mensagem XML en- viada. Não são permitidos RPS com numeração duplica- do no lote. A numeração de RPS deve ser seguen- cial, em ordem ascendente e sem duplicidade. 218 RPS já processado. O RPS não poderá  ser enviado novamente. O RPS enviado no lote já foi convertido em nota em outro lote enviado anteriormente. 219 O campo  Inscrição Municipal do tomador somente deverá ser preenchido para toma- dores estabelecidos no municipio. Deve-se passar um valor vazio para o campo In- scrição Municipal do Tomador quando  o tomador não for do município 220 CPF/CNPJ do Tomador possui mais de uma inscrição municipal, sendo obrigatório o preenchimento do campo Inscrição Munic- ipal do Tomador. O tomador  é do município e possui mais de uma inscrição municipal, deve-se informar a inscrição municipal do tomador. 301 O  tomador   de  serviços  informado   é  o próprio prestador. O prestador e o tomador  do serviço não pode ser os mesmos. Verifique esta informação no RPS. 302 CNPJ do Tomador de Serviços inválido (digi- tos verificadores não conferem). Informe um CNPJ do tomador  válido. 303 O Valor dos serviços deverá ser superior a R$ 0,00 (zero). A soma dos valores dos itens de serviço do RPS devem ser maiores que zero. 304 O Valor das deduções deverá ser inferior ao valor dos serviços. A soma do valor das deduções do RPS devem ser menores que a soma dos valores de itens de serviço 305 O Valor das deduções deverá  ser superior ou igual a R$ 0,00 (zero). A soma dos itens de deduções do RPS deve ser maior ou igual a zero. 
-306 Código da Atividade do RPS inexistente. O código da atividade informada no RPS não foi encontrada ou não esta vinculada ao contribuinte. Verifique junto a prefeitura qual o código CNAE correto para sua atividade de prestação. Verifique quais são as atividades vinculadas ao prestador 308 Código da Atividade do RPS não  permite dedução  na base de cálculo. Foram informados itens de dedução  no RPS porém a atividade não permite dedução  na base de cálculo. 309 Código da Atividade do RPS não  permite tributação fora do municipio. Foi informada uma alíquota de ISS para uma atividade que não permite tributação fora do município. 310 Código da Atividade não permitida  para o Prestador. A atividade informada não esta vinculado ao prestador. Verfique o CNAE correto da atividade junto a prefeitura. 311 Alíquota ISS informada  no  RPS difere  do valor da alíquota para a atividade informa- da Verifique o valor correto da alíquota de ISS para esta atividade de prestação  junto a prefeitura. 312 A data da emissão do RPS não foi preenchi- da corretamente. Verifique a data  de emissão do RPS. 313 A data da emissão do RPS não poderá  ser superior a data de hoje. Não podem ser emitidos RPS com data futura. 314 A data da emissão do RPS não poderá  ser inferior a 01/06/2006. Verifique a data de emissão do RPS 315 Número do RPS não informado. Informe o número do RPS 317 Campo   Endereço   não   preenchido  (ob- rigatório para tomador  com CNPJ). Para tomador  pessoa jurídica é obrigatório o preenchimento do endereço. 318 Campo  Cidade/UF  não  preenchido  (ob- rigatório para tomador  com CNPJ). É obrigatório o preenchimento da cidade do to- mador para pessoa jurídica 320 Inscrição  Municipal do  Tomador  de  Ser- viços consta como cancelada. Verifique a inscrição municipal do tomador  do RPS 321 Apenas Notas com tributação no municipio ou fora do municipio podem  sofrer reten- ção de ISS. Verfique o correto preenchimento para o campo Alíquota de ISS do RPS 322 O campo  discriminação  dos  serviços não foi preenchido. Nos itens de serviço do RPS devem ser preenchi- dos a discriminação dos mesmos. 324 A tributação do Rps não confere com a trib- utação do Prestador. Verifique a alíquota de ISS do RPS. 325 Operação  de tributação  permitida  apenas para serviço de construção. A Operação 'G' é permitida apenas para serviços de contrução. Verifique a Operação correta de acordo com o serviço contido no RPS. 326 Operação de tributação  não condiz com o código do regime de tributação. Verifique a Operação de acordo com o Regime de Tributação do Prestador. 327 Municipio do Prestador inválido. Verifique o código SIAFI para o município do prestador 328 Municipio do Tomador inválido. Verifique o código SIAFI para o município do to- mador 329 Nota  Fiscal para  ser  substituida não  lo- calizada. Verifique o número  e a data  de emissão.  330 Nota Fiscal não pode ser substituida pois já foi cancelada ou substituida anteriormente.  331 Nota Fiscal para ser substituida encontra-se em uma guia Emitida ou Paga.  332 Nota Fiscal não pode ser substituida pois os tomadores são diferentes.  333 Cidade do Exterior não informada. Quando o tomador  for do exterior deve ser in- formar o codigo da cidade do tomador  como '0009999' e na descrição da cidade deve se infor- mar o pais de origem. 334 Número do Rps não está presente no con- trole de AIDF. Solicite junto a prefeitura uma Autorização de Im- pressão de Documento  Fiscal(AIDF) para emissão de RPS, o número do RPS deve estar entre a nume- ração inicial e final desde controle. 335 Número do RPS deve  ser subsequênte ao anterior enviado. O número do primeiro RPS do lote deve ser sub- sequente número do último RPS convertido em nota. Os números dos demais RPS do lote devem estar subsequentes a este. 336 Alíquota não coincide com as possíveis na Faixa do Simples Nacional. Verifique a alíquota de ISS correta para o RPS 337 Alíquota inválida para tributação  Isenta, Imune ou Natureza de Operação  com alí- quota zero. Verifique a alíquota de ISS correta para o RPS 338 Tomador pessoa física com tipo de recolhi- mento inválido. Tipo de Recolhimento deve ser A Recolher. Deve-se informar o Tipo de Recolhimento A Recol- her para tomador  pessoa física. 339 Motivo do cancelamento do RPS não infor- mado. A situação do RPS esta marcada como CANCEL- ADA porém não foi informado o motivo do cancel- amento. 340 A alíquota deve estar entre 2,00 a 5,00 ou alíquota igual a zero. Verifique o correto preenchimento para o campo Alíquota de ISS 341 Alíquota inválida para contribuinte en- quadrado como Microempreendedor 
-Individual - MEI. Verifique o correto preenchimento para o campo alíquota de ISS 342 Alíquota inválida para contribuinte en- quadrado como Simples Nacional Estima- tiva. Verifique o correto preenchimento para o campo alíquota de ISS 1002 Versão do Schema XML incorreto. Verifique a versão do XML informada no cabeç- alho do lote. 1050 Rejeição: Assinatura  Digital Inválida. Veri- fique se o certificado digital utilizado na as- sinatura está válido. A assinatura difital do lote esta inválida, verifique se o certificado digital utilizado na assinatura esta válido. Se não existem caracteres especiais nos dados que não estão no padrão UTF-8 e estão invalidando o XML. 1051 Rejeição:  Certificado Assinatura Data Vali- dade. Verifique se o certificado digital utilizado na as- sinatura do lote esta válido 1052 Rejeição: Assinatura Digital sem CNPJ. Verifique se o certificado digital utilizado na as- sinatura do lote esta válido  
+COD 
+DESCRICAO 
+PROCEDIMENTO 
+104 
+A Data Inicial de emissï¿½o das Notas Fiscais enviadas nï¿½o pode ser inferior a 01/06/2006. 
+Data Inicial no cabeï¿½alho do lote deve ser superior a 01/06/2006. 
+106 
+A Data Final de emissï¿½o das Notas Fiscais en- viadas nï¿½o pode ser inferior a 01/06/2006. 
+A Data Final no cabeï¿½alho do lote deve ser supe- rior 01/06/2006. 
+107 
+A Data Final de emissï¿½o das Notas Fiscais enviadas nï¿½o pode  ser Superior a Data At- ual. 
+A Data Final no cabeï¿½alho deve ser igual a data do ï¿½ltimo RPS contido no lote e esta data nï¿½o pode ser superior a data atual. 
+108 
+A Data Final de emissï¿½o das Notas Fiscais enviadas devera ser superior a Data Inicial. 
+Verifique a Data Final no cabeï¿½alho do lote. 
+207 
+Data  de  Emissï¿½o do  RPS nï¿½o  estï¿½  com- preendia  entre  data  inï¿½cio da emissï¿½o  do lote e data fim da emissï¿½o do lote conforme especificado no cabecalho do lote. 
+A data inicial do cabeï¿½alho do lote deve ser igual a data do primeiro RPS contido no lote e a data final do cabeï¿½alho do lote deve ser igual a data do ï¿½ltimo RPS do lote. 
+209 
+O cï¿½digo do serviï¿½o prestado nï¿½o permite retenï¿½ï¿½o  de ISS. 
+Verifique a tributaï¿½ï¿½o para a atividade informada no RPS. 
+215 
+RPS em duplicidade na mensagem XML en- viada. 
+Nï¿½o sï¿½o permitidos RPS com numeraï¿½ï¿½o duplica- do no lote. A numeraï¿½ï¿½o de RPS deve ser seguen- cial, em ordem ascendente e sem duplicidade. 
+218 
+RPS jï¿½ processado. O RPS nï¿½o poderï¿½  ser enviado novamente. 
+O RPS enviado no lote jï¿½ foi convertido em nota em outro lote enviado anteriormente. 
+219 
+O campo  Inscriï¿½ï¿½o Municipal do tomador somente deverï¿½ ser preenchido para toma- dores estabelecidos no municipio. 
+Deve-se passar um valor vazio para o campo In- scriï¿½ï¿½o Municipal do Tomador quando  o tomador nï¿½o for do municï¿½pio 
+220 
+CPF/CNPJ do Tomador possui mais de uma inscriï¿½ï¿½o municipal, sendo obrigatï¿½rio o preenchimento do campo Inscriï¿½ï¿½o Munic- ipal do Tomador. 
+O tomador  ï¿½ do municï¿½pio e possui mais de uma inscriï¿½ï¿½o municipal, deve-se informar a inscriï¿½ï¿½o municipal do tomador. 
+301 
+O  tomador   de  serviï¿½os  informado   ï¿½  o prï¿½prio prestador. 
+O prestador e o tomador  do serviï¿½o nï¿½o pode ser os mesmos. Verifique esta informaï¿½ï¿½o no RPS. 
+302 
+CNPJ do Tomador de Serviï¿½os invï¿½lido (digi- tos verificadores nï¿½o conferem). 
+Informe um CNPJ do tomador  vï¿½lido. 
+303 
+O Valor dos serviï¿½os deverï¿½ ser superior a R$ 0,00 (zero). 
+A soma dos valores dos itens de serviï¿½o do RPS devem ser maiores que zero. 
+304 
+O Valor das deduï¿½ï¿½es deverï¿½ ser inferior ao valor dos serviï¿½os. 
+A soma do valor das deduï¿½ï¿½es do RPS devem ser menores que a soma dos valores de itens de serviï¿½o 
+305 
+O Valor das deduï¿½ï¿½es deverï¿½  ser superior ou igual a R$ 0,00 (zero). 
+A soma dos itens de deduï¿½ï¿½es do RPS deve ser maior ou igual a zero. 
+
+306 
+Cï¿½digo da Atividade do RPS inexistente. 
+O cï¿½digo da atividade informada no RPS nï¿½o foi encontrada ou nï¿½o esta vinculada ao contribuinte. Verifique junto a prefeitura qual o cï¿½digo CNAE correto para sua atividade de prestaï¿½ï¿½o. Verifique quais sï¿½o as atividades vinculadas ao prestador 
+308 
+Cï¿½digo da Atividade do RPS nï¿½o  permite deduï¿½ï¿½o  na base de cï¿½lculo. 
+Foram informados itens de deduï¿½ï¿½o  no RPS porï¿½m a atividade nï¿½o permite deduï¿½ï¿½o  na base de cï¿½lculo. 
+309 
+Cï¿½digo da Atividade do RPS nï¿½o  permite tributaï¿½ï¿½o fora do municipio. 
+Foi informada uma alï¿½quota de ISS para uma atividade que nï¿½o permite tributaï¿½ï¿½o fora do municï¿½pio. 
+310 
+Cï¿½digo da Atividade nï¿½o permitida  para o Prestador. 
+A atividade informada nï¿½o esta vinculado ao prestador. Verfique o CNAE correto da atividade junto a prefeitura. 
+311 
+Alï¿½quota ISS informada  no  RPS difere  do valor da alï¿½quota para a atividade informa- da 
+Verifique o valor correto da alï¿½quota de ISS para esta atividade de prestaï¿½ï¿½o  junto a prefeitura. 
+312 
+A data da emissï¿½o do RPS nï¿½o foi preenchi- da corretamente. 
+Verifique a data  de emissï¿½o do RPS. 
+313 
+A data da emissï¿½o do RPS nï¿½o poderï¿½  ser superior a data de hoje. 
+Nï¿½o podem ser emitidos RPS com data futura. 
+314 
+A data da emissï¿½o do RPS nï¿½o poderï¿½  ser inferior a 01/06/2006. 
+Verifique a data de emissï¿½o do RPS 
+315 
+Nï¿½mero do RPS nï¿½o informado. 
+Informe o nï¿½mero do RPS 
+317 
+Campo   Endereï¿½o   nï¿½o   preenchido  (ob- rigatï¿½rio para tomador  com CNPJ). 
+Para tomador  pessoa jurï¿½dica ï¿½ obrigatï¿½rio o preenchimento do endereï¿½o. 
+318 
+Campo  Cidade/UF  nï¿½o  preenchido  (ob- rigatï¿½rio para tomador  com CNPJ). 
+ï¿½ obrigatï¿½rio o preenchimento da cidade do to- mador para pessoa jurï¿½dica 
+320 
+Inscriï¿½ï¿½o  Municipal do  Tomador  de  Ser- viï¿½os consta como cancelada. 
+Verifique a inscriï¿½ï¿½o municipal do tomador  do RPS 
+321 
+Apenas Notas com tributaï¿½ï¿½o no municipio ou fora do municipio podem  sofrer reten- ï¿½ï¿½o de ISS. 
+Verfique o correto preenchimento para o campo Alï¿½quota de ISS do RPS 
+322 
+O campo  discriminaï¿½ï¿½o  dos  serviï¿½os nï¿½o foi preenchido. 
+Nos itens de serviï¿½o do RPS devem ser preenchi- dos a discriminaï¿½ï¿½o dos mesmos. 
+324 
+A tributaï¿½ï¿½o do Rps nï¿½o confere com a trib- utaï¿½ï¿½o do Prestador. 
+Verifique a alï¿½quota de ISS do RPS. 
+325 
+Operaï¿½ï¿½o  de tributaï¿½ï¿½o  permitida  apenas para serviï¿½o de construï¿½ï¿½o. 
+A Operaï¿½ï¿½o 'G' ï¿½ permitida apenas para serviï¿½os de contruï¿½ï¿½o. Verifique a Operaï¿½ï¿½o correta de acordo com o serviï¿½o contido no RPS. 
+326 
+Operaï¿½ï¿½o de tributaï¿½ï¿½o  nï¿½o condiz com o cï¿½digo do regime de tributaï¿½ï¿½o. 
+Verifique a Operaï¿½ï¿½o de acordo com o Regime de Tributaï¿½ï¿½o do Prestador. 
+327 
+Municipio do Prestador invï¿½lido. 
+Verifique o cï¿½digo SIAFI para o municï¿½pio do prestador 
+328 
+Municipio do Tomador invï¿½lido. 
+Verifique o cï¿½digo SIAFI para o municï¿½pio do to- mador 
+329 
+Nota  Fiscal para  ser  substituida nï¿½o  lo- calizada. Verifique o nï¿½mero  e a data  de emissï¿½o. 
+ 
+330 
+Nota Fiscal nï¿½o pode ser substituida pois jï¿½ foi cancelada ou substituida anteriormente. 
+ 
+331 
+Nota Fiscal para ser substituida encontra-se em uma guia Emitida ou Paga. 
+ 
+332 
+Nota Fiscal nï¿½o pode ser substituida pois os tomadores sï¿½o diferentes. 
+ 
+333 
+Cidade do Exterior nï¿½o informada. 
+Quando o tomador  for do exterior deve ser in- formar o codigo da cidade do tomador  como '0009999' e na descriï¿½ï¿½o da cidade deve se infor- mar o pais de origem. 
+334 
+Nï¿½mero do Rps nï¿½o estï¿½ presente no con- trole de AIDF. 
+Solicite junto a prefeitura uma Autorizaï¿½ï¿½o de Im- pressï¿½o de Documento  Fiscal(AIDF) para emissï¿½o de RPS, o nï¿½mero do RPS deve estar entre a nume- raï¿½ï¿½o inicial e final desde controle. 
+335 
+Nï¿½mero do RPS deve  ser subsequï¿½nte ao anterior enviado. 
+O nï¿½mero do primeiro RPS do lote deve ser sub- sequente nï¿½mero do ï¿½ltimo RPS convertido em nota. Os nï¿½meros dos demais RPS do lote devem estar subsequentes a este. 
+336 
+Alï¿½quota nï¿½o coincide com as possï¿½veis na Faixa do Simples Nacional. 
+Verifique a alï¿½quota de ISS correta para o RPS 
+337 
+Alï¿½quota invï¿½lida para tributaï¿½ï¿½o  Isenta, Imune ou Natureza de Operaï¿½ï¿½o  com alï¿½- quota zero. 
+Verifique a alï¿½quota de ISS correta para o RPS 
+338 
+Tomador pessoa fï¿½sica com tipo de recolhi- mento invï¿½lido. Tipo de Recolhimento deve ser A Recolher. 
+Deve-se informar o Tipo de Recolhimento A Recol- her para tomador  pessoa fï¿½sica. 
+339 
+Motivo do cancelamento do RPS nï¿½o infor- mado. 
+A situaï¿½ï¿½o do RPS esta marcada como CANCEL- ADA porï¿½m nï¿½o foi informado o motivo do cancel- amento. 
+340 
+A alï¿½quota deve estar entre 2,00 a 5,00 ou alï¿½quota igual a zero. 
+Verifique o correto preenchimento para o campo Alï¿½quota de ISS 
+341 
+Alï¿½quota invï¿½lida para contribuinte en- quadrado como Microempreendedor 
+Individual - MEI. 
+Verifique o correto preenchimento para o campo alï¿½quota de ISS 
+342 
+Alï¿½quota invï¿½lida para contribuinte en- quadrado como Simples Nacional Estima- tiva. 
+Verifique o correto preenchimento para o campo alï¿½quota de ISS 
+1002 
+Versï¿½o do Schema XML incorreto. 
+Verifique a versï¿½o do XML informada no cabeï¿½- alho do lote. 
+1050 
+Rejeiï¿½ï¿½o: Assinatura  Digital Invï¿½lida. Veri- fique se o certificado digital utilizado na as- sinatura estï¿½ vï¿½lido. 
+A assinatura difital do lote esta invï¿½lida, verifique se o certificado digital utilizado na assinatura esta vï¿½lido. Se nï¿½o existem caracteres especiais nos dados que nï¿½o estï¿½o no padrï¿½o UTF-8 e estï¿½o invalidando o XML. 
+1051 
+Rejeiï¿½ï¿½o:  Certificado Assinatura Data Vali- dade. 
+Verifique se o certificado digital utilizado na as- sinatura do lote esta vï¿½lido 
+1052 
+Rejeiï¿½ï¿½o: Assinatura Digital sem CNPJ. 
+Verifique se o certificado digital utilizado na as- sinatura do lote esta vï¿½lido 
+ 
  
 
-1053 Rejeição: Assinatura Digital - Erro na Cadeia de Certificação. Verifique se o certificado digital utilizado na as- sinatura do lote esta válido 1054 Rejeição:  Assinatura  Digital difere  do  pa- drão ICP-Brasil. Verifique se o certificado digital utilizado na as- sinatura do lote esta válido 1056 Rejeição: Assinatura - Digest difere do cal- culado. Verifique se o certificado digital utilizado na as- sinatura do lote esta válido 1057 Rejeição: Assinatura difere do calculado. Verifique se o certificado digital utilizado na as- sinatura do lote esta válido 1100 O campo  discriminação  dos  serviços não foi preenchido. Nos itens de serviço do RPS deve-se preencher a discriminação do serviço 1101 Tamanho da mensagem XML ultrapassou o limite máximo permitido de 500 kbytes. Reduza o número de RPS enviados no lote de forma a não ultrapassar o limite. Recomendamos que cada lote tenha no máximo 100 RPS para não ultrapassar o limite de 500Kb e não demandar muito tempo para processamento. 1102 Mensagem XML de pedido do serviço sem conteúdo. Foi enviado um conteúdo vazio 1103 O CPF/CNPJ do Remetente não possui per- missão para o serviço solicitado. O CPF/CNPJ do Remetente indicado no cabeçalho do lote não é o responsável legal do prestador e não esta vinculado como sub usuário autorizado pelo mesmo. Verifique se esta credenciado no ambiente utilizado. Se estiver utilizando o ambi- ente de produção  deve estar credenciado para este ambiente, ou se estiver utilizando o ambiente de homologação deve estar credenciado para este ambiente.  O CPF/CNPJ do remetende do lote deve ser o mesmo indicado como responsável legal no momento do credenciamento, ou caso seja outro deve estar vinculado como sub usuário autorizado pelo prestador. 1105 Lote não encontrado. Verifique se o número do lote esta correto. 1106 NF-e não encontrada. Verifique corretamente o número da Nota. 1107 O CPF/CNPJ da  assinatura  da  mensagem XML  não  corresponde  ao  CPF/CNPJ do Prestador de Serviços.  1108 O CPF/CNPJ vinculado a inscrição do toma- dor não corresponde ao CPF/CNPJ informa- do no campo CPF/CNPJ Tomador. Verique a Inscrição Municipal correta do tomador ou seu CNPJ. 1109 CPF/CNPJ inválido. Verifique se o CPF/CNPJ estão corretos 1201 Somente é permitido o envio de RPS emiti- dos por um único Prestador de Serviços (mesma inscrição municipal). No lote de envio não são permitidos RPS de prestadores diferentes. 1202 Prestador  de Serviços não encontrado no Cadastro Municipal (CCM). A inscrição municipal do prestador não foi encon- trada no cadastro da prefeitura. Verifique se foi re- alizado o credenciamento no ambiente utilizado. Se esta utilizando o ambiente de homologação deve se realizar o credenciamento neste ambiente, que segue o mesmo processo de credenciamento do ambiente de produção. Caso esteja utilizando o ambiente de produção  o contribuinte deve estar credenciado no ambiente de produção. Caso ja tenha feito o credenciamento verifique se a in- scrição municipal do prestador esta sendo infor- mada corretamente no RPS. 1203 Total de RPS do cabeçalho do Lote não con- fere com o enviado (total de RPS enviados no lote). Verifique o total de RPS do cabeçalho do lote 1204 Valor Total de Serviços indicado no cabeç- alho do lote não confere com o soma dos valores de serviços do RPS. Verifique o valor dos serviços do RPS deve ser igual ao valor indicado no cabeçalho do lote. 1205 Valor Total de Dedução não confere com o enviado (somatório do valor das deduções presentes no lote). O valor total das deduções no cabeçalho do lote esta diferente da soma das deduções dos RPS contidos no lote. 1206 Assinatura do RPS incorreta.  Código Hash gerado  para  o campo  assinatura  do  RPS está inválido. O campo Assinatura do RPS não esta correto veri- fique a regra de preenchimento deste campo no manual. 1207 Prestador   de  Serviços  não  autorizado   a emitir NFS-e. Verifique a situação junto a prefeitura 1303 Somente  é permitido  o cancelamento de NFS-e emitidas por um único Prestador de Serviços (mesma inscrição municipal). No lote de cancelamento de NFSe é permitido apenas notas do mesmo prestador. 1304 Erro ao cancelar NFS-e. Erro interno a cancelar a NFSe contacte o suporte. 1305 Assinatura de cancelamento da NFS-e in- correta.  1306 A NFS-e não pode  ser cancelada  pois está vinculada a uma guia de pagamento.  1401 Somente é permitido consultar NFS-E emi- tidas por um único Prestador  de Serviços (mesma inscrição municipal).  1402 O CPF/CNPJ da  assinatura  da  mensagem XML não  tem  acesso  ao Tomador de Ser- viços informado.  1403 As datas   informadas   compreendem  um período maior que o permitido. O período não pode abranger  mais que 31 dias.  1404 A Inscrição Municipal do Prestador  de Ser- viços não consta na base de dados. Verifique se o prestador esta credenciado correta- mente.  
+1053 
+Rejeiï¿½ï¿½o: Assinatura Digital - Erro na Cadeia de Certificaï¿½ï¿½o. 
+Verifique se o certificado digital utilizado na as- sinatura do lote esta vï¿½lido 
+1054 
+Rejeiï¿½ï¿½o:  Assinatura  Digital difere  do  pa- drï¿½o ICP-Brasil. 
+Verifique se o certificado digital utilizado na as- sinatura do lote esta vï¿½lido 
+1056 
+Rejeiï¿½ï¿½o: Assinatura - Digest difere do cal- culado. 
+Verifique se o certificado digital utilizado na as- sinatura do lote esta vï¿½lido 
+1057 
+Rejeiï¿½ï¿½o: Assinatura difere do calculado. 
+Verifique se o certificado digital utilizado na as- sinatura do lote esta vï¿½lido 
+1100 
+O campo  discriminaï¿½ï¿½o  dos  serviï¿½os nï¿½o foi preenchido. 
+Nos itens de serviï¿½o do RPS deve-se preencher a discriminaï¿½ï¿½o do serviï¿½o 
+1101 
+Tamanho da mensagem XML ultrapassou o limite mï¿½ximo permitido de 500 kbytes. 
+Reduza o nï¿½mero de RPS enviados no lote de forma a nï¿½o ultrapassar o limite. Recomendamos que cada lote tenha no mï¿½ximo 100 RPS para nï¿½o ultrapassar o limite de 500Kb e nï¿½o demandar muito tempo para processamento. 
+1102 
+Mensagem XML de pedido do serviï¿½o sem conteï¿½do. 
+Foi enviado um conteï¿½do vazio 
+1103 
+O CPF/CNPJ do Remetente nï¿½o possui per- missï¿½o para o serviï¿½o solicitado. 
+O CPF/CNPJ do Remetente indicado no cabeï¿½alho do lote nï¿½o ï¿½ o responsï¿½vel legal do prestador e nï¿½o esta vinculado como sub usuï¿½rio autorizado pelo mesmo. Verifique se esta credenciado no ambiente utilizado. Se estiver utilizando o ambi- ente de produï¿½ï¿½o  deve estar credenciado para este ambiente, ou se estiver utilizando o ambiente de homologaï¿½ï¿½o deve estar credenciado para este ambiente.  O CPF/CNPJ do remetende do lote deve ser o mesmo indicado como responsï¿½vel legal no momento do credenciamento, ou caso seja outro deve estar vinculado como sub usuï¿½rio autorizado pelo prestador. 
+1105 
+Lote nï¿½o encontrado. 
+Verifique se o nï¿½mero do lote esta correto. 
+1106 
+NF-e nï¿½o encontrada. 
+Verifique corretamente o nï¿½mero da Nota. 
+1107 
+O CPF/CNPJ da  assinatura  da  mensagem XML  nï¿½o  corresponde  ao  CPF/CNPJ do Prestador de Serviï¿½os. 
+ 
+1108 
+O CPF/CNPJ vinculado a inscriï¿½ï¿½o do toma- dor nï¿½o corresponde ao CPF/CNPJ informa- do no campo CPF/CNPJ Tomador. 
+Verique a Inscriï¿½ï¿½o Municipal correta do tomador ou seu CNPJ. 
+1109 
+CPF/CNPJ invï¿½lido. 
+Verifique se o CPF/CNPJ estï¿½o corretos 
+1201 
+Somente ï¿½ permitido o envio de RPS emiti- dos por um ï¿½nico Prestador de Serviï¿½os (mesma inscriï¿½ï¿½o municipal). 
+No lote de envio nï¿½o sï¿½o permitidos RPS de prestadores diferentes. 
+1202 
+Prestador  de Serviï¿½os nï¿½o encontrado no Cadastro Municipal (CCM). 
+A inscriï¿½ï¿½o municipal do prestador nï¿½o foi encon- trada no cadastro da prefeitura. Verifique se foi re- alizado o credenciamento no ambiente utilizado. Se esta utilizando o ambiente de homologaï¿½ï¿½o deve se realizar o credenciamento neste ambiente, que segue o mesmo processo de credenciamento do ambiente de produï¿½ï¿½o. Caso esteja utilizando o ambiente de produï¿½ï¿½o  o contribuinte deve estar credenciado no ambiente de produï¿½ï¿½o. Caso ja tenha feito o credenciamento verifique se a in- scriï¿½ï¿½o municipal do prestador esta sendo infor- mada corretamente no RPS. 
+1203 
+Total de RPS do cabeï¿½alho do Lote nï¿½o con- fere com o enviado (total de RPS enviados no lote). 
+Verifique o total de RPS do cabeï¿½alho do lote 
+1204 
+Valor Total de Serviï¿½os indicado no cabeï¿½- alho do lote nï¿½o confere com o soma dos valores de serviï¿½os do RPS. 
+Verifique o valor dos serviï¿½os do RPS deve ser igual ao valor indicado no cabeï¿½alho do lote. 
+1205 
+Valor Total de Deduï¿½ï¿½o nï¿½o confere com o enviado (somatï¿½rio do valor das deduï¿½ï¿½es presentes no lote). 
+O valor total das deduï¿½ï¿½es no cabeï¿½alho do lote esta diferente da soma das deduï¿½ï¿½es dos RPS contidos no lote. 
+1206 
+Assinatura do RPS incorreta.  Cï¿½digo Hash gerado  para  o campo  assinatura  do  RPS estï¿½ invï¿½lido. 
+O campo Assinatura do RPS nï¿½o esta correto veri- fique a regra de preenchimento deste campo no manual. 
+1207 
+Prestador   de  Serviï¿½os  nï¿½o  autorizado   a emitir NFS-e. 
+Verifique a situaï¿½ï¿½o junto a prefeitura 
+1303 
+Somente  ï¿½ permitido  o cancelamento de NFS-e emitidas por um ï¿½nico Prestador de Serviï¿½os (mesma inscriï¿½ï¿½o municipal). 
+No lote de cancelamento de NFSe ï¿½ permitido apenas notas do mesmo prestador. 
+1304 
+Erro ao cancelar NFS-e. 
+Erro interno a cancelar a NFSe contacte o suporte. 
+1305 
+Assinatura de cancelamento da NFS-e in- correta. 
+ 
+1306 
+A NFS-e nï¿½o pode  ser cancelada  pois estï¿½ vinculada a uma guia de pagamento. 
+ 
+1401 
+Somente ï¿½ permitido consultar NFS-E emi- tidas por um ï¿½nico Prestador  de Serviï¿½os (mesma inscriï¿½ï¿½o municipal). 
+ 
+1402 
+O CPF/CNPJ da  assinatura  da  mensagem XML nï¿½o  tem  acesso  ao Tomador de Ser- viï¿½os informado. 
+ 
+1403 
+As datas   informadas   compreendem  um perï¿½odo maior que o permitido. O perï¿½odo nï¿½o pode abranger  mais que 31 dias. 
+ 
+1404 
+A Inscriï¿½ï¿½o Municipal do Prestador  de Ser- viï¿½os nï¿½o consta na base de dados. 
+Verifique se o prestador esta credenciado correta- mente. 
+ 
   
  
   
  
 
-1405 Assinatura Digital Inválida Verifique se o lote foi assinado corretamente e com um certificado digital válido. Verifique se não existem caracteres especiais que estão inváli- dando o XML assinado. O padrão de codificação utilizado é o UTF-8 caracteres fora desse padrão podem invalidar o XML. 1406 Município do tomador  não encontrado. Informe corretamente o municipio do tomador. Verifique se o código SIAFI da cidade do tomador esta correto. 1407 Município de prestação  não encontrado. Verifique o município de prestação. Verifique se o código SIAFI da cidade de prestação  esta correto. 1408 Município do prestador não encontrado.  1409 Código de cidade não encontrado. Verifique se o código SIAFI da cidade esta correto. 1410 Não é possivel substituir NFSe  1411 Dados da NFSe a ser substituída estão incompletos.  1412 Email do tomador  inválido Foi informado um email inválido para o tomador 1413 Valor informado para  o valor do PIS não está válido ou não confere com a alíquota informada.  1414 Tipo de Dedução não encontrado ou invá- lido. Verifique nos itens de dedução  do RPS quais são os tipos de dedução  validos. No manual estão descritos os tipos válidos. 1415 Campo Dedução Por dos registros de dedução  do RPS diferente do tipo de dedução  permitida na atividade. A atividade informada no RPS não permitido o tipo de dedução  lançada nos itens de dedução. 1416 Valor informado para COFINS não está válido ou não confere com a aliquota infor- mada.  1417 Valor informado para INSS não está válido ou não confere com a aliquota informada.  1418 Valor informado para IR não está válido ou não confere com a aliquota informada.  1419 Valor informado para CSLL não está válido ou não confere com a aliquota informada.  1420 Campo Dedução Por dos registros de dedução  do RPS com valor não encontra- do ou inválido. Nos itens de dedução  do RPS verifique o campo Dedução Por , deve ser informado se a dedução for por Percentual ou por Valor. 1421 Atividade não aceita Dedução Por Valor Nas dedução  do RPS não é permitido dedução  por Valor. A atividade informada não permitite esse tipo de dedução. 1422 Atividade não aceita Dedução Por Percen- tual. Nas dedução  do RPS não é permitido dedução  por Percentual. A atividade informada não permitite esse tipo de dedução. 1423 Existem RPS já convertidos com numera- ção superior e data de emissão inferior ao RPS enviado para conversão. A numeração do RPS deve ser maior que a nume- ração do último RPS convertido 1424 Existem RPS já convertidos com numera- ção inferior e data de emissão superior ao RPS enviado para conversão. A data de emissão do RPS deve ser maior que a data do último RPS convertido. 1425 Método de Envio Inválido. Adicione a tag MetodoEnvio com valor "WS" ao cabeçalho do XML após o campo Versao ou atualize a versão da sua DLL de conversão de RPS no site da prefeitura.  1426 Versão da DLL de conversão de RPS de- satualizada. Baixe o instalador da última versão no site da prefeitura.  1427 Versão da DMS desatualizada.  1428 Certificado Digital utilizado na assinatura do lote deve ser o mesmo do remetente do lote. CPF/CNPJ do Certificado diferente do remetente. Certificado Inválido. Verfique se o Certificado Digital esta registrado para o remetente do lote. 1429 Erro interno ao tentar gravar lote. Entre em contato  com suporte atravéz do site da NFSe.  1430 Contribuinte não credenciado. Faça o cre- denciamento no site da NFSe. Caso esteja utilizando o ambiente de produção deve se acessar o site da NFSe e realizar o pro- cesso de credenciamento. Caso esteja utilizando o ambiente de homologação deve se acessar o site de homologação e realizar o mesmo processo de credenciamento para produção. 1431 Alíquota inválida para contribuintes en- quadrados no regime de tributação com alíquota zero. A alíquota de ISS não pode ser diferente de zero.  1432 Valor do serviço difere do valor unitário multiplicado pela quantidade informada. Verifique se não existe algum erro de arrendonda- mento que esta provocando esse erro. 1433 Contribuinte não credenciado para o mé- todo de integração  com a NFSe utilizado. O contribuinte de estar credenciado para emitir nota pelo regime especial. O contribuinte esta credenciado porém habilitado para emitir nota ap- enas pelo site da NFSe. Verifique com a prefeitura solicitando a liberação para emissã por lote. 1434 Razao Social do Tomador não informado  1435 Operação não permitida; Verifique o correto preenchimento do Campo Operação do RPS 1436 Atividade com dedução  tipo Intermedia- ção, deve se informar o valor da dedução igual ao valor da nota de dedução.  1437 Atividade com dedução  tipo Intermedia- ção. Deve se informar as deduções por intermediação nos itens de dedução  do RPS.  1438 Para o tipo de Operação Intermediação, deve-se informar o CPF/CNPJ do Inter- mediário.   
+1405 
+Assinatura Digital Invï¿½lida 
+Verifique se o lote foi assinado corretamente e com um certificado digital vï¿½lido. Verifique se nï¿½o existem caracteres especiais que estï¿½o invï¿½li- dando o XML assinado. O padrï¿½o de codificaï¿½ï¿½o utilizado ï¿½ o UTF-8 caracteres fora desse padrï¿½o podem invalidar o XML. 
+1406 
+Municï¿½pio do tomador  nï¿½o encontrado. 
+Informe corretamente o municipio do tomador. Verifique se o cï¿½digo SIAFI da cidade do tomador esta correto. 
+1407 
+Municï¿½pio de prestaï¿½ï¿½o  nï¿½o encontrado. 
+Verifique o municï¿½pio de prestaï¿½ï¿½o. Verifique se o cï¿½digo SIAFI da cidade de prestaï¿½ï¿½o  esta correto. 
+1408 
+Municï¿½pio do prestador nï¿½o encontrado. 
+ 
+1409 
+Cï¿½digo de cidade nï¿½o encontrado. 
+Verifique se o cï¿½digo SIAFI da cidade esta correto. 
+1410 
+Nï¿½o ï¿½ possivel substituir NFSe 
+ 
+1411 
+Dados da NFSe a ser substituï¿½da estï¿½o incompletos. 
+ 
+1412 
+Email do tomador  invï¿½lido 
+Foi informado um email invï¿½lido para o tomador 
+1413 
+Valor informado para  o valor do PIS nï¿½o estï¿½ vï¿½lido ou nï¿½o confere com a alï¿½quota informada. 
+ 
+1414 
+Tipo de Deduï¿½ï¿½o nï¿½o encontrado ou invï¿½- lido. 
+Verifique nos itens de deduï¿½ï¿½o  do RPS quais sï¿½o os tipos de deduï¿½ï¿½o  validos. No manual estï¿½o descritos os tipos vï¿½lidos. 
+1415 
+Campo Deduï¿½ï¿½o Por dos registros de deduï¿½ï¿½o  do RPS diferente do tipo de deduï¿½ï¿½o  permitida na atividade. 
+A atividade informada no RPS nï¿½o permitido o tipo de deduï¿½ï¿½o  lanï¿½ada nos itens de deduï¿½ï¿½o. 
+1416 
+Valor informado para COFINS nï¿½o estï¿½ vï¿½lido ou nï¿½o confere com a aliquota infor- mada. 
+ 
+1417 
+Valor informado para INSS nï¿½o estï¿½ vï¿½lido ou nï¿½o confere com a aliquota informada. 
+ 
+1418 
+Valor informado para IR nï¿½o estï¿½ vï¿½lido ou nï¿½o confere com a aliquota informada. 
+ 
+1419 
+Valor informado para CSLL nï¿½o estï¿½ vï¿½lido ou nï¿½o confere com a aliquota informada. 
+ 
+1420 
+Campo Deduï¿½ï¿½o Por dos registros de deduï¿½ï¿½o  do RPS com valor nï¿½o encontra- do ou invï¿½lido. 
+Nos itens de deduï¿½ï¿½o  do RPS verifique o campo Deduï¿½ï¿½o Por , deve ser informado se a deduï¿½ï¿½o for por Percentual ou por Valor. 
+1421 
+Atividade nï¿½o aceita Deduï¿½ï¿½o Por Valor 
+Nas deduï¿½ï¿½o  do RPS nï¿½o ï¿½ permitido deduï¿½ï¿½o  por Valor. A atividade informada nï¿½o permitite esse tipo de deduï¿½ï¿½o. 
+1422 
+Atividade nï¿½o aceita Deduï¿½ï¿½o Por Percen- tual. 
+Nas deduï¿½ï¿½o  do RPS nï¿½o ï¿½ permitido deduï¿½ï¿½o  por Percentual. A atividade informada nï¿½o permitite esse tipo de deduï¿½ï¿½o. 
+1423 
+Existem RPS jï¿½ convertidos com numera- ï¿½ï¿½o superior e data de emissï¿½o inferior ao RPS enviado para conversï¿½o. 
+A numeraï¿½ï¿½o do RPS deve ser maior que a nume- raï¿½ï¿½o do ï¿½ltimo RPS convertido 
+1424 
+Existem RPS jï¿½ convertidos com numera- ï¿½ï¿½o inferior e data de emissï¿½o superior ao RPS enviado para conversï¿½o. 
+A data de emissï¿½o do RPS deve ser maior que a data do ï¿½ltimo RPS convertido. 
+1425 
+Mï¿½todo de Envio Invï¿½lido. Adicione a tag MetodoEnvio com valor "WS" ao cabeï¿½alho do XML apï¿½s o campo Versao ou atualize a versï¿½o da sua DLL de conversï¿½o de RPS no site da prefeitura. 
+ 
+1426 
+Versï¿½o da DLL de conversï¿½o de RPS de- satualizada. Baixe o instalador da ï¿½ltima versï¿½o no site da prefeitura. 
+ 
+1427 
+Versï¿½o da DMS desatualizada. 
+ 
+1428 
+Certificado Digital utilizado na assinatura do lote deve ser o mesmo do remetente do lote. CPF/CNPJ do Certificado diferente do remetente. Certificado Invï¿½lido. 
+Verfique se o Certificado Digital esta registrado para o remetente do lote. 
+1429 
+Erro interno ao tentar gravar lote. Entre em contato  com suporte atravï¿½z do site da NFSe. 
+ 
+1430 
+Contribuinte nï¿½o credenciado. Faï¿½a o cre- denciamento no site da NFSe. 
+Caso esteja utilizando o ambiente de produï¿½ï¿½o deve se acessar o site da NFSe e realizar o pro- cesso de credenciamento. Caso esteja utilizando o ambiente de homologaï¿½ï¿½o deve se acessar o site de homologaï¿½ï¿½o e realizar o mesmo processo de credenciamento para produï¿½ï¿½o. 
+1431 
+Alï¿½quota invï¿½lida para contribuintes en- quadrados no regime de tributaï¿½ï¿½o com alï¿½quota zero. A alï¿½quota de ISS nï¿½o pode ser diferente de zero. 
+ 
+1432 
+Valor do serviï¿½o difere do valor unitï¿½rio multiplicado pela quantidade informada. 
+Verifique se nï¿½o existe algum erro de arrendonda- mento que esta provocando esse erro. 
+1433 
+Contribuinte nï¿½o credenciado para o mï¿½- todo de integraï¿½ï¿½o  com a NFSe utilizado. 
+O contribuinte de estar credenciado para emitir nota pelo regime especial. O contribuinte esta credenciado porï¿½m habilitado para emitir nota ap- enas pelo site da NFSe. Verifique com a prefeitura solicitando a liberaï¿½ï¿½o para emissï¿½ por lote. 
+1434 
+Razao Social do Tomador nï¿½o informado 
+ 
+1435 
+Operaï¿½ï¿½o nï¿½o permitida; 
+Verifique o correto preenchimento do Campo Operaï¿½ï¿½o do RPS 
+1436 
+Atividade com deduï¿½ï¿½o  tipo Intermedia- ï¿½ï¿½o, deve se informar o valor da deduï¿½ï¿½o igual ao valor da nota de deduï¿½ï¿½o. 
+ 
+1437 
+Atividade com deduï¿½ï¿½o  tipo Intermedia- ï¿½ï¿½o. Deve se informar as deduï¿½ï¿½es por intermediaï¿½ï¿½o nos itens de deduï¿½ï¿½o  do RPS. 
+ 
+1438 
+Para o tipo de Operaï¿½ï¿½o Intermediaï¿½ï¿½o, deve-se informar o CPF/CNPJ do Inter- mediï¿½rio. 
+ 
+ 
 
-1439 CPF/CNPJ do Intermediário Inválido.  1440 Tipo de Recolhimento inválido. O Tipo de recolhimento deve ser A- A Recolher para local de incidencia do imposto no mu- nicípio e tomador  não sendo substituto tributário.  1441 Tipo de Recolhimento inválido. O Tipo de recolhimento deve ser R- Retido para local de incidencia do imposto no município e tomador  substituto tributário.  1442 A atividade não aceita itens de serviço não tributável. Nos itens de serviço do RPS o campo Tributável deve estar com o valor “S” Item tributável. Pois a atividade não aceita itens não tributáveis. Veri- fique o anexo 08 para identificar quais atividades são permitidas no município. 1443 O valor total das deduções do RPS não pode ultrapassar o limite máximo de dedução  permitido para a cidade. Verifique o percentual máximo sobre o valor total da nota permitido para esta atividade. 1444 Tributacao invalida para contribuinte enquadrado como Microempreendedor 
-Individual - MEI. Para contribuintes enquadrados como MEI os ti- pos de tributacao possiveis sao : ( C - Isenta de ISS, 
-F - Imune, K - Exigibilidade , M - Tributacao MEI, N - Nao Tributavel ) 1445 A operacao  informada nao permite inter- mediacao. Quando informado um interme- diario deve-se informar no campo opera- cao o tipo J- Intermediacao  1446 Valor do item do RPS não é valido O valor unitario e quantidade do Item do RPS de- vem ter um valor maior que zero. 1447 A alíquota deve estar entre 1 e 6. Verifique a alíquota de ISS correta para este CNAE de atividade. 1448 Tributação inválida para contribuinte en- quadrado como Simples Nacional. Para contribuintes enquadrados como Simples 
-Nacional no campo Tributação deve ser informado H - Tributável S.N 1449 Alíquota de  ISS não cadastrada na tela de configuração de prestador do site da NFS- e para a empresa do Simples Nacional Informar a alíquota de ISS na tela de configuração de prestador no site da NFS-e, para a empresa do Simples Nacional e obrigatório cadastrar a alíquo- ta de ISS no site. 1450 A alíquota informada no RPS diverge da alíquota cadastrada no site da NFS-e, na tela de configuração do prestador. Realize a correção da divergência entre a alíquota cadastrada no site da NFS-e e a alíquota informada no RPS. Ou altere a alíquota cadastrada no site da NFS-e para a alíquota informada no RPS ou no RPS informe a mesma alíquota cadastrada no site. 1451 Contribuinte não autorizado a emitir 
+1439 
+CPF/CNPJ do Intermediï¿½rio Invï¿½lido. 
+ 
+1440 
+Tipo de Recolhimento invï¿½lido. O Tipo de recolhimento deve ser A- A Recolher para local de incidencia do imposto no mu- nicï¿½pio e tomador  nï¿½o sendo substituto tributï¿½rio. 
+ 
+1441 
+Tipo de Recolhimento invï¿½lido. O Tipo de recolhimento deve ser R- Retido para local de incidencia do imposto no municï¿½pio e tomador  substituto tributï¿½rio. 
+ 
+1442 
+A atividade nï¿½o aceita itens de serviï¿½o nï¿½o tributï¿½vel. 
+Nos itens de serviï¿½o do RPS o campo Tributï¿½vel deve estar com o valor ï¿½Sï¿½ Item tributï¿½vel. Pois a atividade nï¿½o aceita itens nï¿½o tributï¿½veis. Veri- fique o anexo 08 para identificar quais atividades sï¿½o permitidas no municï¿½pio. 
+1443 
+O valor total das deduï¿½ï¿½es do RPS nï¿½o pode ultrapassar o limite mï¿½ximo de deduï¿½ï¿½o  permitido para a cidade. 
+Verifique o percentual mï¿½ximo sobre o valor total da nota permitido para esta atividade. 
+1444 
+Tributacao invalida para contribuinte enquadrado como Microempreendedor 
+Individual - MEI. 
+Para contribuintes enquadrados como MEI os ti- pos de tributacao possiveis sao : ( C - Isenta de ISS, 
+F - Imune, K - Exigibilidade , M - Tributacao MEI, N - Nao Tributavel ) 
+1445 
+A operacao  informada nao permite inter- mediacao. Quando informado um interme- diario deve-se informar no campo opera- cao o tipo J- Intermediacao 
+ 
+1446 
+Valor do item do RPS nï¿½o ï¿½ valido 
+O valor unitario e quantidade do Item do RPS de- vem ter um valor maior que zero. 
+1447 
+A alï¿½quota deve estar entre 1 e 6. 
+Verifique a alï¿½quota de ISS correta para este CNAE de atividade. 
+1448 
+Tributaï¿½ï¿½o invï¿½lida para contribuinte en- quadrado como Simples Nacional. 
+Para contribuintes enquadrados como Simples 
+Nacional no campo Tributaï¿½ï¿½o deve ser informado H - Tributï¿½vel S.N 
+1449 
+Alï¿½quota de  ISS nï¿½o cadastrada na tela de configuraï¿½ï¿½o de prestador do site da NFS- e para a empresa do Simples Nacional 
+Informar a alï¿½quota de ISS na tela de configuraï¿½ï¿½o de prestador no site da NFS-e, para a empresa do Simples Nacional e obrigatï¿½rio cadastrar a alï¿½quo- ta de ISS no site. 
+1450 
+A alï¿½quota informada no RPS diverge da alï¿½quota cadastrada no site da NFS-e, na tela de configuraï¿½ï¿½o do prestador. 
+Realize a correï¿½ï¿½o da divergï¿½ncia entre a alï¿½quota cadastrada no site da NFS-e e a alï¿½quota informada no RPS. Ou altere a alï¿½quota cadastrada no site da NFS-e para a alï¿½quota informada no RPS ou no RPS informe a mesma alï¿½quota cadastrada no site. 
+1451 
+Contribuinte nï¿½o autorizado a emitir 
 RPS com serie de prestacao  diferente de 
-99- Modelo Unico Altere a serie de prestação  do RPS para 99-Modelo Único ou caso queira utilizar outras series entre em contato  com a prefeitura e solicite autorização. A liberação de utilização do campo SeriePrestacao para informar o número do equipamento emissor do RPS esta condicionado a autorização da prefei- tura. 1452 Versão do XML de envio invalida Verifique se o valor do campo Versão no cabeçalho do XML de envio esta valido. Verifique a ultima versão no manual no site da NFS-e. 1453 Tributação Inválida. Quando a incidência for fora do município deve ser informado no campo Tributação o valor E - Não Inci- dente no Município. No campo Tributação informe o valor E - Não Inci- dente no Município 1454 Tributação Inválida. Verifique o valor correto que deve ser informado no campo Tributação de acordo com sue CNAE de atividade e enquadramento da tributação da prestação  de serviços. 1455 Intermediário não encontrado no Cadastro Municipal (CCM). Verifique se o CPF/CNPJ do intermediário esta válido. O intermediário deve ser uma empresa do município. 1456 Dedução Inválida. Para tributação E - Não Incidente no Município deve ser infor- mado dedução  por Percentual com valor entre 0 e 99.99%. Nos itens de Dedução do RPS informe uma dedução  por percentual com valor entre 0 e 99.99%. 1457 Tipo de recolhimento inválido. Para contri- buinte enquadrado com Micro Empreend- edor Individual (MEI) o tipo de recolhimen- to deve ser A Recolher. Informe  A Receber no campo Tipo de Recolhi- mento  
+99- Modelo Unico 
+Altere a serie de prestaï¿½ï¿½o  do RPS para 99-Modelo ï¿½nico ou caso queira utilizar outras series entre em contato  com a prefeitura e solicite autorizaï¿½ï¿½o. A liberaï¿½ï¿½o de utilizaï¿½ï¿½o do campo SeriePrestacao para informar o nï¿½mero do equipamento emissor do RPS esta condicionado a autorizaï¿½ï¿½o da prefei- tura. 
+1452 
+Versï¿½o do XML de envio invalida 
+Verifique se o valor do campo Versï¿½o no cabeï¿½alho do XML de envio esta valido. Verifique a ultima versï¿½o no manual no site da NFS-e. 
+1453 
+Tributaï¿½ï¿½o Invï¿½lida. Quando a incidï¿½ncia for fora do municï¿½pio deve ser informado no campo Tributaï¿½ï¿½o o valor E - Nï¿½o Inci- dente no Municï¿½pio. 
+No campo Tributaï¿½ï¿½o informe o valor E - Nï¿½o Inci- dente no Municï¿½pio 
+1454 
+Tributaï¿½ï¿½o Invï¿½lida. 
+Verifique o valor correto que deve ser informado no campo Tributaï¿½ï¿½o de acordo com sue CNAE de atividade e enquadramento da tributaï¿½ï¿½o da prestaï¿½ï¿½o  de serviï¿½os. 
+1455 
+Intermediï¿½rio nï¿½o encontrado no Cadastro Municipal (CCM). 
+Verifique se o CPF/CNPJ do intermediï¿½rio esta vï¿½lido. O intermediï¿½rio deve ser uma empresa do municï¿½pio. 
+1456 
+Deduï¿½ï¿½o Invï¿½lida. Para tributaï¿½ï¿½o E - Nï¿½o Incidente no Municï¿½pio deve ser infor- mado deduï¿½ï¿½o  por Percentual com valor entre 0 e 99.99%. 
+Nos itens de Deduï¿½ï¿½o do RPS informe uma deduï¿½ï¿½o  por percentual com valor entre 0 e 99.99%. 
+1457 
+Tipo de recolhimento invï¿½lido. Para contri- buinte enquadrado com Micro Empreend- edor Individual (MEI) o tipo de recolhimen- to deve ser A Recolher. 
+Informe  A Receber no campo Tipo de Recolhi- mento 
+ 
  
  ALERTAS RETORNADOS 
  
-CAMPO DESCRIÇÃO 203 Lote não processado ainda 211 A inscrição municipal do tomador  não foi encontrada na base de dados de CMM. 214 Cidade/UF informada não foi encontrada na base de dados. 216 RPS já foi convertido individualmente em NF-E através do site e não será processado novamente. 217 RPS reenviado. A NFS-E referente ao RPS foi cancelada e uma nova NFS-e foi emitida. 221 O CNPJ informado possui inscrição municipal dentro do município, porem foi informado endereço fora do município. 1301 NFSe já cancelada. 1302 NFSe em duplicidade na mensagem XML enviada. 1304 NFSe não localizada na base de dados para cancelamento. 1405 Não existe nenhuma inscrição municipal vinculada ao CPF/CNPJ informado. 1406 Versao da DLL de conversao  de RPS desatualizada.  Baixe a ultima versao no site da NFSe. 1407 NFSe nao localizada na base de dados 1408 RPS nao localizado na base de dados 1409 Lote nao assinado 1410 Versao do XML desatualizada. Anexo 02 
-URL do WebService para produção: 
-O WebService de produção  encontra-se disponível no link: 
-SÃO LUÍS : http://sistemas.semfaz.saoluis.ma.gov.br/WsNFe2/LoteRps.jws 
-Site do Ambiente de Produção : 
-SÃO LUIS - http://stm.semfaz.saoluis.ma.gov.br/ 
+CAMPO 
+DESCRIï¿½ï¿½O 
+203 
+Lote nï¿½o processado ainda 
+211 
+A inscriï¿½ï¿½o municipal do tomador  nï¿½o foi encontrada na base de dados de CMM. 
+214 
+Cidade/UF informada nï¿½o foi encontrada na base de dados. 
+216 
+RPS jï¿½ foi convertido individualmente em NF-E atravï¿½s do site e nï¿½o serï¿½ processado novamente. 
+217 
+RPS reenviado. A NFS-E referente ao RPS foi cancelada e uma nova NFS-e foi emitida. 
+221 
+O CNPJ informado possui inscriï¿½ï¿½o municipal dentro do municï¿½pio, porem foi informado endereï¿½o fora do municï¿½pio. 
+1301 
+NFSe jï¿½ cancelada. 
+1302 
+NFSe em duplicidade na mensagem XML enviada. 
+1304 
+NFSe nï¿½o localizada na base de dados para cancelamento. 
+1405 
+Nï¿½o existe nenhuma inscriï¿½ï¿½o municipal vinculada ao CPF/CNPJ informado. 
+1406 
+Versao da DLL de conversao  de RPS desatualizada.  Baixe a ultima versao no site da NFSe. 
+1407 
+NFSe nao localizada na base de dados 
+1408 
+RPS nao localizado na base de dados 
+1409 
+Lote nao assinado 
+1410 
+Versao do XML desatualizada. 
+Anexo 02 
+URL do WebService para produï¿½ï¿½o: 
+O WebService de produï¿½ï¿½o  encontra-se disponï¿½vel no link: 
+Sï¿½O LUï¿½S : http://sistemas.semfaz.saoluis.ma.gov.br/WsNFe2/LoteRps.jws 
+Site do Ambiente de Produï¿½ï¿½o : 
+Sï¿½O LUIS - http://stm.semfaz.saoluis.ma.gov.br/ 
 Anexo 03 
-Definições para a formatação do campo Inscrição Municipal do. 
-CIDADE TAMANHO DO CAMPO EXEMPLO São Luis 11 00061994000 Obs : Preencher sempre com zeros a esquerda para completar o tamanho do campo. 
+Definiï¿½ï¿½es para a formataï¿½ï¿½o do campo Inscriï¿½ï¿½o Municipal do. 
+CIDADE 
+TAMANHO DO CAMPO 
+EXEMPLO 
+Sï¿½o Luis 
+11 
+00061994000 
+Obs : Preencher sempre com zeros a esquerda para completar o tamanho do campo. 
 
-ANEXO 04 – TIPOS DE LOGRADOURO 
+ANEXO 04 ï¿½ TIPOS DE LOGRADOURO 
  
  
-Avenida Rua Rodovia Ruela Rio Sítio Sup Quadra Travessa Vale Via Viaduto Viela Vila Vargem  
-ANEXO 05 – TIPOS DE BAIRROS 
+Avenida 
+Rua 
+Rodovia 
+Ruela 
+Rio 
+Sï¿½tio 
+Sup Quadra 
+Travessa 
+Vale 
+Via 
+Viaduto 
+Viela 
+Vila 
+Vargem 
+ 
+ANEXO 05 ï¿½ TIPOS DE BAIRROS 
  
  
-Bairro Bosque Chácara Conjunto Desmembramento Distrito Favela Fazenda Gleba Horto Jardim Loteamento Núcleo Parque Residencial Sítio Tropical Vila Zona  
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+Bairro 
+Bosque 
+Chï¿½cara 
+Conjunto 
+Desmembramento 
+Distrito 
+Favela 
+Fazenda 
+Gleba 
+Horto 
+Jardim 
+Loteamento 
+Nï¿½cleo 
+Parque 
+Residencial 
+Sï¿½tio 
+Tropical 
+Vila 
+Zona 
  
  
  
@@ -386,5 +2377,41 @@ Bairro Bosque Chácara Conjunto Desmembramento Distrito Favela Fazenda Gl
  
  
  
-Av. Guaxenduba, 1455 – Bairro de Fátima – CEP 65060-360. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Av. Guaxenduba, 1455 ï¿½ Bairro de Fï¿½tima ï¿½ CEP 65060-360. 
  

@@ -740,6 +740,13 @@ class GeracadNfse(models.Model):
         nfse["tributacao_iss"] = tributacao_iss
         nfse["tipo_retencao_iss"] = tipo_retencao_iss
 
+        # Grupo do percentual aproximado dos tributos (obrigatório para evitar E0713)
+        # Para Não Optante o suporte FocusNFE orienta enviar com valores zerados.
+        # Documentação: campos.focusnfe.com.br/nfse_nacional/EmissaoDPSXml.html (pTotTribFed, pTotTribEst, pTotTribMun)
+        nfse["percentual_total_tributos_federais"] = 0.00
+        nfse["percentual_total_tributos_estaduais"] = 0.00
+        nfse["percentual_total_tributos_municipais"] = 0.00
+
         return referencia, nfse
 
     def _focus_api_instance(self):
